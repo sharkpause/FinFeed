@@ -7,13 +7,16 @@ const connect = require('./db/connect');
 
 const signup = require('./routes/signup');
 const login = require('./routes/login');
+const posts = require('./routes/posts');
 
 require('dotenv').config();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/signup', signup);
 app.use('/login', login);
+app.use('/posts', posts);
 
 app.get('/', (req, res) => {
 	res.send('Hello');
@@ -33,3 +36,5 @@ async function start() {
 }
 
 start();
+
+// TODO: - controllers/login.js

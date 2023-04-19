@@ -9,7 +9,7 @@ async function signup(req, res) {
 
 	await user.save();
 
-	res.json({ user });
+	res.json({ success: true, message: 'user created succesfully' });
 }
 
 module.exports = signup;

@@ -1,4 +1,3 @@
-const router = require('express').Router();
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
 
@@ -10,7 +9,7 @@ const Unauthorized = require('../errors/unauthorized');
 async function login(req, res) {
 	const { username, password } = req.body;
 
-	// TODO: add restrict api access like security here later idk how the fuck im gonna do that but ima just pray to Buddha i find a reasonable way fuuuuuuuuuuuuuuuuuuuuck
+	// TODO: Security measure
 
 	if(!username) {
 		throw new BadRequest('Please provide username');

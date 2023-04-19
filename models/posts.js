@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const PostSchema = mongoose.Schema({
-	author: {
-		type: String,
+	authorID: {
+		type: mongoose.Schema.Types.ObjectID,
 		required: true
 	},
 	createdAt: {
@@ -15,9 +15,25 @@ const PostSchema = mongoose.Schema({
 		required: true
 	},
 	likes: {
-		type: Number,
-		required: true
+		count: {
+			type: Number,
+			required: true,
+			default: 0
+		},
+		likers: [{
+			type: mongoose.Schema.Types.ObjectID,
+			required: true
+		}]
 	}
+});
+
+PostSchema.pre('save', async function(next) {
+	const post = this;
+
+	if(!post.isNew) return;
+
+	post.likes.count = 0;
+	post.likes.likers = [];
 });
 
 module.exports = mongoose.model('Post', PostSchema, 'posts');
