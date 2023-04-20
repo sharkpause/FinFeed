@@ -14,9 +14,9 @@ require('dotenv').config();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/', posts);
 app.use('/signup', signup);
 app.use('/login', login);
-app.use('/posts', posts);
 
 app.get('/', (req, res) => {
 	res.send('Hello');

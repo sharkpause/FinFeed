@@ -1,4 +1,7 @@
 const Account = require('../models/accounts');
+const login = require('./login');
+
+const { StatusCodes }  = require('http-status-codes');
 
 async function signup(req, res) {
 	const { username, password } = req.body;
@@ -9,7 +12,9 @@ async function signup(req, res) {
 
 	await user.save();
 
-	res.json({ success: true, message: 'user created succesfully' });
+	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });
+
+	login(req, res);
 }
 
 module.exports = signup;

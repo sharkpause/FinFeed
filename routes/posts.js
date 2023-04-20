@@ -1,15 +1,17 @@
 const router = require('express').Router();
 
+const auth = require('../middleware/auth');
+
 const { getAllPosts, getPost, createPost, likePost } = require('../controllers/posts');
 
-router.route('/')
-	.post(createPost);
+router.route('/:username/posts')
+	.post(auth, createPost);
 
-router.route('/:userID')
+router.route('/:username/posts')
 	.get(getAllPosts);
 
-router.route('/:userID/:postID')
+router.route('/:username/posts/:postID')
 	.get(getPost)
-	.patch(likePost);
+	.patch(auth, likePost);
 
 module.exports = router;
