@@ -38,3 +38,10 @@ async function start() {
 start();
 
 // TODO: - controllers/login.js
+//
+// TODO:
+// 		- Edit post
+// 		- Delete post
+// 		- Add comment
+// 		- Like comment
+// 		- Delete Account

@@ -32,6 +32,10 @@ async function getPost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
+	if(post === null) {
+		throw new NotFound('Post does not exist');
+	}
+
 	res.status(StatusCodes.OK).send(post);
 }
 
@@ -58,7 +62,7 @@ async function createPost(req, res) {
 		content
 	});
 
-	res.status(StatusCodes.CREATED).send({ success: true, message: 'Succesfully created post' });
+	res.status(StatusCodes.CREATED).json({ success: true, message: 'Succesfully created post' });
 }
 
 async function likePost(req, res) {
@@ -85,15 +89,37 @@ async function likePost(req, res) {
 
 		await post.save();
 
-		res.status(StatusCodes.OK).send({ success: true, message: 'Succesfully unliked post' });
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully unliked post' });
 	} else {
 		++post.likes.count;
 		post.likes.likers.push(likerID);
 
 		await post.save();
 
-		res.status(StatusCodes.OK).send({ success: true, message: 'Succesfully liked post' });
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully liked post' });
 	}
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost };
+async function deletePost(req, res) {
+	const { username, postID } = req.params;
+
+	const user = await Account.findOne({ username });
+
+	if(!user) {
+		throw NotFound('User does not exist');
+	}
+
+	if(req.token.username !== username || req.token.id !== String(user._id)) {
+		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
+	}
+
+	const result = await Post.deleteOne({ _id: postID });
+
+	if(result.deletedCount <= 0) {
+		throw new NotFound('Post not does not exist');
+	}
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted post' });
+}
+
+module.exports = { getAllPosts, getPost, createPost, likePost, deletePost };

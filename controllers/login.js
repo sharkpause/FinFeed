@@ -19,26 +19,22 @@ async function login(req, res) {
 		throw new BadRequest('Please provide password');
 	}
 
-	try {
-		const account = await Account.findOne({ username });
+	const account = await Account.findOne({ username });
 
-		if(!account) {
-			throw new Unauthorized('Either username or password was wrong');
-		}
-
-		const token = jwt.sign({ id: account._id, username: username }, process.env.JWT_SECRET, { expiresIn: '1h' });
-
-		res.cookie('jwtToken', token, {
-			httpOnly: true,
-			secure: true,
-			sameSite: 'none',
-			maxAge: 3600000
-		});
-
-		res.status(StatusCodes.OK).json({ success: true, message: 'token set in cookies' });
-	} catch(err) {
-		console.log(err);
+	if(!account) {
+		throw new Unauthorized('Either username or password was wrong');
 	}
+
+	const token = jwt.sign({ id: account._id, username: username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+	res.cookie('jwtToken', token, {
+		httpOnly: true,
+		secure: true,
+		sameSite: 'none',
+		maxAge: 3600000
+	});
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'token set in cookies' });
 }
 
 module.exports = login;

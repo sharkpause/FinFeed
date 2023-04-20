@@ -17,10 +17,27 @@ const CommentSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	like: {
-		type: Number,
-		default: 0
+	likes: {
+		count: {
+			type: Number,
+			required: true,
+			default: 0
+		},
+		likers: [{
+			type: mongoose.Schema.Types.ObjectID,
+			required: true
+		}]
 	}
 });
+
+CommentSchema.pre('save', async function(next) {
+	const comment = this;
+
+	if(!comment.isNew) return;
+
+	comment.likes.count = 0;
+	comment.likes.likers = [];
+});
+
 
 module.exports = mongoose.model('Comment', CommentSchema, 'comments');
