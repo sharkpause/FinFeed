@@ -24,6 +24,17 @@ const PostSchema = mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectID,
 			required: true
 		}]
+	},
+	dislikes: {
+		count: {
+			type: Number,
+			required: true,
+			default: 0
+		},
+		dislikers: [{
+			type: mongoose.Schema.Types.ObjectID,
+			required: true
+		}]
 	}
 });
 
@@ -34,6 +45,9 @@ PostSchema.pre('save', async function(next) {
 
 	post.likes.count = 0;
 	post.likes.likers = [];
+
+	post.dislikes.count = 0;
+	post.dislikes.dislikers = [];
 });
 
 module.exports = mongoose.model('Post', PostSchema, 'posts');

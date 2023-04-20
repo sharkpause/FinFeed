@@ -32,7 +32,7 @@ async function getPost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(post === null) {
+	if(!post) {
 		throw new NotFound('Post does not exist');
 	}
 
@@ -100,6 +100,42 @@ async function likePost(req, res) {
 	}
 }
 
+async function dislikePost(req, res) {
+	const { postID } = req.params;
+	const { dislikerID } = req.body;
+
+	if(!dislikerID) {
+		throw new BadRequest('Please provide disliker ID');
+	}
+
+	const post = await Post.findOne({ _id: postID });
+
+	if(!post) {
+		throw new NotFound('Post does not exist');
+	}
+
+	if(req.token.id !== dislikerID) {
+		throw new Unauthorized('You are not authorized to like posts on behalf of ' + (await Account.findOne({ _id: dislikerID })).username);
+	}
+
+	if(post.dislikes.dislikers.includes(dislikerID)) {
+		--post.dislikes.count;
+		post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(likerID), 1);
+
+		await post.save();
+
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully unliked post' });
+	} else {
+		++post.dislikes.count;
+		post.dislikes.dislikers.push(dislikerID);
+
+		await post.save();
+
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully liked post' });
+	}
+
+}
+
 async function deletePost(req, res) {
 	const { username, postID } = req.params;
 
@@ -122,4 +158,29 @@ async function deletePost(req, res) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted post' });
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost, deletePost };
+async function editPost(req, res) {
+	const { username, postID } = req.params;
+	const { newContent } = req.body;
+
+	if(!newContent) {
+		throw new BadRequest('Please provide the new edited content');
+	}
+
+	const user = await Account.findOne({ username });
+
+	if(!user) {
+		throw NotFound('User does not exist');
+	}
+
+	if(req.token.username !== username || req.token.id !== String(user._id)) {
+		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
+	}
+
+	const post = await Post.findOne({ _id: postID });
+
+	await post.updateOne({ content: newContent });
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited post' });
+}
+
+module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost };

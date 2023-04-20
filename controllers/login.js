@@ -25,7 +25,7 @@ async function login(req, res) {
 		throw new Unauthorized('Either username or password was wrong');
 	}
 
-	const token = jwt.sign({ id: account._id, username: username }, process.env.JWT_SECRET, { expiresIn: '1h' });
+	const token = jwt.sign({ id: account._id, username: username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
 	res.cookie('jwtToken', token, {
 		httpOnly: true,

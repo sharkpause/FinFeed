@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');;
 
 const CommentSchema = mongoose.Schema({
-	post: {
+	postID: {
 		type: mongoose.Schema.Types.ObjectID,
 		required: true
 	},
-	author: {
-		type: String,
+	authorID: {
+		type: mongoose.Schema.Types.ObjectID,
 		required: true
 	},
 	createdAt: {
@@ -27,6 +27,17 @@ const CommentSchema = mongoose.Schema({
 			type: mongoose.Schema.Types.ObjectID,
 			required: true
 		}]
+	},
+	dislikes: {
+		count: {
+			type: Number,
+			required: true,
+			default: 0
+		},
+		dislikers: [{
+			type: mongoose.Schema.Types.ObjectID,
+			required: true
+		}]
 	}
 });
 
@@ -37,6 +48,9 @@ CommentSchema.pre('save', async function(next) {
 
 	comment.likes.count = 0;
 	comment.likes.likers = [];
+
+	comment.dislikes.count = 0;
+	comment.dislikes.dislikers = [];
 });
 
 
