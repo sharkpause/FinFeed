@@ -39,15 +39,8 @@ async function start() {
 start();
 
 // TODO:
-// 		- controllers/login.js
-// 		- controllers/comments.js
-//
-// TODO:
-// 		- Only allow user to either dislike or like
-// 		- Get one comment
+// 		- Sign up add security measure to prevent spammers
 // 		- Edit account
 // 		- Account profile: - display name, bio, account creation date
-// 		- Add comment
 // 		- Edit comment
-// 		- Delete comment
 // 		- Delete Account: also deletes all posts and comments made from user

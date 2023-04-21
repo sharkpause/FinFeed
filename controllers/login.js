@@ -1,5 +1,6 @@
 const { StatusCodes } = require('http-status-codes');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const Account = require('../models/accounts');
 
@@ -21,7 +22,7 @@ async function login(req, res) {
 
 	const account = await Account.findOne({ username });
 
-	if(!account) {
+	if(!account || (await bcrypt.compare(password, account.password)) === false) {
 		throw new Unauthorized('Either username or password was wrong');
 	}
 

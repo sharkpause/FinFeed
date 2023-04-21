@@ -66,11 +66,17 @@ async function createPost(req, res) {
 }
 
 async function likePost(req, res) {
-	const { postID } = req.params;
+	const { username, postID } = req.params;
 	const { likerID } = req.body;
 
 	if(!likerID) {
 		throw new BadRequest('Please provide liker ID');
+	}
+
+	const user = await Account.findOne({ username });
+
+	if(!user) {
+		throw new NotFound('User does not exist');
 	}
 
 	const post = await Post.findOne({ _id: postID });
@@ -94,6 +100,11 @@ async function likePost(req, res) {
 		++post.likes.count;
 		post.likes.likers.push(likerID);
 
+		if(post.dislikes.dislikers.includes(likerID)) {
+			--post.dislikes.count;
+			post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(likerID), 1);
+		}
+
 		await post.save();
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully liked post' });
@@ -101,11 +112,17 @@ async function likePost(req, res) {
 }
 
 async function dislikePost(req, res) {
-	const { postID } = req.params;
+	const { username, postID } = req.params;
 	const { dislikerID } = req.body;
 
 	if(!dislikerID) {
 		throw new BadRequest('Please provide disliker ID');
+	}
+
+	const user = await Account.findOne({ username });
+
+	if(!user) {
+		throw new NotFound('User does not exist');
 	}
 
 	const post = await Post.findOne({ _id: postID });
@@ -120,20 +137,24 @@ async function dislikePost(req, res) {
 
 	if(post.dislikes.dislikers.includes(dislikerID)) {
 		--post.dislikes.count;
-		post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(likerID), 1);
+		post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(dislikerID), 1);
 
 		await post.save();
 
-		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully unliked post' });
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully undisliked post' });
 	} else {
 		++post.dislikes.count;
 		post.dislikes.dislikers.push(dislikerID);
 
+		if(post.dislikes.dislikers.includes(dislikerID)) {
+			--post.likes.count;
+			post.likes.likers.splice(post.likes.likers.indexOf(dislikerID), 1);
+		}
+
 		await post.save();
 
-		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully liked post' });
+		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully disliked post' });
 	}
-
 }
 
 async function deletePost(req, res) {
