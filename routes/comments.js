@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { getAllComments, getComment, createComment, likeComment, dislikeComment, deleteComment } = require('../controllers/comments.js');
+const { getAllComments, getComment, createComment, likeComment, dislikeComment, deleteComment, editComment } = require('../controllers/comments.js');
 
 const auth = require('../middleware/auth');
 
@@ -10,7 +10,8 @@ router.route('/:username/posts/:postID/comments')
 
 router.route('/:username/posts/:postID/comments/:commentID')
 	.get(getComment)
-	.delete(auth, deleteComment);
+	.delete(auth, deleteComment)
+	.patch(auth, editComment);
 
 router.route('/:username/posts/:postID/comments/:commentID/like')
 	.patch(auth, likeComment);

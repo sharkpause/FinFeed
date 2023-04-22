@@ -42,5 +42,4 @@ start();
 // 		- Sign up add security measure to prevent spammers
 // 		- Edit account
 // 		- Account profile: - display name, bio, account creation date
-// 		- Edit comment
 // 		- Delete Account: also deletes all posts and comments made from user

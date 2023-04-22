@@ -219,4 +219,39 @@ async function deleteComment(req, res) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted comment' });
 }
 
-module.exports = { getAllComments, getComment, createComment, likeComment, dislikeComment, deleteComment };
+async function editComment(req, res) {
+	const { username, postID, commentID } = req.params;
+	const { newContent } = req.body;
+
+	if(!newContent) {
+		throw new BadRequest('Please provide the new edited content');
+	}
+
+	const user = await Account.findOne({ username });
+
+	if(!user) {
+		throw NotFound('User does not exist');
+	}
+
+	if(req.token.username !== username || req.token.id !== String(user._id)) {
+		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
+	}
+
+	const post = await Post.findOne({ _id: postID });
+
+	if(!post) {
+		throw new NotFound('Post does not exist');
+	}
+
+	const comment = await Comment.findOne({ _id: commentID });
+
+	if(!comment) {
+		throw new NotFound('comment does not exist');
+	}
+
+	await comment.updateOne({ content: newContent });
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited comment' });
+}
+
+module.exports = { getAllComments, getComment, createComment, likeComment, dislikeComment, deleteComment, editComment };
