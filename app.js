@@ -12,8 +12,7 @@ const comments = require('./routes/comments');
 
 require('dotenv').config();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use([express.json(), express.urlencoded({ extended: true })]);
 
 app.use('/', [posts, comments]);
 app.use('/signup', signup);
@@ -27,7 +26,7 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
 	try {
-		await connect(process.env.MONGO_URI);
+		console.log(await connect(process.env.MONGO_URI));
 		app.listen(PORT, () => {
 			console.log('Server listening on port ' + PORT);
 		});

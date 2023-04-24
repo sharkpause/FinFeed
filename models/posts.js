@@ -21,7 +21,7 @@ const PostSchema = mongoose.Schema({
 			default: 0
 		},
 		likers: [{
-			type: mongoose.Schema.Types.ObjectID,
+			type: String,
 			required: true
 		}]
 	},
@@ -32,7 +32,7 @@ const PostSchema = mongoose.Schema({
 			default: 0
 		},
 		dislikers: [{
-			type: mongoose.Schema.Types.ObjectID,
+			type: String,
 			required: true
 		}]
 	}

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 async function connect(url) {
-	mongoose.connect(url, {
+	return mongoose.connect(url, {
 		useNewUrlParser: true
 	});
 }

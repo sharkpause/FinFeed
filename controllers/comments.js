@@ -9,43 +9,19 @@ const BadRequest = require('../errors/badrequest');
 const NotFound = require('../errors/notfound');
 
 async function getAllComments(req, res) {
-	const { username, postID } = req.params;
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
-	}
+	const { postID } = req.params;
 
 	const comments = await Comment.find({ postID });
 
-	res.status(StatusCodes.OK).send(comments);
+	res.status(StatusCodes.OK).json({ comments, numPosts: comments.length });
 }
 
 async function getComment(req, res) {
-	const { username, postID, commentID } = req.params;
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
-	}
+	const { commentID } = req.params;
 
 	const comment = await Comment.findOne({ _id: commentID });
 
-	res.status(StatusCodes.OK).send(comment);
+	res.status(StatusCodes.OK).json({ comment });
 
 }
 
@@ -61,17 +37,7 @@ async function createComment(req, res) {
 		throw new BadRequest('Please provide comment content');
 	}
 
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
 	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
-	}
 
 	if(req.token.username !== commentator) {
 		throw new Unauthorized('You are not authorized to create comments on the behalf of ' + commentator);
@@ -87,49 +53,33 @@ async function createComment(req, res) {
 }
 
 async function likeComment(req, res) {
-	const { username, postID, commentID } = req.params;
-	const { likerID } = req.body;
+	const { commentID } = req.params;
+	const { liker } = req.body;
 
-	if(!likerID) {
-		throw new BadRequest('Please provide liker ID');
-	}
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
+	if(!liker) {
+		throw new BadRequest('Please provide liker username');
 	}
 
 	const comment = await Comment.findOne({ _id: commentID });
 
-	if(!comment) {
-		throw new NotFound('Comment does not exist');
-	}
-
-	if(req.token.id !== likerID) {
+	if(req.token.username !== liker) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + username);
 	}
 
-	if(comment.likes.likers.includes(likerID)) {
+	if(comment.likes.likers.includes(liker)) {
 		--comment.likes.count;
-		comment.likes.likers.splice(comment.likes.likers.indexOf(likerID), 1);
+		comment.likes.likers.splice(comment.likes.likers.indexOf(liker), 1);
 
 		await comment.save();
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully unliked comment' });
 	} else {
 		++comment.likes.count;
-		comment.likes.likers.push(likerID);
+		comment.likes.likers.push(liker);
 
-		if(comment.dislikes.dislikers.includes(likerID)) {
+		if(comment.dislikes.dislikers.includes(liker)) {
 			--comment.dislikes.count;
-			comment.dislikes.dislikers.splice(comment.dislikes.dislikers.indexOf(likerID), 1);
+			comment.dislikes.dislikers.splice(comment.dislikes.dislikers.indexOf(liker), 1);
 		}
 
 		await comment.save();
@@ -139,49 +89,33 @@ async function likeComment(req, res) {
 }
 
 async function dislikeComment(req, res) {
-	const { username, postID, commentID } = req.params;
-	const { dislikerID } = req.body;
+	const { commentID } = req.params;
+	const { disliker } = req.body;
 
-	if(!dislikerID) {
-		throw new BadRequest('Please provide disliker ID');
-	}
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
+	if(!disliker) {
+		throw new BadRequest('Please provide disliker username');
 	}
 
 	const comment = await Comment.findOne({ _id: commentID });
 
-	if(!comment) {
-		throw new NotFound('Comment does not exist');
-	}
-
-	if(req.token.id !== dislikerID) {
+	if(req.token.username !== disliker) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + username);
 	}
 
-	if(comment.dislikes.dislikers.includes(dislikerID)) {
+	if(comment.dislikes.dislikers.includes(disliker)) {
 		--comment.dislikes.count;
-		comment.dislikes.dislikers.splice(comment.dislikes.dislikers.indexOf(dislikerID), 1);
+		comment.dislikes.dislikers.splice(comment.dislikes.dislikers.indexOf(disliker), 1);
 
 		await comment.save();
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully undisliked comment' });
 	} else {
 		++comment.dislikes.count;
-		comment.dislikes.dislikers.push(dislikerID);
+		comment.dislikes.dislikers.push(disliker);
 
-		if(comment.likes.likers.includes(dislikerID)) {
+		if(comment.likes.likers.includes(disliker)) {
 			--comment.likes.count;
-			comment.likes.likers.splice(comment.likes.likers.indexOf(dislikerID), 1);
+			comment.likes.likers.splice(comment.likes.likers.indexOf(disliker), 1);
 		}
 
 		await comment.save();
@@ -191,22 +125,10 @@ async function dislikeComment(req, res) {
 }
 
 async function deleteComment(req, res) {
-	const { username, postID, commentID } = req.params;
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
+	const { commentID } = req.params;
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to delete comments on behalf of ' + username);
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post not does not exist');
 	}
 
 	const result = await Comment.deleteOne({ _id: commentID });
@@ -220,34 +142,18 @@ async function deleteComment(req, res) {
 }
 
 async function editComment(req, res) {
-	const { username, postID, commentID } = req.params;
+	const { username, commentID } = req.params;
 	const { newContent } = req.body;
 
 	if(!newContent) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw NotFound('User does not exist');
-	}
-
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
-		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
-	}
-
-	const post = await Post.findOne({ _id: postID });
-
-	if(!post) {
-		throw new NotFound('Post does not exist');
+		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
 	const comment = await Comment.findOne({ _id: commentID });
-
-	if(!comment) {
-		throw new NotFound('comment does not exist');
-	}
 
 	await comment.updateOne({ content: newContent });
 

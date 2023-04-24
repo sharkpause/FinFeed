@@ -8,35 +8,19 @@ const Unauthorized = require('../errors/unauthorized');
 const { StatusCodes } = require('http-status-codes');
 
 async function getAllPosts(req, res) {
-	const { username } = req.params;
+	const userID = await Account.findOne({ username: req.params.username});
 
-	const user = await Account.findOne({ username });
+	const posts = await Post.find({ authorID: userID });
 
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	const posts = await Post.find({ authorID: user._id });
-
-	res.status(StatusCodes.OK).send(posts);
+	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
 
 async function getPost(req, res) {
-	const { username, postID } = req.params;
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
+	const { postID } = req.params;
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(!post) {
-		throw new NotFound('Post does not exist');
-	}
-
-	res.status(StatusCodes.OK).send(post);
+	res.status(StatusCodes.OK).json({ post });
 }
 
 async function createPost(req, res) {
@@ -47,18 +31,14 @@ async function createPost(req, res) {
 		throw new BadRequest('Please provide the post content');
 	}
 
-	const user = await Account.findOne({ username });
+	const userID = (await Account.findOne({ username }))._id;
 
-	if(!user) {
-		throw new NotFound('User does not exist');
-	}
-
-	if(req.token.username !== username || req.token.id !== String(user._id)) {
+	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to make posts on behalf of ' + username);
 	}
 
 	const newPost = await Post.create({
-		authorID: user._id,
+		authorID: userID,
 		content
 	});
 
@@ -66,43 +46,33 @@ async function createPost(req, res) {
 }
 
 async function likePost(req, res) {
-	const { username, postID } = req.params;
-	const { likerID } = req.body;
+	const { postID } = req.params;
+	const { liker } = req.body;
 
-	if(!likerID) {
-		throw new BadRequest('Please provide liker ID');
-	}
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
+	if(!liker) {
+		throw new BadRequest('Please provide liker username');
 	}
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(!post) {
-		throw new NotFound('Post does not exist');
+	if(req.token.username !== liker) {
+		throw new Unauthorized('You are not authorized to like posts on behalf of ' + liker);
 	}
 
-	if(req.token.id !== likerID) {
-		throw new Unauthorized('You are not authorized to like posts on behalf of ' + (await Account.findOne({ _id: likerID })).username);
-	}
-
-	if(post.likes.likers.includes(likerID)) {
+	if(post.likes.likers.includes(liker)) {
 		--post.likes.count;
-		post.likes.likers.splice(post.likes.likers.indexOf(likerID), 1);
+		post.likes.likers.splice(post.likes.likers.indexOf(liker), 1);
 
 		await post.save();
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully unliked post' });
 	} else {
 		++post.likes.count;
-		post.likes.likers.push(likerID);
+		post.likes.likers.push(liker);
 
-		if(post.dislikes.dislikers.includes(likerID)) {
+		if(post.dislikes.dislikers.includes(liker)) {
 			--post.dislikes.count;
-			post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(likerID), 1);
+			post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(liker), 1);
 		}
 
 		await post.save();
@@ -112,43 +82,33 @@ async function likePost(req, res) {
 }
 
 async function dislikePost(req, res) {
-	const { username, postID } = req.params;
-	const { dislikerID } = req.body;
+	const { postID } = req.params;
+	const { disliker } = req.body;
 
-	if(!dislikerID) {
-		throw new BadRequest('Please provide disliker ID');
-	}
-
-	const user = await Account.findOne({ username });
-
-	if(!user) {
-		throw new NotFound('User does not exist');
+	if(!disliker) {
+		throw new BadRequest('Please provide disliker username');
 	}
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(!post) {
-		throw new NotFound('Post does not exist');
+	if(req.token.username !== disliker) {
+		throw new Unauthorized('You are not authorized to like posts on behalf of ' + disliker);
 	}
 
-	if(req.token.id !== dislikerID) {
-		throw new Unauthorized('You are not authorized to like posts on behalf of ' + (await Account.findOne({ _id: dislikerID })).username);
-	}
-
-	if(post.dislikes.dislikers.includes(dislikerID)) {
+	if(post.dislikes.dislikers.includes(disliker)) {
 		--post.dislikes.count;
-		post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(dislikerID), 1);
+		post.dislikes.dislikers.splice(post.dislikes.dislikers.indexOf(disliker), 1);
 
 		await post.save();
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully undisliked post' });
 	} else {
 		++post.dislikes.count;
-		post.dislikes.dislikers.push(dislikerID);
+		post.dislikes.dislikers.push(disliker);
 
-		if(post.dislikes.dislikers.includes(dislikerID)) {
+		if(post.dislikes.dislikers.includes(disliker)) {
 			--post.likes.count;
-			post.likes.likers.splice(post.likes.likers.indexOf(dislikerID), 1);
+			post.likes.likers.splice(post.likes.likers.indexOf(disliker), 1);
 		}
 
 		await post.save();
@@ -160,13 +120,9 @@ async function dislikePost(req, res) {
 async function deletePost(req, res) {
 	const { username, postID } = req.params;
 
-	const user = await Account.findOne({ username });
+	const userID = (await Account.findOne({ username }))._id;
 
-	if(!user) {
-		throw NotFound('User does not exist');
-	}
-
-	if(req.token.username !== username || req.token.id !== String(user._id)) {
+	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
 	}
 
@@ -187,14 +143,10 @@ async function editPost(req, res) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const user = await Account.findOne({ username });
+	const userID = (await Account.findOne({ username }))._id;
 
-	if(!user) {
-		throw NotFound('User does not exist');
-	}
-
-	if(req.token.username !== username || req.token.id !== String(user._id)) {
-		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
+	if(req.token.username !== username || req.token.id !== String(userID)) {
+		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
 	const post = await Post.findOne({ _id: postID });
