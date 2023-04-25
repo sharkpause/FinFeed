@@ -6,15 +6,16 @@ const { StatusCodes }  = require('http-status-codes');
 async function signup(req, res) {
 	const { username, password } = req.body;
 
+	const displayName = req.body.displayName || req.body.username;
+	const bio = req.body.bio || '';
+
 	const user = await Account.create({
-		username, password
+		username, password, displayName, bio
 	});
 
 	await user.save();
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });
-
-	login(req, res);
 }
 
 module.exports = signup;

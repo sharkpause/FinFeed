@@ -1,25 +1,27 @@
-const router = require('express').Router();
+const router = require('express').Router({ mergeParams: true });
 
 const auth = require('../middleware/auth');
 const validateParams = require('../middleware/params');
 
 const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost } = require('../controllers/posts');
 
-router.route('/:username/posts')
-	.post(auth, validateParams, createPost);
+router.use('/', validateParams);
 
-router.route('/:username/posts')
-	.get(validateParams, getAllPosts);
+router.route('/')
+	.post(auth, createPost);
 
-router.route('/:username/posts/:postID')
-	.get(validateParams, getPost)
-	.delete(auth, validateParams, deletePost)
-	.patch(auth, validateParams, editPost);
+router.route('/')
+	.get(getAllPosts);
 
-router.route('/:username/posts/:postID/like')
-	.patch(auth, validateParams, likePost);
+router.route('/:postID')
+	.get(getPost)
+	.delete(auth, deletePost)
+	.patch(auth, editPost);
 
-router.route('/:username/posts/:postID/dislike')
-	.patch(auth, validateParams, dislikePost);
+router.route('/:postID/like')
+	.patch(auth, likePost);
+
+router.route(':postID/dislike')
+	.patch(auth, dislikePost);
 
 module.exports = router;

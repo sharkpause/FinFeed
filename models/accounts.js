@@ -17,6 +17,18 @@ const AccountSchema = mongoose.Schema({
 	password: {
 		type: String,
 		required: true
+	},
+	createdAt: {
+		type: Date,
+		default: Date.now()
+	},
+	bio: {
+		type: String,
+		default: ''
+	},
+	displayName: {
+		type: String,
+		default: ''
 	}
 });
 

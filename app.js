@@ -9,14 +9,17 @@ const signup = require('./routes/signup');
 const login = require('./routes/login');
 const posts = require('./routes/posts');
 const comments = require('./routes/comments');
+const accounts = require('./routes/accounts');
 
 require('dotenv').config();
 
 app.use([express.json(), express.urlencoded({ extended: true })]);
 
-app.use('/', [posts, comments]);
 app.use('/signup', signup);
 app.use('/login', login);
+app.use('/:username/posts', posts);
+app.use('/:username/posts/:postID/comments', comments);
+app.use('/:username', accounts);
 
 app.get('/', (req, res) => {
 	res.send('Hello');
@@ -26,7 +29,8 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
 	try {
-		console.log(await connect(process.env.MONGO_URI));
+		//console.log(await connect(process.env.MONGO_URI));
+		console.log(await connect('mongodb://127.0.0.1/finfeed'));
 		app.listen(PORT, () => {
 			console.log('Server listening on port ' + PORT);
 		});
@@ -40,5 +44,5 @@ start();
 // TODO:
 // 		- Sign up add security measure to prevent spammers
 // 		- Edit account
-// 		- Account profile: - display name, bio, account creation date
+// 		- Get account
 // 		- Delete Account: also deletes all posts and comments made from user
