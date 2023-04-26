@@ -12,6 +12,8 @@ async function getAllPosts(req, res) {
 
 	const posts = await Post.find({ authorID: userID });
 
+	console.log(req.socket.remoteAddress);
+
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
 
@@ -137,7 +139,6 @@ async function deletePost(req, res) {
 
 async function editPost(req, res) {
 	const { username, postID } = req.params;
-	const { newContent } = req.body;
 
 	if(!newContent) {
 		throw new BadRequest('Please provide the new edited content');
@@ -149,9 +150,7 @@ async function editPost(req, res) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
-
-	await post.updateOne({ content: newContent });
+	await Post.updateOne({ _id: postID }, { content });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited post' });
 }

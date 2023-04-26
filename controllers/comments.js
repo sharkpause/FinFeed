@@ -143,7 +143,6 @@ async function deleteComment(req, res) {
 
 async function editComment(req, res) {
 	const { username, commentID } = req.params;
-	const { newContent } = req.body;
 
 	if(!newContent) {
 		throw new BadRequest('Please provide the new edited content');
@@ -153,9 +152,7 @@ async function editComment(req, res) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	const comment = await Comment.findOne({ _id: commentID });
-
-	await comment.updateOne({ content: newContent });
+	await Comment.updateOne({ _id: commentID }, { content });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited comment' });
 }

@@ -15,11 +15,11 @@ require('dotenv').config();
 
 app.use([express.json(), express.urlencoded({ extended: true })]);
 
-app.use('/signup', signup);
-app.use('/login', login);
-app.use('/:username', accounts);
-app.use('/:username/posts', posts);
-app.use('/:username/posts/:postID/comments', comments);
+app.use('/api/signup', signup);
+app.use('/api/login', login);
+app.use('/api/:username', accounts);
+app.use('/api/:username/posts', posts);
+app.use('/api/:username/posts/:postID/comments', comments);
 
 app.get('/', (req, res) => {
 	res.send('Hello');
@@ -43,4 +43,3 @@ start();
 
 // TODO:
 // 		- Sign up add security measure to prevent spammers
-// 		- Edit account

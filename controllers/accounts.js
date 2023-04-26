@@ -2,15 +2,17 @@ const Account = require('../models/accounts');
 const Post = require('../models/posts');
 const Comment = require('../models/comments');
 
+const bcrypt = require('bcrypt');
 const { StatusCodes } = require('http-status-codes');
 
 const Unauthorized = require('../errors/unauthorized');
 const NotFound = require('../errors/notfound');
+const BadRequest = require('../errors/badrequest');
 
 async function getAccount(req, res) {
 	const { username } = req.params;
 
-	const user = await Account.findOne({ username }).select({ username: 1, bio: 1, createdAt: 1, displayName: 1 });
+	const user = await Account.findOne({ username }).select({ username: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
 	const posts = await Post.find({ authorID: user._id});
 
 	res.status(StatusCodes.OK).json({ user, posts, numPosts: posts.length });
@@ -67,9 +69,55 @@ async function deleteAccount(req, res) {
 
 async function editAccount(req, res) {
 	const { username } = req.params;
-	const { newUsername, newDisplayName, newBio, newPassword } = req.body;
 
-	;
+	if(req.token.username !== username) {
+		throw new Unauthorized('You are not authorized to edit this account');
+	}
+
+	if(req.body.password) {
+		const salt = await bcrypt.genSalt(10);
+		const hash = await bcrypt.hash(req.body.password, salt);
+		req.body.password = hash;
+	}
+
+	await Account.updateOne({ username }, req.body);
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully edited' });
 }
 
-module.exports = { getAccount, deleteAccount, editAccount };
+async function followAccount(req, res) {
+	const { username } = req.params;
+	const { follower } = req.body;
+
+	if(!follower) {
+		throw new BadRequest('Please provide follower username');
+	}
+
+	const user = await Account.findOne({ username });
+
+	if(req.token.username !== follower) {
+		throw new Unauthorized('You are not authorized to follow users on behalf of ' + follower);
+	}
+
+	if(follower === username) {
+		throw new BadRequest('You cannot follow yourself');
+	}
+
+	if(!user.follows.followers.includes(follower)) {
+		++user.follows.count;
+		user.follows.followers.push(follower);
+
+		await user.save();
+
+		res.status(StatusCodes.OK).json({ success: true, message: 'Successfully followed user' });
+	} else {
+		--user.follows.count;
+		user.follows.followers.splice(user.follows.followers.indexOf(follower), 1);
+
+		await user.save();
+
+		res.status(StatusCodes.OK).json({ success: true, message: 'Successfully unfollowed user' });
+	}
+}
+
+module.exports = { getAccount, deleteAccount, editAccount, followAccount };

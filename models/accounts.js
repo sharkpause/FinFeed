@@ -29,6 +29,16 @@ const AccountSchema = mongoose.Schema({
 	displayName: {
 		type: String,
 		default: ''
+	},
+	follows: {
+		count: {
+			type: Number,
+			default: 0
+		},
+		followers: [{
+			type: String,
+			required: true
+		}]
 	}
 });
 
@@ -36,6 +46,11 @@ AccountSchema.pre('save',  async function(next) {
 	const user = this;
 
 	if(!user.isModified('password')) next();
+
+	if(user.isNew()) {
+		user.follows.count = 0;
+		user.follows.followers = [];
+	}
 
 	try {
 		const salt = await bcrypt.genSalt(10);
