@@ -17,9 +17,9 @@ app.use([express.json(), express.urlencoded({ extended: true })]);
 
 app.use('/signup', signup);
 app.use('/login', login);
+app.use('/:username', accounts);
 app.use('/:username/posts', posts);
 app.use('/:username/posts/:postID/comments', comments);
-app.use('/:username', accounts);
 
 app.get('/', (req, res) => {
 	res.send('Hello');
@@ -44,5 +44,3 @@ start();
 // TODO:
 // 		- Sign up add security measure to prevent spammers
 // 		- Edit account
-// 		- Get account
-// 		- Delete Account: also deletes all posts and comments made from user

@@ -16,10 +16,10 @@ router.route('/:commentID')
 	.delete(auth, deleteComment)
 	.patch(auth, editComment);
 
-router.route(':commentID/like')
+router.route('/:commentID/like')
 	.patch(auth, likeComment);
 
-router.route(':commentID/dislike')
+router.route('/:commentID/dislike')
 	.patch(auth, dislikeComment);
 
 module.exports = router;
