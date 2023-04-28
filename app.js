@@ -3,6 +3,8 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 
+const rateLimiter = require('express-rate-limit');
+
 const connect = require('./db/connect');
 
 const signup = require('./routes/signup');
@@ -12,6 +14,14 @@ const comments = require('./routes/comments');
 const accounts = require('./routes/accounts');
 
 require('dotenv').config();
+
+app.set('trust proxy', 1);
+app.use(
+  rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })
+);
 
 app.use([express.json(), express.urlencoded({ extended: true })]);
 
