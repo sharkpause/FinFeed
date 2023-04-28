@@ -5,6 +5,8 @@ const app = express();
 
 const rateLimiter = require('express-rate-limit');
 
+const path = require('path');
+
 const connect = require('./db/connect');
 
 const signup = require('./routes/signup');
@@ -25,14 +27,16 @@ app.use(
 
 app.use([express.json(), express.urlencoded({ extended: true })]);
 
+app.use(express.static('public'));
+
 app.use('/api/signup', signup);
 app.use('/api/login', login);
 app.use('/api/:username', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
 
-app.get('/', (req, res) => {
-	res.send('Hello');
+app.get('/signup', (req, res) => {
+	res.sendFile(path.resolve(__dirname, 'public', 'signup', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
