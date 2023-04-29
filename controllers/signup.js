@@ -19,8 +19,6 @@ async function signup(req, res) {
 			res.status(StatusCodes.CONFLICT)
 			throw new Conflict('Username already exists');
 		}
-
-		console.log(err.code); // handle min length validator
 	}
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });

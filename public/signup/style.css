@@ -1,6 +1,11 @@
-html {
+html,body {
+    width: 100%;
     height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
 }
+
 body {
     height: 100%;
     margin: 0;
@@ -14,10 +19,12 @@ body {
 
 #usernameLabel {
 	color: white;
+	font-weight: normal;
 }
 
 #passwordLabel {
 	color: white;
+	font-weight: normal;
 }
 
 #usernameIcon {

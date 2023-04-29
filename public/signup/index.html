@@ -27,11 +27,11 @@
 							<img class="is-rounded" src="../images/logo.png" alt="Logo">
 						</figure>
 					</div>
-					<form id="signupForm">
+					<form id="signupForm" method="post">
 						<div class="field mt-6">
 							<label class="label" id="usernameLabel">Username</label>
 							<div class="control has-icons-left">
-								<input class="input" type="text" placeholder="Username" name="username" id="usernameInput" required>
+								<input class="input" type="text" placeholder="John Doe" name="username" id="usernameInput">
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-user" id="usernameIcon"></i>
 								</span>
@@ -41,7 +41,7 @@
 						<div class="field mt-3 mb-6">
 							<label class="label" id="passwordLabel">Password</label>
 							<div class="control has-icons-left">
-								<input class="input" type="password" placeholder="Password" name="password" id="passwordInput" required>
+								<input class="input" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput">
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-lock" id="passwordIcon"></i>
 								</span>
@@ -53,6 +53,8 @@
 								<input type="submit" class="button is-medium" id="submitInput" value="Submit and make an account!">
 							</div>
 						</div>
+
+						<p class="has-text-success is-size-3 has-text-centered mt-6 is-family-primary" id="successText"></p>
 					</form>
 				</div>
 			</div>

@@ -9,7 +9,7 @@ const AccountSchema = mongoose.Schema({
 		maxlength: 30,
 		minLength: 8,
 		validate: {
-			validator: (name) => {
+			validator: name => {
 				return /^[a-zA-Z0-9_]+$/.test(name);
 			},
 			message: 'Username may only contain letters, numbers, and underscores'
