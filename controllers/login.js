@@ -23,6 +23,7 @@ async function login(req, res) {
 	const account = await Account.findOne({ username });
 
 	if(!account || (await bcrypt.compare(password, account.password)) === false) {
+		res.status(StatusCodes.UNAUTHORIZED);
 		throw new Unauthorized('Either username or password was wrong');
 	}
 

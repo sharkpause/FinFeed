@@ -7,7 +7,7 @@ const AccountSchema = mongoose.Schema({
 		required: true,
 		unique: true,
 		maxlength: 30,
-		minLength: 8,
+		minLength: 3,
 		validate: {
 			validator: name => {
 				return /^[a-zA-Z0-9_]+$/.test(name);

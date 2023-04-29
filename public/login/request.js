@@ -40,13 +40,12 @@ form.addEventListener('submit', async e => {
 	};
 
 	try {
-		await axios.post('/api/signup', { username, password });
+		await axios.post('/api/login', { username, password });
 
-		successText.textContent = 'Account successfully created!';
+		successText.textContent = 'Succesfully logged into account';
 	} catch(err) {
-		if(err.response.status === 409) {
-			usernameError.textContent = 'Username is unavailable';
-			return usernameInput.classList.add('input-error');
+		if(err.response.status === 401) {
+			return passwordError.textContent = 'Either username or password is wrong, please try again';
 		}
 
 		passwordError.textContent = 'Something went wrong, please try again later';

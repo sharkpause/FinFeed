@@ -35,10 +35,6 @@ app.use('/api/:username', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
 
-app.get('/signup', (req, res) => {
-	res.sendFile(path.resolve(__dirname, 'public', 'signup', 'index.html'));
-})
-
 const PORT = process.env.PORT || 3000;
 
 async function start() {
