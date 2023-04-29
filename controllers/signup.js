@@ -1,5 +1,6 @@
 const Account = require('../models/accounts');
-const login = require('./login');
+
+const Conflict = require('../errors/conflict');
 
 const { StatusCodes }  = require('http-status-codes');
 
@@ -9,11 +10,18 @@ async function signup(req, res) {
 	const displayName = req.body.displayName || req.body.username;
 	const bio = req.body.bio || '';
 
-	const user = await Account.create({
-		username, password, displayName, bio
-	});
+	try {
+		const user = await Account.create({
+			username, password, displayName, bio
+		});
+	} catch(err) {
+		if(err.code === 11000) {
+			res.status(StatusCodes.CONFLICT)
+			throw new Conflict('Username already exists');
+		}
 
-	await user.save();
+		console.log(err.code); // handle min length validator
+	}
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });
 }

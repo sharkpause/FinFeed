@@ -1,0 +1,57 @@
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+body {
+	background-image: url("../images/background.jpeg");
+}
+
+#usernameLabel {
+	color: white;
+}
+
+#passwordLabel {
+	color: white;
+}
+
+#usernameIcon {
+	color: white;
+}
+
+#passwordIcon {
+	color: white;
+}
+
+#submitInput {
+	background-color: #495c86;
+	border-color: #495c86;
+	color: white;
+	border-radius: 7px;
+}
+
+input[type="text"] {
+    background: rgba(0, 0, 0, 0.5);
+	color: white;
+    border: none;
+}
+
+::placeholder {
+	color: rgba(180, 180, 180) !important;
+	opacity: 1;
+}
+
+input[type="password"] {
+	background: rgba(0, 0, 0, 0.5);
+	color: white;
+    border: none;
+}
+
+.input-error {
+	border: 1px solid #f03a5f !important;
+}

@@ -7,6 +7,7 @@ const AccountSchema = mongoose.Schema({
 		required: true,
 		unique: true,
 		maxlength: 30,
+		minLength: 8,
 		validate: {
 			validator: (name) => {
 				return /^[a-zA-Z0-9_]+$/.test(name);
@@ -47,7 +48,7 @@ AccountSchema.pre('save',  async function(next) {
 
 	if(!user.isModified('password')) next();
 
-	if(user.isNew()) {
+	if(user.isNew) {
 		user.follows.count = 0;
 		user.follows.followers = [];
 	}

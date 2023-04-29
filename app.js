@@ -37,7 +37,7 @@ app.use('/api/:username/posts/:postID/comments', comments);
 
 app.get('/signup', (req, res) => {
 	res.sendFile(path.resolve(__dirname, 'public', 'signup', 'index.html'));
-});
+})
 
 const PORT = process.env.PORT || 3000;
 
