@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 
 const rateLimiter = require('express-rate-limit');
+const { StatusCodes } = require('http-status-codes');
 
 const path = require('path');
 
@@ -34,6 +35,10 @@ app.use('/api/login', login);
 app.use('/api/:username', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
+
+app.get('/', (req, res) => {
+	res.status(StatusCodes.OK).sendFile(path.resolve(__dirname, 'public', 'home', 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 

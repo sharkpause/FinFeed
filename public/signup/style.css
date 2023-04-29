@@ -23,10 +23,6 @@ body {
 	font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
-.-color {
-	color: white;
-}
-
 .input-error {
 	border: 1px solid #f03a5f !important;
 }

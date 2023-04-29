@@ -19,6 +19,8 @@ form.addEventListener('submit', async e => {
 	passwordError.textContent = '';
 	passwordInput.classList.remove('input-error');
 
+	successText.textContent = '';
+
 	if(username === '') {
 		usernameError.textContent = 'Please provide username';
 		return usernameInput.classList.add('input-error');

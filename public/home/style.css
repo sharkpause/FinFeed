@@ -22,31 +22,3 @@ body {
 	font-weight: normal;
 	font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
 }
-
-.input-error {
-	border: 1px solid #f03a5f !important;
-}
-
-#submitInput {
-	background-color: #495c86;
-	border-color: #495c86;
-	color: white;
-	border-radius: 7px;
-}
-
-input[type="text"] {
-    background: rgba(0, 0, 0, 0.5);
-	color: white;
-    border: none;
-}
-
-input[type="password"] {
-	background: rgba(0, 0, 0, 0.5);
-	color: white;
-    border: none;
-}
-
-::placeholder {
-	color: rgba(180, 180, 180) !important;
-	opacity: 1;
-}
