@@ -10,8 +10,6 @@ const { StatusCodes } = require('http-status-codes');
 async function getHomePosts(req, res) {
 	let posts = await Post.find({});
 
-	console.log(posts);
-
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
 
@@ -37,14 +35,15 @@ async function createPost(req, res) {
 		throw new BadRequest('Please provide the post content');
 	}
 
-	const userID = (await Account.findOne({ username }))._id;
+	const user = await Account.findOne({ username });
 
-	if(req.token.username !== username || req.token.id !== String(userID)) {
+	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to make posts on behalf of ' + username);
 	}
 
 	const newPost = await Post.create({
 		author: username,
+		authorDisplay: user.displayName,
 		content
 	});
 

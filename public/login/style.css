@@ -23,8 +23,21 @@ body {
 	font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
+.is-white-text {
+	color: white;
+}
+
 .input-error {
 	border: 1px solid #f03a5f !important;
+}
+
+.navbar-button:hover {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	color: #9be0ff !important;
+}
+
+.is-navbar-transparent {
+	background-color: rgba(0, 0, 0, 0.3);
 }
 
 #submitInput {

@@ -1,4 +1,9 @@
-axios.get('/api/posts')
-	.then(res => {
-		console.log(res.data); // make the media object thing, and also turn this into async await
-	});
+async function getPosts() {
+	try {
+		const posts = (await axios.get('/api/posts'));
+
+		console.log(posts);
+	} catch(err) {
+		console.log(err);
+	}
+}

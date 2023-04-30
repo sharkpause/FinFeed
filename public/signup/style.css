@@ -27,6 +27,19 @@ body {
 	border: 1px solid #f03a5f !important;
 }
 
+.is-navbar-transparent {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+
+.is-white-text {
+	color: white;
+}
+
+.navbar-button:hover {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	color: #9be0ff !important;
+}
+
 #submitInput {
 	background-color: #495c86;
 	border-color: #495c86;

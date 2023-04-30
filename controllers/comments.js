@@ -43,9 +43,12 @@ async function createComment(req, res) {
 		throw new Unauthorized('You are not authorized to create comments on the behalf of ' + commentator);
 	}
 
+	const user = await Account.findOne({ commentator });
+
 	const newComment = await Comment.create({
 		postID: postID,
 		author: commentator,
+		authorDisplay: user.displayName,
 		content
 	});
 

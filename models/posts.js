@@ -5,6 +5,10 @@ const PostSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
+	authorDisplay: {
+		type: String,
+		required: true
+	},
 	createdAt: {
 		type: Date,
 		required: true,
