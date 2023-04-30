@@ -45,7 +45,7 @@ async function createComment(req, res) {
 
 	const newComment = await Comment.create({
 		postID: postID,
-		authorID: await Account.findOne({ username: commentator }),
+		author: commentator,
 		content
 	});
 

@@ -7,12 +7,16 @@ const Unauthorized = require('../errors/unauthorized');
 
 const { StatusCodes } = require('http-status-codes');
 
+async function getHomePosts(req, res) {
+	let posts = await Post.find({});
+
+	console.log(posts);
+
+	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
+}
+
 async function getAllPosts(req, res) {
-	const userID = await Account.findOne({ username: req.params.username});
-
-	const posts = await Post.find({ authorID: userID });
-
-	console.log(req.socket.remoteAddress);
+	const posts = await Post.find({ author: req.params.username });
 
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
@@ -40,7 +44,7 @@ async function createPost(req, res) {
 	}
 
 	const newPost = await Post.create({
-		authorID: userID,
+		author: username,
 		content
 	});
 
@@ -155,4 +159,4 @@ async function editPost(req, res) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited post' });
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost };
+module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost, getHomePosts };

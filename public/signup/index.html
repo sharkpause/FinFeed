@@ -18,7 +18,35 @@
 </head>
 <body>
 
-	<section class="hero">
+	<nav class="navbar is-fixed-top pl-6 pr-6" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="navbar-item" href="/"><img src="../images/navbar-logo.png"></a>
+		</div>
+
+		<div class="navbar-menu">
+			<div class="navbar-start">
+				<a class="navbar-item" href="/">
+					<i class="fa-solid fa-house mr-2"></i>
+					Home
+				</a>
+				<a class="navbar-item" id="profileNav">
+					<i class="fa-solid fa-user mr-2"></i>
+					Profile
+				</a>
+			</div>
+		</div>
+
+		<div class="navbar-end">
+			<div class="navbar-item">
+				<div class="buttons">
+					<a class="button is-info" href="/signup"><strong>Sign up</strong></a>
+					<a class="button is-light" href="/login">Log in</a>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<section class="hero mt-6">
 		<div class="hero-body">
 			<div class="columns is-centered is-vcentered">
 				<div class="column is-5">

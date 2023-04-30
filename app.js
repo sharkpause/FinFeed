@@ -16,6 +16,8 @@ const posts = require('./routes/posts');
 const comments = require('./routes/comments');
 const accounts = require('./routes/accounts');
 
+const { getHomePosts } = require('./controllers/posts');
+
 require('dotenv').config();
 
 app.set('trust proxy', 1);
@@ -32,13 +34,10 @@ app.use(express.static('public'));
 
 app.use('/api/signup', signup);
 app.use('/api/login', login);
+app.use('/api/posts', getHomePosts);
 app.use('/api/:username', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
-
-app.get('/', (req, res) => {
-	res.status(StatusCodes.OK).sendFile(path.resolve(__dirname, 'public', 'home', 'index.html'));
-});
 
 const PORT = process.env.PORT || 3000;
 

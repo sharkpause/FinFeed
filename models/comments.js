@@ -5,8 +5,8 @@ const CommentSchema = mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectID,
 		required: true
 	},
-	authorID: {
-		type: mongoose.Schema.Types.ObjectID,
+	author: {
+		type: String,
 		required: true
 	},
 	createdAt: {
