@@ -54,6 +54,3 @@ async function start() {
 }
 
 start();
-
-// TODO:
-// 		- Sign up add security measure to prevent spammers
