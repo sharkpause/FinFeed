@@ -8,7 +8,7 @@ const { getAccount, deleteAccount, editAccount, followAccount } = require('../co
 router.use(validateParams);
 
 router.route('/')
-	.get(getAccount)
+	.get(auth, getAccount)
 	.delete(auth, deleteAccount)
 	.patch(auth, editAccount);
 

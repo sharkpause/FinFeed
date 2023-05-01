@@ -4,6 +4,7 @@ const express = require('express');
 const app = express();
 
 const rateLimiter = require('express-rate-limit');
+const cookieParser = require('cookie-parser');
 const { StatusCodes } = require('http-status-codes');
 
 const path = require('path');
@@ -15,6 +16,7 @@ const login = require('./routes/login');
 const posts = require('./routes/posts');
 const comments = require('./routes/comments');
 const accounts = require('./routes/accounts');
+const accountProfile = require('./routes/accountProfile');
 
 const { getHomePosts } = require('./controllers/posts');
 
@@ -28,23 +30,23 @@ app.use(
   })
 );
 
-app.use([express.json(), express.urlencoded({ extended: true })]);
-
-app.use(express.static('public'));
+app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
 
 app.use('/api/signup', signup);
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
-app.use('/api/:username', accounts);
+app.use('/api/user', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
+
+app.use('/:username', accountProfile);
 
 const PORT = process.env.PORT || 3000;
 
 async function start() {
 	try {
-		//console.log(await connect(process.env.MONGO_URI));
-		console.log(await connect('mongodb://127.0.0.1/finfeed'));
+		//console.log(await connect(process.env.MONGO_URI)); // Connect to online database
+		console.log(await connect('mongodb://127.0.0.1/finfeed')); // Connect to local database
 		app.listen(PORT, () => {
 			console.log('Server listening on port ' + PORT);
 		});

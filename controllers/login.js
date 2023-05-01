@@ -10,8 +10,6 @@ const Unauthorized = require('../errors/unauthorized');
 async function login(req, res) {
 	const { username, password } = req.body;
 
-	// TODO: Security measure
-
 	if(!username) {
 		throw new BadRequest('Please provide username');
 	}
@@ -27,7 +25,7 @@ async function login(req, res) {
 		throw new Unauthorized('Either username or password was wrong');
 	}
 
-	const token = jwt.sign({ id: account._id, username: username }, process.env.JWT_SECRET, { expiresIn: '1d' });
+	const token = jwt.sign({ id: account._id, username }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
 	res.cookie('jwtToken', token, {
 		httpOnly: true,
@@ -36,7 +34,9 @@ async function login(req, res) {
 		maxAge: 3600000
 	});
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'token set in cookies' });
+	res.cookie('username', username);
+
+	res.status(StatusCodes.OK).json({ success: true, message: 'token and username set in cookies' });
 }
 
 module.exports = login;

@@ -7,3 +7,5 @@ async function getPosts() {
 		console.log(err);
 	}
 }
+
+getPosts();

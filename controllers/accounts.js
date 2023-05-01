@@ -10,10 +10,11 @@ const NotFound = require('../errors/notfound');
 const BadRequest = require('../errors/badrequest');
 
 async function getAccount(req, res) {
-	const { username } = req.params;
+	const username = req.token.username;
 
 	const user = await Account.findOne({ username }).select({ username: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
-	const posts = await Post.find({ authorID: user._id});
+
+	const posts = await Post.find({ author: username});
 
 	res.status(StatusCodes.OK).json({ user, posts, numPosts: posts.length });
 }

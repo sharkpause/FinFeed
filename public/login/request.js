@@ -42,7 +42,7 @@ form.addEventListener('submit', async e => {
 	};
 
 	try {
-		await axios.post('/api/login', { username, password });
+		const response = await axios.post('/api/login', { username, password });
 
 		successText.textContent = 'Succesfully logged into account';
 	} catch(err) {
