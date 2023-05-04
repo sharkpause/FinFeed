@@ -1,0 +1,76 @@
+$navbar-breakpoint: 0px;
+
+html,body {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+}
+
+body {
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+	background-image: url("../images/background.jpeg");
+}
+
+.is-light-white-color {
+	color: white !important;
+	font-weight: normal !important;
+}
+
+.is-light-blue-color {
+	color: #9be0ff !important;
+	font-weight: normal !important;
+	font-family:Helvetica Neue, Helvetica, Arial, sans-serif;
+}
+
+.is-white-text {
+	color: white !important;
+}
+
+.input-error {
+	border: 1px solid #f03a5f !important;
+}
+
+.navbar-button:hover {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	color: #9be0ff !important;
+}
+
+.is-navbar-transparent {
+	background-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+#submitInput {
+	background-color: #495c86 !important;
+	border-color: #495c86 !important;
+	color: white !important;
+	border-radius: 7px !important;
+}
+
+input[type="text"] {
+    background: rgba(0, 0, 0, 0.5) !important;
+	color: white !important;
+    border: none !important;
+}
+
+input[type="password"] {
+	background: rgba(0, 0, 0, 0.5) !important;
+	color: white !important;
+    border: none !important;
+}
+
+::placeholder {
+	color: rgb(180, 180, 180) !important;
+	opacity: 1 !important;
+}
+
+@import "../../node_modules/bulma/sass/utilities/_all.sass";
+@import "../../node_modules/bulma/sass/base/_all.sass";
+@import "../../node_modules/bulma/sass/elements/_all.sass";
+@import "../../node_modules/bulma/sass/form/_all.sass";
+@import "../../node_modules/bulma/sass/components/_all.sass";
+@import "../../node_modules/bulma/sass/layout/_all.sass";
+@import "../../node_modules/bulma/sass/grid/_all.sass";
+@import "../../node_modules/bulma/sass/helpers/_all.sass";

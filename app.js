@@ -23,16 +23,14 @@ const { getHomePosts } = require('./controllers/posts');
 require('dotenv').config();
 
 app.set('trust proxy', 1);
-app.use(
-  rateLimiter({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-  })
-);
 
 app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
 
-app.use('/api/signup', signup);
+app.use('/api/signup', [signup, rateLimiter({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // limit each IP to 100 requests per windowMs
+  })]
+);
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
 app.use('/api/user', accounts);

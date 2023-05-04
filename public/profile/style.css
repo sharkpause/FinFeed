@@ -35,10 +35,11 @@ body {
 	color: #9be0ff !important;
 }
 
-.profileUsername {
+.profile-username {
 	color: white;
 }
 
-.proileSection {
-	;
+.profile-section {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	margin-top: 5.5rem;
 }

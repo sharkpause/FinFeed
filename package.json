@@ -5,13 +5,18 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+	"css-build": "node-sass --omit-source-map-url public/style.scss public/style.css",
+	"css-build-login": "node-sass --omit-source-map-url public/login/style.scss public/login/style.css",
+	"css-build-signup": "node-sass --omit-source-map-url public/signup/style.scss public/signup/style.css",
+	"css-watch": "npm run css-build -- --watch"
   },
   "keywords": [],
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "bulma": "^0.9.4",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -19,7 +24,8 @@
     "express-rate-limit": "^6.7.0",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.5"
+    "mongoose": "^7.0.5",
+    "node-sass": "^8.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22",
