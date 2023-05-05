@@ -4,13 +4,13 @@ function getCookie(name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-async function likePost(username, postID) {
-	const result = await axios.patch(`/api/${username}/posts/${postID}/like`, { liker: getCookie('username') });
-	alert(result);
+async function likePost(postID) {
+	const username = getCookie('username');
+	const result = await axios.patch(`/api/${username}/posts/${postID}/like`, { liker: username });
 }
 
 function createMediaObject(likeCount, postID) {
-	return `<div class="media-margin" id="${postID}">
+	return `<div class="mt-6" id="${postID}">
 				<article class="media">
 					<div class="media-content media-left media-background">
 						<div class="content">
@@ -31,6 +31,9 @@ function createMediaObject(likeCount, postID) {
 							</div>
 						</nav>
 					</div>
+					<div class="media-right">
+    					<button class="delete"></button>
+  					</div>
 				</article>
 			</div>`
 }
@@ -42,29 +45,48 @@ async function getPosts() {
 		const mediaContainer = document.getElementById('mediaContainer');
 
 		for(let i = 0; i < posts.length; ++i) {
-			mediaContainer.innerHTML += createMediaObject(posts[i].likes.count, posts[i]._id);
-
+			const postElem = document.createElement('div');
+			postElem.innerHTML = createMediaObject(posts[i].likes.count, posts[i]._id);
+			
 			// check if logged in
-			const post = document.getElementById(posts[i]._id);
-
-			const mediaContent = post.querySelector('#mediaContent');
-
+			const mediaContent = postElem.querySelector('#mediaContent');
+			
 			const displayName = mediaContent.querySelector('#displayName');
 			displayName.textContent = posts[i].authorDisplay;
-
+			
 			const username = mediaContent.querySelector('#username');
 			username.textContent += posts[i].author;
-
+			
 			const postContent = mediaContent.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
-
-			const likeButton = post.querySelector('#likeButton');
-
+			
+			const likeButton = postElem.querySelector('#likeButton');
+			
 			likeButton.addEventListener('click', e => {
 				e.preventDefault();
-				likePost(getCookie('username'), posts[i]._id);
+
+				alert('Liked');
+
+				likePost(posts[i]._id);
 			});
+			
+			mediaContainer.appendChild(postElem);
 		}
+
+		const makePostForm = document.getElementById('makePostForm');
+
+		makePostForm.addEventListener('submit', async e => {
+			e.preventDefault();
+
+			const makePostInput = document.getElementById('makePostInput');
+			await axios.post('/api/' + getCookie('username') + '/posts', { content: makePostInput.value });
+
+			location.reload();
+
+			makePostForm.reset();
+		});
+
+		// TODO: Make delete button work
 	} catch(err) {
 		console.log(err);
 	}
