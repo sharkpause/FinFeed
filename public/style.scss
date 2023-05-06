@@ -55,6 +55,14 @@ body {
 	margin-top: 5.5rem !important;
 }
 
+.columns.is-variable.is-1 {
+	$column-gap: 0.25rem;
+}
+
+.columns.is-variable.is-2 {
+	$column-gap: 0.5rem;
+}
+
 #submitInput {
 	background-color: #495c86 !important;
 	border-color: #495c86 !important;
