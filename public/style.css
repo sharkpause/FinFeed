@@ -62,6 +62,9 @@ body {
   color: white !important;
   border: none !important; }
 
+.input-error {
+  border: 1px solid #f03a5f !important; }
+
 ::placeholder {
   color: #b4b4b4 !important;
   opacity: 1 !important; }

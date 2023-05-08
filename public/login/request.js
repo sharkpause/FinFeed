@@ -1,5 +1,3 @@
-import inputError from '../modules/inputError.js';
-
 const form = document.getElementById('signupForm');
 const usernameInput = document.getElementById('usernameInput');
 const passwordInput = document.getElementById('passwordInput');
@@ -25,7 +23,7 @@ form.addEventListener('submit', async e => {
 
 	if(username === '') {
 		usernameError.textContent = 'Please provide username';
-		return inputError(usernameInput);
+		return usernameInput.classList.add('input-error');
 	}
 
 	if(password === '') {
@@ -35,12 +33,12 @@ form.addEventListener('submit', async e => {
 
 	if(username.length < 3 || username.length > 30) {
 		usernameError.textContent = 'Username must be longer or equal to 3 characters and less than or equal to 30 characters';
-		return inputError(usernameInput);
+		return usernameInput.classList.add('input-error');
 	}
 
 	if(!/^[a-zA-Z0-9_]+$/.test(username)) {
 		usernameError.textContent = 'Username may only contain uppercase amd lowercase letters and underscores';
-		return inputError(usernameInput);
+		return usernameInput.classList.add('input-error');
 	};
 
 	try {

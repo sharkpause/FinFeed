@@ -87,6 +87,10 @@ body {
 	border: none !important;
 }
 
+.input-error {
+	border: 1px solid #f03a5f !important;
+}
+
 ::placeholder {
 	color: rgb(180, 180, 180) !important;
 	opacity: 1 !important;
