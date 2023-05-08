@@ -11,8 +11,8 @@ body {
   background-image: url("../images/background.jpeg"); }
 
 .is-light-white-color {
-  color: white;
-  font-weight: normal; }
+  color: white !important;
+  font-weight: normal !important; }
 
 .is-white-text {
   color: white !important; }
@@ -31,6 +31,15 @@ body {
   background-color: rgba(0, 0, 0, 0.5) !important;
   border: none !important; }
 
+.post-interact-button {
+  background-color: rgba(0, 0, 0, 0);
+  border: none;
+  color: white; }
+
+.post-interact-button:hover {
+  color: #9be0ff;
+  cursor: pointer; }
+
 .navbar-button:hover {
   background-color: rgba(0, 0, 0, 0.5) !important;
   color: #9be0ff !important; }
@@ -42,13 +51,13 @@ body {
 .media-margin {
   margin-top: 5.5rem !important; }
 
-#submitInput {
+.submit-input {
   background-color: #495c86 !important;
   border-color: #495c86 !important;
   color: white !important;
   border-radius: 7px !important; }
 
-input[type="text"] {
+.input-transparent {
   background: rgba(0, 0, 0, 0.5) !important;
   color: white !important;
   border: none !important; }

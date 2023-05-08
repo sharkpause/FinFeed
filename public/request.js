@@ -8,10 +8,10 @@ async function likePost(username, postID) {
 	try {
 		await axios.patch('/api/' + username + '/posts/' + postID + '/like', { liker: getCookie('username') });
 
-		alert('Liked');
+		location.reload();
 	} catch(err) {
 		console.log(err);
-		alert(err);
+		alert(err);a
 	}
 }
 
@@ -19,7 +19,7 @@ async function dislikePost(username, postID) {
 	try {
 		await axios.patch('/api/' + username + '/posts/' + postID + '/dislike', { disliker: getCookie('username') });
 
-		alert('Disliked');
+		location.reload();
 	} catch(err) {
 		console.log(err);
 		alert(err);
@@ -30,10 +30,12 @@ async function deletePost(username, postID) {
 	try {
 		await axios.delete('/api/' + username + '/posts/' + postID);
 
-		alert('Deleted');
+		location.reload();
 	} catch(err) {
 		if(err.response.status === 401) {
 			alert('You are not authorized to delete this post');
+		} else {
+			alert('Something went wrong');
 		}
 	}
 }
@@ -63,7 +65,10 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 							</div>
 						</nav>
 					</div>
-					<div class="media-right" id="deleteButtonContainer"></div>
+					<div>
+						<div class="media-right" id="deleteButtonContainer"></div>
+						<div class="media-right" id="editButtonContainer"></div>
+					</div>
 				</article>
 			</div>`
 }
@@ -109,7 +114,7 @@ async function getPosts() {
 
 				if(loggedUser === posts[i].author) {
 					const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
-					deleteButtonContainer.innerHTML = '<button class="delete" id="deleteButton"></button>';
+					deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
 
 					const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
 					
@@ -117,6 +122,17 @@ async function getPosts() {
 						e.preventDefault();
 
 						deletePost(posts[i].author, posts[i]._id);
+					});
+
+					const editButtonContainer = postElem.querySelector('#editButtonContainer');
+					editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+
+					const editButton = editButtonContainer.querySelector('#editButton');
+
+					editButton.addEventListener('click', e => {
+						e.preventDefault();
+						
+						alert('edit');
 					});
 				}
 			}
@@ -130,6 +146,11 @@ async function getPosts() {
 			e.preventDefault();
 
 			const makePostInput = document.getElementById('makePostInput');
+
+			if(makePostInput.value.length > 300) {
+				
+			}
+
 			await axios.post('/api/' + getCookie('username') + '/posts', { content: makePostInput.value });
 
 			location.reload();

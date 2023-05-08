@@ -28,7 +28,7 @@ app.use([express.json(), express.urlencoded({ extended: true }), express.static(
 
 app.use('/api/signup', [signup, rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
+    max: 1, // limit each IP to 1 request per windowMs
   })]
 );
 app.use('/api/login', login);

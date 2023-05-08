@@ -8,7 +8,7 @@ const Unauthorized = require('../errors/unauthorized');
 const { StatusCodes } = require('http-status-codes');
 
 async function getHomePosts(req, res) {
-	let posts = await Post.find({});
+	let posts = (await Post.find({})).reverse();
 
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
@@ -111,7 +111,7 @@ async function dislikePost(req, res) {
 		++post.dislikes.count;
 		post.dislikes.dislikers.push(disliker);
 
-		if(post.dislikes.dislikers.includes(disliker)) {
+		if(post.likes.likers.includes(disliker)) {
 			--post.likes.count;
 			post.likes.likers.splice(post.likes.likers.indexOf(disliker), 1);
 		}

@@ -16,7 +16,8 @@ const PostSchema = mongoose.Schema({
 	},
 	content: {
 		type: String,
-		required: true
+		required: true,
+		maxlength: 300
 	},
 	likes: {
 		count: {

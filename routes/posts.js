@@ -21,7 +21,7 @@ router.route('/:postID')
 router.route('/:postID/like')
 	.patch(auth, likePost);
 
-router.route(':postID/dislike')
+router.route('/:postID/dislike')
 	.patch(auth, dislikePost);
 
 module.exports = router;

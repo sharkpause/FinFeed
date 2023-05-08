@@ -6,10 +6,8 @@
   "scripts": {
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-	"css-build": "node-sass --omit-source-map-url public/style.scss public/style.css",
-	"css-build-login": "node-sass --omit-source-map-url public/login/style.scss public/login/style.css",
-	"css-build-signup": "node-sass --omit-source-map-url public/signup/style.scss public/signup/style.css",
-	"css-watch": "npm run css-build -- --watch"
+    "css-build": "node-sass --omit-source-map-url public/style.scss public/style.css",
+    "css-watch": "npm run css-build -- --watch"
   },
   "keywords": [],
   "author": "",
@@ -24,10 +22,10 @@
     "express-rate-limit": "^6.7.0",
     "http-status-codes": "^2.2.0",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.5",
-    "node-sass": "^8.0.0"
+    "mongoose": "^7.0.5"
   },
   "devDependencies": {
+    "node-sass": "^8.0.0",
     "nodemon": "^2.0.22",
     "prettier": "^2.8.8"
   }
