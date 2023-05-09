@@ -40,10 +40,51 @@ async function deletePost(username, postID) {
 	}
 }
 
+async function editPost(postElem, postID) {
+	const mainContent = postElem.querySelector('#mainContent');
+
+	const beforeMainContent = postElem.querySelector('#mainContent').dataset.originalContent;
+	const beforeContent = postElem.querySelector('#postContent').textContent;
+
+	mainContent.innerHTML = createEditInput(beforeContent);
+
+	const cancelButton = mainContent.querySelector('#cancelButton');
+
+	cancelButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		mainContent.innerHTML = beforeMainContent.innerHTML;
+	});
+}
+
+function createEditInput(beforeContent) {
+	return `
+			<form method="post">
+				<div class="field is-grouped">
+					<p class="control is-expanded">
+						<input type="text" class="input input-transparent" id="makePostInput" value="${beforeContent}">
+					</p>
+					<p class="control">
+						<button type="submit" class="button is-blue-color is-transparent-button">
+							<span class="icon">
+								<i class="fa-solid fa-check"></i>
+							</span>
+						</button>
+						<button id="cancelButton" class="button is-blue-color is-transparent-button">
+							<span class="icon">
+								<i class="fa-solid fa-xmark"></i>
+							</span>
+						</button>
+					</p>
+				</div>
+			</form>
+			`;
+}
+
 function createMediaObject(likeCount, dislikeCount, postID) {
 	return `<div class="mt-6" id="${postID}">
 				<article class="media">
-					<div class="media-content media-left media-background">
+					<div class="media-content media-left media-background" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><small id="username">@</small>
@@ -97,44 +138,50 @@ async function getPosts() {
 
 			const loggedUser = getCookie('username');
 
-			if(loggedUser) {
-				const likeButton = postElem.querySelector('#likeButton');
-				likeButton.addEventListener('click', e => {
-					e.preventDefault();
+			const likeButton = postElem.querySelector('#likeButton');
+			likeButton.addEventListener('click', e => {
+				e.preventDefault();
 
-					likePost(posts[i].author, posts[i]._id);
-				});
-
-				const dislikeButton = postElem.querySelector('#dislikeButton');
-				dislikeButton.addEventListener('click', e => {
-					e.preventDefault();
-
-					dislikePost(posts[i].author, posts[i]._id);
-				});
-
-				if(loggedUser === posts[i].author) {
-					const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
-					deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
-
-					const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
-					
-					deleteButton.addEventListener('click', e => {
-						e.preventDefault();
-
-						deletePost(posts[i].author, posts[i]._id);
-					});
-
-					const editButtonContainer = postElem.querySelector('#editButtonContainer');
-					editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
-
-					const editButton = editButtonContainer.querySelector('#editButton');
-
-					editButton.addEventListener('click', e => {
-						e.preventDefault();
-						
-						alert('edit');
-					});
+				if(typeof loggedUser === 'undefined') {
+					return alert('You must be logged in to use this feature');
 				}
+
+				likePost(posts[i].author, posts[i]._id);
+			});
+
+			const dislikeButton = postElem.querySelector('#dislikeButton');
+			dislikeButton.addEventListener('click', e => {
+				e.preventDefault();
+
+				if(typeof loggedUser === 'undefined') {
+					return alert('You must be logged in to use this feature');
+				}
+
+				dislikePost(posts[i].author, posts[i]._id);
+			});
+
+			if(loggedUser === posts[i].author) {
+				const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
+				deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
+
+				const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
+				
+				deleteButton.addEventListener('click', e => {
+					e.preventDefault();
+
+					deletePost(posts[i].author, posts[i]._id);
+				});
+
+				const editButtonContainer = postElem.querySelector('#editButtonContainer');
+				editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+
+				const editButton = editButtonContainer.querySelector('#editButton');
+
+				editButton.addEventListener('click', e => {
+					e.preventDefault();
+					
+					editPost(postElem, posts[i]._id);
+				});
 			}
 			
 			mediaContainer.appendChild(postElem);
@@ -145,10 +192,14 @@ async function getPosts() {
 		makePostForm.addEventListener('submit', async e => {
 			e.preventDefault();
 
+			if(typeof loggedUser === 'undefined') {
+				return alert('You must be logged in to use this feature');
+			}
+
 			const makePostInput = document.getElementById('makePostInput');
 
 			if(makePostInput.value.length > 300) {
-				
+				return alert('Post length exceeds 300 letter limit');
 			}
 
 			await axios.post('/api/' + getCookie('username') + '/posts', { content: makePostInput.value });
