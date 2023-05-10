@@ -20,6 +20,12 @@ body {
 .is-blue-color {
   color: #008dcc !important; }
 
+.is-red-color {
+  color: #f03a5f !important; }
+
+.is-dark {
+  background-color: #1e2021; }
+
 .is-light-blue-color {
   color: #9be0ff !important;
   font-weight: normal !important; }
@@ -68,6 +74,17 @@ body {
 ::placeholder {
   color: #b4b4b4 !important;
   opacity: 1 !important; }
+
+.profile-display-name {
+  color: white; }
+
+.profile-section {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  margin-top: 5.5rem !important; }
+
+.delete-confirmation {
+  border: 1px solid #f03a5f;
+  background-color: #ff4d52; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,

@@ -8,11 +8,7 @@
 
         <title>FinFeed</title>
 
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-		>
-        <link rel="stylesheet" href="profile/style.css">
+        <link rel="stylesheet" href="/style.css">
 
         <script
             src="https://kit.fontawesome.com/bee6c87f05.js"
@@ -24,7 +20,7 @@
 
 	<nav class="navbar is-fixed-top pl-6 pr-6 is-navbar-transparent columns pt-3" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
-			<a class="navbar-item" href="/"><img src="images/logo.png"></a>
+			<a class="navbar-item" href="/"><img src="/images/logo.png"></a>
 		</div>
 
 		<div class="navbar-menu">
@@ -45,20 +41,35 @@
 				<div class="buttons">
 					<a class="button is-info" href="/signup"><strong>Sign up</strong></a>
 					<a class="button is-light" href="/login">Log in</a>
+					<a class="button is-dark" href="https://www.github.com/sharkpause/FinFeed" target="_blank"><img src="/images/github-mark-white.png" class="mr-2"> Github</a>
 				</div>
 			</div>
 		</div>
 	</nav>
 
-	<div class="section columns is-centered profile-section">
+	<div class="section columns profile-section">
 		<div class="column">
-			<span class="profile-username title mr-2">Don the Shark</span>
-			<span class="subtitle is-white-text">@sharkPause</span>
+			<strong class="profile-display-name title mr-2 is-white-text" id="displayNameSection"></strong>
+			<span class="is-white-text" id="usernameSection">@</span>
+			<div>
+				<div class="is-pulled-right" id="deleteButtonContainer"></div>
+				<br>
+				<div class="is-pulled-right" id="editButtonContainer"></div>
+			</div>
 		<div>
+		<div class="column" style="margin-left: -0.6rem">
+			<span class="is-blue-color">Followers:&nbsp;</span>
+			<span id="followCount" class="is-white-text"></span>
+			<span class="is-blue-color ml-6">Number of posts:&nbsp;</span>
+			<span id="numPosts" class="is-white-text"></span>
+		</div>
 		<div class="column">
-			<p class="is-white-text" style="margin-left: -0.6rem">Bio: this is a bio lmaooo anyways I'm still horny as fuck this is a bio lmaooo anyways I'm still horny as fuckthis is a bio lmaooo anyways I'm still horny as fuckthis is a bio lmaooo anyways I'm still horny as fuckthis is a bio lmaooo anyways I'm still horny as fuckthis is a bio lmaooo anyways I'm still horny as fuckthis is a bio lmaooo anyways I'm still horny as fuck</p>
+			<p class="is-white-text" style="margin-left: -0.6rem" id="bioSection"></p>
 		</div>
 	</div>
+
+	<script src="/modules/profileLink.js"></script>
+	<script src="/profile/script.js"></script>
 
 </body>
 </html>

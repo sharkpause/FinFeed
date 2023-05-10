@@ -19,7 +19,7 @@
 
 	<nav class="navbar is-fixed-top pl-6 pr-6 is-navbar-transparent" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
-			<a class="navbar-item" href="/"><img src="../images/logo.png"></a>
+			<a class="navbar-item" href="/"><img src="/images/logo.png"></a>
 		</div>
 
 		<div class="navbar-menu">
@@ -40,6 +40,7 @@
 				<div class="buttons">
 					<a class="button is-info" href="/signup"><strong>Sign up</strong></a>
 					<a class="button is-light" href="/login">Log in</a>
+					<a class="button is-dark" href="https://www.github.com/sharkpause/FinFeed" target="_blank"><img src="/images/github-mark-white.png" class="mr-2"> Github</a>
 				</div>
 			</div>
 		</div>
@@ -52,7 +53,7 @@
 					<p class="is-size-2 has-text-centered mb-6 is-light-blue-color">Log into your FinFeed account</p>
 					<div class="has-text-centered">
 						<figure class="image is-256x256 is-inline-block mb-6">
-							<img src="../images/logo.png" alt="Logo">
+							<img src="/images/logo.png" alt="Logo">
 						</figure>
 					</div>
 					<form id="signupForm" method="post">
@@ -89,7 +90,8 @@
 		</div>
 	</section>
 
-	<script src="./request.js" type="module"></script>
+	<script src="/modules/profileLink.js"></script>
+	<script src="./script.js" type="module"></script>
 
 </body>
 </html>

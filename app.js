@@ -33,7 +33,7 @@ app.use('/api/signup', [signup, rateLimiter({
 );
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
-app.use('/api/user', accounts);
+app.use('/api/:username', accounts);
 app.use('/api/:username/posts', posts);
 app.use('/api/:username/posts/:postID/comments', comments);
 

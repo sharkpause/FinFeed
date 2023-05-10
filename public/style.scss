@@ -27,6 +27,14 @@ body {
 	color: #008dcc !important;
 }
 
+.is-red-color {
+	color: #f03a5f !important;
+}
+
+.is-dark {
+	background-color: rgb(30, 32, 33);
+}
+
 .is-light-blue-color {
 	color: #9be0ff !important;
 	font-weight: normal !important;
@@ -94,6 +102,20 @@ body {
 ::placeholder {
 	color: rgb(180, 180, 180) !important;
 	opacity: 1 !important;
+}
+
+.profile-display-name {
+	color: white;
+}
+
+.profile-section {
+	background-color: rgba(0, 0, 0, 0.5) !important;
+	margin-top: 5.5rem !important;
+}
+
+.delete-confirmation {
+	border: 1px solid #f03a5f;
+	background-color: #ff4d52;
 }
 
 @import "../node_modules/bulma/sass/utilities/_all.sass";

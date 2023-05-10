@@ -102,7 +102,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 					<div class="media-content media-left media-background" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
-								<strong class="is-white-text mr-2" id="displayName"></strong><small id="username">@</small>
+								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
 								<br>
 								<span id="postContent"></span>
 							</p>
@@ -126,6 +126,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 						<div class="media-right" id="editButtonContainer"></div>
 					</div>
 				</article>
+				<div class="delete-confirmation" id="deleteConfirmation">Are you sure you want to delete this?</div>
 			</div>`
 }
 
@@ -149,6 +150,7 @@ async function getPosts() {
 			
 			const username = mediaContent.querySelector('#username');
 			username.textContent += posts[i].author;
+			username.href = '/' + posts[i].author;
 			
 			const postContent = mediaContent.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
@@ -183,6 +185,8 @@ async function getPosts() {
 				
 				deleteButton.addEventListener('click', e => {
 					e.preventDefault();
+
+					
 
 					deletePost(posts[i].author, posts[i]._id);
 				});
