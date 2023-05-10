@@ -142,8 +142,9 @@ async function deletePost(req, res) {
 
 async function editPost(req, res) {
 	const { username, postID } = req.params;
+	const { content } = req.body;
 
-	if(!newContent) {
+	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 

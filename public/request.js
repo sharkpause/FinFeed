@@ -11,7 +11,7 @@ async function likePost(username, postID) {
 		location.reload();
 	} catch(err) {
 		console.log(err);
-		alert(err);a
+		alert(err);
 	}
 }
 
@@ -43,26 +43,41 @@ async function deletePost(username, postID) {
 async function editPost(postElem, postID) {
 	const mainContent = postElem.querySelector('#mainContent');
 
-	const beforeMainContent = postElem.querySelector('#mainContent').dataset.originalContent;
+	const beforeHTML = mainContent.innerHTML;
 	const beforeContent = postElem.querySelector('#postContent').textContent;
 
 	mainContent.innerHTML = createEditInput(beforeContent);
 
 	const cancelButton = mainContent.querySelector('#cancelButton');
-
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
 
-		mainContent.innerHTML = beforeMainContent.innerHTML;
+		mainContent.innerHTML = beforeHTML;
+	});
+
+	const editForm = mainContent.querySelector('#editForm');
+	editForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const editValue = mainContent.querySelector('#editPostInput').value;
+
+		try {
+			await axios.patch('/api/' + getCookie('username') + '/posts/' + postID, { content: editValue });
+
+			location.reload();
+		} catch(err) {
+			console.log(err);
+			alert(err);
+		}
 	});
 }
 
 function createEditInput(beforeContent) {
 	return `
-			<form method="post">
+			<form method="post" id="editForm">
 				<div class="field is-grouped">
 					<p class="control is-expanded">
-						<input type="text" class="input input-transparent" id="makePostInput" value="${beforeContent}">
+						<input type="text" class="input input-transparent" id="editPostInput" value="${beforeContent}">
 					</p>
 					<p class="control">
 						<button type="submit" class="button is-blue-color is-transparent-button">
@@ -120,6 +135,8 @@ async function getPosts() {
 
 		const mediaContainer = document.getElementById('mediaContainer');
 
+		const loggedUser = getCookie('username');
+
 		for(let i = 0; i < posts.length; ++i) {
 			const postElem = document.createElement('div');
 			postElem.innerHTML = createMediaObject(posts[i].likes.count, posts[i].dislikes.count, posts[i]._id);
@@ -135,8 +152,6 @@ async function getPosts() {
 			
 			const postContent = mediaContent.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
-
-			const loggedUser = getCookie('username');
 
 			const likeButton = postElem.querySelector('#likeButton');
 			likeButton.addEventListener('click', e => {
