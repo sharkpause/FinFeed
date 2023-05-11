@@ -40,7 +40,7 @@ async function deletePost(username, postID) {
 	}
 }
 
-async function editPost(postElem, postID) {
+async function editPost(postElem, postAuthor, postID) {
 	const mainContent = postElem.querySelector('#mainContent');
 
 	const beforeHTML = mainContent.innerHTML;
@@ -54,7 +54,7 @@ async function editPost(postElem, postID) {
 
 		mainContent.innerHTML = beforeHTML;
 
-		// TODO: add back the editing and deleting functionalities;
+		addPostInteractButtons(postElem, postAuthor, postID);
 	});
 
 	const editForm = mainContent.querySelector('#editForm');
@@ -130,6 +130,53 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 			</div>`
 }
 
+function addPostInteractButtons(postElem, postAuthor, postID) {
+	const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
+
+	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
+	
+	deleteButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		const deleteConfirmation = postElem.querySelector('#deleteConfirmation');
+		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
+		deleteConfirmation.innerHTML = `Are you sure you want to delete this post?
+			<span class="is-pulled-right">
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
+						<i class="fa-solid fa-check"></i>
+				</button>
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+						<i class="fa-solid fa-xmark"></i>
+				</button>
+			</span>`;
+
+		deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			deletePost(postAuthor, postID);
+		});
+
+		deleteConfirmation.querySelector('#cancelButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			deleteConfirmation.innerHTML = '';
+			deleteConfirmation.classList.remove('delete-confirmation');
+		});
+	});
+
+	const editButtonContainer = postElem.querySelector('#editButtonContainer');
+	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+
+	const editButton = editButtonContainer.querySelector('#editButton');
+
+	editButton.addEventListener('click', e => {
+		e.preventDefault();
+		
+		editPost(postElem, postAuthor, postID);
+	});
+}
+
 async function getPosts() {
 	try {
 		const posts = (await axios.get('/api/posts')).data.posts;
@@ -178,50 +225,7 @@ async function getPosts() {
 			});
 
 			if(loggedUser === posts[i].author) {
-				const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
-				deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
-
-				const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
-				
-				deleteButton.addEventListener('click', e => {
-					e.preventDefault();
-
-					const deleteConfirmation = postElem.querySelector('#deleteConfirmation');
-					deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
-					deleteConfirmation.innerHTML = `Are you sure you want to delete this post?
-						<span class="is-pulled-right">
-							<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
-									<i class="fa-solid fa-check"></i>
-							</button>
-							<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
-									<i class="fa-solid fa-xmark"></i>
-							</button>
-						</span>`;
-
-					deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
-						e.preventDefault();
-
-						deletePost(posts[i].author, posts[i]._id);
-					});
-
-					deleteConfirmation.querySelector('#cancelButton').addEventListener('click', e => {
-						e.preventDefault();
-
-						deleteConfirmation.innerHTML = '';
-						deleteConfirmation.classList.remove('delete-confirmation');
-					});
-				});
-
-				const editButtonContainer = postElem.querySelector('#editButtonContainer');
-				editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
-
-				const editButton = editButtonContainer.querySelector('#editButton');
-
-				editButton.addEventListener('click', e => {
-					e.preventDefault();
-					
-					editPost(postElem, posts[i]._id);
-				});
+				addPostInteractButtons(postElem, posts[i].author, posts[i]._id);
 			}
 			
 			mediaContainer.appendChild(postElem);
