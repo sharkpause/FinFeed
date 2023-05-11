@@ -53,6 +53,8 @@ async function editPost(postElem, postID) {
 		e.preventDefault();
 
 		mainContent.innerHTML = beforeHTML;
+
+		// TODO: add back the editing and deleting functionalities;
 	});
 
 	const editForm = mainContent.querySelector('#editForm');
@@ -99,10 +101,12 @@ function createEditInput(beforeContent) {
 function createMediaObject(likeCount, dislikeCount, postID) {
 	return `<div class="mt-6" id="${postID}">
 				<article class="media">
-					<div class="media-content media-left media-background" id="mainContent">
+					<div class="media-content media-background" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
+								<span class="is-pulled-right" id="deleteButtonContainer"></span>
+								<span class="is-pulled-right" id="editButtonContainer"></span>
 								<br>
 								<span id="postContent"></span>
 							</p>
@@ -121,12 +125,8 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 							</div>
 						</nav>
 					</div>
-					<div>
-						<div class="media-right" id="deleteButtonContainer"></div>
-						<div class="media-right" id="editButtonContainer"></div>
-					</div>
 				</article>
-				<div class="delete-confirmation" id="deleteConfirmation">Are you sure you want to delete this?</div>
+				<div id="deleteConfirmation"></div>
 			</div>`
 }
 
@@ -186,9 +186,30 @@ async function getPosts() {
 				deleteButton.addEventListener('click', e => {
 					e.preventDefault();
 
-					
+					const deleteConfirmation = postElem.querySelector('#deleteConfirmation');
+					deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
+					deleteConfirmation.innerHTML = `Are you sure you want to delete this post?
+						<span class="is-pulled-right">
+							<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
+									<i class="fa-solid fa-check"></i>
+							</button>
+							<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+									<i class="fa-solid fa-xmark"></i>
+							</button>
+						</span>`;
 
-					deletePost(posts[i].author, posts[i]._id);
+					deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
+						e.preventDefault();
+
+						deletePost(posts[i].author, posts[i]._id);
+					});
+
+					deleteConfirmation.querySelector('#cancelButton').addEventListener('click', e => {
+						e.preventDefault();
+
+						deleteConfirmation.innerHTML = '';
+						deleteConfirmation.classList.remove('delete-confirmation');
+					});
 				});
 
 				const editButtonContainer = postElem.querySelector('#editButtonContainer');

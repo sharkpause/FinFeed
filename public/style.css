@@ -37,6 +37,10 @@ body {
   background-color: rgba(0, 0, 0, 0.5) !important;
   border: none !important; }
 
+.is-completely-transparent-button {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: none !important; }
+
 .post-interact-button {
   background-color: rgba(0, 0, 0, 0);
   border: none;
@@ -85,6 +89,9 @@ body {
 .delete-confirmation {
   border: 1px solid #f03a5f;
   background-color: #ff4d52; }
+
+.clickable-button:hover {
+  cursor: pointer; }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
