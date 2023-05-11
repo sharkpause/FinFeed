@@ -27,7 +27,8 @@ async function deleteAccount(req, res) {
 	if(req.token.username !== user.username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to delete this account');
 	}
-	await Post.deleteMany({ authorID: user._id });
+
+	await Post.deleteMany({ author: username });
 	
 	const likedPosts = await Post.find({ 'likes.likers': { $elemMatch: { $eq: user.username } } } );
 
@@ -45,7 +46,7 @@ async function deleteAccount(req, res) {
 		dislikedPosts[i].save();
 	}
 	
-	await Comment.deleteMany({ authorID: user._id });
+	await Comment.deleteMany({ author: username });
 
 	const likedComments = await Comment.find({ 'likes.likers': { $elemMatch: { $eq: user.username } } } );
 
@@ -75,13 +76,27 @@ async function editAccount(req, res) {
 		throw new Unauthorized('You are not authorized to edit this account');
 	}
 
+	let editingContent = {};
+
+	if(req.body.username) {
+		editingContent.username = req.body.username;
+	}
+
 	if(req.body.password) {
 		const salt = await bcrypt.genSalt(10);
 		const hash = await bcrypt.hash(req.body.password, salt);
-		req.body.password = hash;
+		editingContent.password = hash;
 	}
 
-	await Account.updateOne({ username }, req.body);
+	if(req.body.displayName) {
+		editingContent = req.body.displayName;
+	}
+
+	if(req.body.bio) {
+		editingContent = req.body.bio;
+	}
+
+	await Account.updateOne({ username }, editingContent);
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully edited' });
 }

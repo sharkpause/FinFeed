@@ -50,23 +50,24 @@
 	<div class="section columns profile-section">
 		<div class="column">
 			<strong class="profile-display-name title mr-2 is-white-text" id="displayNameSection"></strong>
+
+			<div class="is-pulled-right" id="deleteButtonContainer"></div>
+			<div class="is-pulled-right" id="editButtonContainer"></div>
+
 			<span class="is-white-text" id="usernameSection">@</span>
-			<div>
-				<div class="is-pulled-right" id="deleteButtonContainer"></div>
-				<br>
-				<div class="is-pulled-right" id="editButtonContainer"></div>
-			</div>
 		<div>
 		<div class="column" style="margin-left: -0.6rem">
-			<span class="is-blue-color">Followers:&nbsp;</span>
-			<span id="followCount" class="is-white-text"></span>
-			<span class="is-blue-color ml-6">Number of posts:&nbsp;</span>
-			<span id="numPosts" class="is-white-text"></span>
+			<span class="is-blue-color subtitle">Followers:&nbsp;</span>
+			<span id="followCount" class="is-white-text subtitle"></span>
+			<span class="is-blue-color ml-6 subtitle">Number of posts:&nbsp;</span>
+			<span id="numPosts" class="is-white-text subtitle"></span>
 		</div>
 		<div class="column">
 			<p class="is-white-text" style="margin-left: -0.6rem" id="bioSection"></p>
 		</div>
 	</div>
+
+	<div id="deleteConfirmation"></div>
 
 	<script src="/modules/profileLink.js"></script>
 	<script src="/profile/script.js"></script>

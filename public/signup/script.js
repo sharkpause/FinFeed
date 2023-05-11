@@ -45,6 +45,8 @@ form.addEventListener('submit', async e => {
 		await axios.post('/api/signup', { username, password });
 
 		successText.textContent = 'Account successfully created!';
+
+		window.location.href = '/login';
 	} catch(err) {
 		if(err.response.status === 409) {
 			usernameError.textContent = 'Username is unavailable';
