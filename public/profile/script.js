@@ -3,7 +3,8 @@ const displayNameSection = document.getElementById('displayNameSection');
 const bioSection = document.getElementById('bioSection');
 const followCount = document.getElementById('followCount');
 const numPosts = document.getElementById('numPosts');
-const deleteConfirmation = document.getElementById('deleteConfirmation');
+const mainUserInfo = document.getElementById('mainUserInfo');
+const profileSection = document.getElementById('profileSection');
 
 async function setInfo() {
 	try {
@@ -21,7 +22,7 @@ async function setInfo() {
 			const deleteButtonContainer = document.getElementById('deleteButtonContainer');
 			const editButtonContainer = document.getElementById('editButtonContainer');
 
-			addAccountInteractButtons(editButtonContainer, deleteButtonContainer, deleteConfirmation, user.user.username);
+			addAccountInteractButtons(editButtonContainer, deleteButtonContainer,  user.user.username);
 		}
 	} catch(err) {
 		if(err.response) {
@@ -50,22 +51,26 @@ function getLastPart(url) {
 	  : parts[parts.length - 2]);
 }
 
-function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, deleteConfirmation, username) {
+function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, username) {
 	deleteButtonContainer.innerHTML = '<button class="post-interact-button subtitle is-white-text ml-3" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete account</button>';
 
-	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
+	const deleteButton = profileSection.querySelector('#deleteButton');
 	
 	deleteButton.addEventListener('click', e => {
 		e.preventDefault();
 
+		const deleteConfirmation = profileSection.querySelector('#deleteConfirmation');
+
 		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
 		deleteConfirmation.innerHTML = `Are you sure you want to delete your account?
 			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
+				<button id="confirmButton" class="is-white-text is-transparent-button clickable-button mr-2">
 						<i class="fa-solid fa-check"></i>
+						Yes
 				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+				<button id="cancelButton" class="is-white-text is-transparent-button clickable-button">
 						<i class="fa-solid fa-xmark"></i>
+						No
 				</button>
 			</span>`;
 
@@ -84,12 +89,12 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, d
 	});
 
 	editButtonContainer.innerHTML = '<button class="post-interact-button subtitle is-white-text" id="editButton"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit account</button>';
-	const editButton = editButtonContainer.querySelector('#editButton');
+	const editButton = profileSection.querySelector('#editButton');
 
 	editButton.addEventListener('click', e => {
 		e.preventDefault();
 		
-		editAccount(usernameContainer, displayContainer, bioContainer);
+		editAccount(editButtonContainer, deleteButtonContainer, username);
 	});
 }
 
@@ -118,8 +123,81 @@ async function deleteAccount(username) {
 	}
 }
 
-async function editAccount() {
-	// TODO: make this (t)werk
+async function editAccount(username) {
+	const beforeProfileSection = profileSection.innerHTML;
+
+	const displayNameSection = profileSection.querySelector('#displayNameSection');
+	const usernameSection = profileSection.querySelector('#usernameSection');
+	const editButtonContainer = profileSection.querySelector('#editButtonContainer');
+	const deleteButtonContainer = profileSection.querySelector('#deleteButtonContainer');
+	const followAndNumPosts = profileSection.querySelector('#followAndNumPosts');
+
+	const beforeDisplayName = displayNameSection.textContent;
+	const beforeUsername = usernameSection.textContent.slice(1);
+	const beforeBioSection = bioSection.textContent;
+
+	editButtonContainer.innerHTML = '';
+	deleteButtonContainer.innerHTML = '';
+
+	followAndNumPosts.innerHTML = '';
+
+	profileSection.innerHTML = `
+
+	<div>
+		<strong class="title is-white-text">Edit account information</strong>
+
+		<form id="editForm" method="post">
+			<div class="field mt-6">
+
+				<label class="label is-light-white-color">Display name</label>
+				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput">
+
+				<label class="label is-light-white-color mt-5">Username</label>
+				<input class="input input-transparent" type="text" placeholder="Username" value="${usernameSection.textContent.slice(1)}" id="usernameInput">
+
+				<label class="label is-light-white-color mt-5">Bio</label>
+				<input class="input input-transparent" placeholder="Bio" type="text" value="${bioSection.textContent}" id="bioInput">
+
+				<label class="label is-light-white-color mt-5">Password</label>
+				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput">
+
+				<label class="label is-light-white-color mt-5">Confirm Password</label>
+				<input class="input input-transparent" type="password" placeholder="Confirm password" id="confirmPasswordInput"">
+
+				<p class="control mt-6">
+					<button type="submit" class="button is-blue-color is-transparent-button mr-2">
+						<span class="icon mr-2">
+							<i class="fa-solid fa-check"></i>
+						</span>
+						Confirm and edit account info
+					</button>
+					<button id="cancelButton" class="button is-blue-color is-transparent-button">
+						<span class="icon mr-2">
+							<i class="fa-solid fa-xmark"></i>
+						</span>
+						Cancel
+					</button>
+				</p>
+
+			</div>
+		</form>
+	</div>`;
+
+	const cancelButton = document.getElementById('cancelButton');
+	cancelButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		profileSection.innerHTML = beforeProfileSection;
+
+		addAccountInteractButtons(editButtonContainer, deleteButtonContainer, username);
+	});
+
+	const editForm = profileSection.querySelector('#editForm');
+	editForm.addEventListener('submit', e => {
+		e.preventDefault();
+
+		alert('a');
+	});
 }
 
 setInfo();

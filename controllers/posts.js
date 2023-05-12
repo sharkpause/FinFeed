@@ -60,7 +60,9 @@ async function likePost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(req.token.username !== liker) {
+	const likerID = (await Account.findOne({ username: liker }))._id;
+
+	if(req.token.username !== liker || req.token.id !== String(likerID)) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + liker);
 	}
 
@@ -96,7 +98,9 @@ async function dislikePost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(req.token.username !== disliker) {
+	const dislikerID = (await Account.findOne({ username: disliker }))._id;
+
+	if(req.token.username !== disliker || req.token.id !== String(dislikerID)) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + disliker);
 	}
 

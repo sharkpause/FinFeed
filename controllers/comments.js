@@ -39,11 +39,11 @@ async function createComment(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
-	if(req.token.username !== commentator) {
+	const user = await Account.findOne({ commentator });
+
+	if(req.token.username !== commentator || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to create comments on the behalf of ' + commentator);
 	}
-
-	const user = await Account.findOne({ commentator });
 
 	const newComment = await Comment.create({
 		postID: postID,
@@ -65,7 +65,9 @@ async function likeComment(req, res) {
 
 	const comment = await Comment.findOne({ _id: commentID });
 
-	if(req.token.username !== liker) {
+	const likerID = (await Account.findOne({ username: liker }))._id;
+
+	if(req.token.username !== liker || req.token.id !== String(likerID)) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + username);
 	}
 
@@ -101,7 +103,9 @@ async function dislikeComment(req, res) {
 
 	const comment = await Comment.findOne({ _id: commentID });
 
-	if(req.token.username !== disliker) {
+	const dislikerID = (await Account.findOne({ username: disliker }))._id;	
+
+	if(req.token.username !== disliker || req.token.id !== String(dislikerID)) {
 		throw new Unauthorized('You are not authorized to like posts on behalf of ' + username);
 	}
 
@@ -113,8 +117,7 @@ async function dislikeComment(req, res) {
 
 		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully undisliked comment' });
 	} else {
-		++comment.dislikes.count;
-		comment.dislikes.dislikers.push(disliker);
+		++comment.dislikes.count; comment.dislikes.dislikers.push(disliker);
 
 		if(comment.likes.likers.includes(disliker)) {
 			--comment.likes.count;

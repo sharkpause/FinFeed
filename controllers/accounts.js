@@ -72,31 +72,31 @@ async function deleteAccount(req, res) {
 async function editAccount(req, res) {
 	const { username } = req.params;
 
-	if(req.token.username !== username) {
+	const user = await Account.findOne({ username });
+
+	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to edit this account');
 	}
 
-	let editingContent = {};
-
 	if(req.body.username) {
-		editingContent.username = req.body.username;
+		user.username = req.body.username;
 	}
 
 	if(req.body.password) {
 		const salt = await bcrypt.genSalt(10);
 		const hash = await bcrypt.hash(req.body.password, salt);
-		editingContent.password = hash;
+		user.password = hash;
 	}
 
 	if(req.body.displayName) {
-		editingContent = req.body.displayName;
+		user.displayName = req.body.displayName;
 	}
 
 	if(req.body.bio) {
-		editingContent = req.body.bio;
+		user.bio = req.body.bio;
 	}
 
-	await Account.updateOne({ username }, editingContent);
+	await user.save();
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully edited' });
 }
