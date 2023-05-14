@@ -6,6 +6,11 @@ const numPosts = document.getElementById('numPosts');
 const mainUserInfo = document.getElementById('mainUserInfo');
 const profileSection = document.getElementById('profileSection');
 
+let username;
+
+let beforeDisplayName;
+let beforeBioSection;
+
 async function setInfo() {
 	try {
 		const usernameURL = getLastPart(window.location.href);
@@ -22,7 +27,9 @@ async function setInfo() {
 			const deleteButtonContainer = document.getElementById('deleteButtonContainer');
 			const editButtonContainer = document.getElementById('editButtonContainer');
 
-			addAccountInteractButtons(editButtonContainer, deleteButtonContainer,  user.user.username);
+			username = user.user.username;
+
+			addAccountInteractButtons(editButtonContainer, deleteButtonContainer);
 		}
 	} catch(err) {
 		if(err.response) {
@@ -51,7 +58,7 @@ function getLastPart(url) {
 	  : parts[parts.length - 2]);
 }
 
-function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, username) {
+function addAccountInteractButtons(editButtonContainer, deleteButtonContainer) {
 	deleteButtonContainer.innerHTML = '<button class="post-interact-button subtitle is-white-text ml-3" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete account</button>';
 
 	const deleteButton = profileSection.querySelector('#deleteButton');
@@ -77,7 +84,7 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, u
 		deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
 			e.preventDefault();
 
-			deleteAccount(username);
+			deleteAccount();
 		});
 
 		deleteConfirmation.querySelector('#cancelButton').addEventListener('click', e => {
@@ -93,12 +100,12 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer, u
 
 	editButton.addEventListener('click', e => {
 		e.preventDefault();
-		
-		editAccount(editButtonContainer, deleteButtonContainer, username);
+
+		editAccount(editButtonContainer, deleteButtonContainer);
 	});
 }
 
-async function deleteAccount(username) {
+async function deleteAccount() {
 	try {
 		await axios.delete('/api/' + username);
 
@@ -123,7 +130,7 @@ async function deleteAccount(username) {
 	}
 }
 
-async function editAccount(username) {
+function editAccount() {
 	const beforeProfileSection = profileSection.innerHTML;
 
 	const displayNameSection = profileSection.querySelector('#displayNameSection');
@@ -132,9 +139,9 @@ async function editAccount(username) {
 	const deleteButtonContainer = profileSection.querySelector('#deleteButtonContainer');
 	const followAndNumPosts = profileSection.querySelector('#followAndNumPosts');
 
-	const beforeDisplayName = displayNameSection.textContent;
-	const beforeUsername = usernameSection.textContent.slice(1);
-	const beforeBioSection = bioSection.textContent;
+	beforeDisplayName = displayNameSection.textContent;
+	beforeUsername = usernameSection.textContent.slice(1);
+	beforeBioSection = bioSection.textContent;
 
 	editButtonContainer.innerHTML = '';
 	deleteButtonContainer.innerHTML = '';
@@ -152,9 +159,6 @@ async function editAccount(username) {
 				<label class="label is-light-white-color">Display name</label>
 				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput">
 
-				<label class="label is-light-white-color mt-5">Username</label>
-				<input class="input input-transparent" type="text" placeholder="Username" value="${usernameSection.textContent.slice(1)}" id="usernameInput">
-
 				<label class="label is-light-white-color mt-5">Bio</label>
 				<input class="input input-transparent" placeholder="Bio" type="text" value="${bioSection.textContent}" id="bioInput">
 
@@ -162,7 +166,7 @@ async function editAccount(username) {
 				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput">
 
 				<label class="label is-light-white-color mt-5">Confirm Password</label>
-				<input class="input input-transparent" type="password" placeholder="Confirm password" id="confirmPasswordInput"">
+				<input class="input input-transparent" type="password" placeholder="Confirm password (this input will only function if the password input above is filled)" id="confirmPasswordInput"">
 
 				<p class="control mt-6">
 					<button type="submit" class="button is-blue-color is-transparent-button mr-2">
@@ -189,14 +193,32 @@ async function editAccount(username) {
 
 		profileSection.innerHTML = beforeProfileSection;
 
-		addAccountInteractButtons(editButtonContainer, deleteButtonContainer, username);
+		addAccountInteractButtons(editButtonContainer, deleteButtonContainer);
 	});
 
 	const editForm = profileSection.querySelector('#editForm');
-	editForm.addEventListener('submit', e => {
+	editForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
-		alert('a');
+		const newDisplayName = editForm.querySelector('#displayNameInput').value;
+		const newBio = editForm.querySelector('#bioInput').value;
+
+		const requestBody = {};
+
+		if(beforeDisplayName !== newDisplayName) {
+			requestBody.displayName = newDisplayName;
+		}
+		if(beforeBioSection !== newBio) {
+			requestBody.bio = newBio;
+		}
+
+		try {
+			await axios.patch('/api/' + username, requestBody);
+			location.reload();
+		} catch(err) {
+			alert('Something went wrong');
+			console.log(err);
+		}
 	});
 }
 
