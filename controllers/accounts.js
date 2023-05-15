@@ -83,9 +83,7 @@ async function editAccount(req, res) {
 	}
 
 	if(req.body.password) {
-		const salt = await bcrypt.genSalt(10);
-		const hash = await bcrypt.hash(req.body.password, salt);
-		user.password = hash;
+		user.password = req.body.password;
 	}
 
 	if(req.body.displayName) {

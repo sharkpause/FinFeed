@@ -167,6 +167,7 @@ function editAccount() {
 
 				<label class="label is-light-white-color mt-5">Confirm Password</label>
 				<input class="input input-transparent" type="password" placeholder="Confirm password (this input will only function if the password input above is filled)" id="confirmPasswordInput"">
+				<p id="passwordError"></p>
 
 				<p class="control mt-6">
 					<button type="submit" class="button is-blue-color is-transparent-button mr-2">
@@ -202,6 +203,8 @@ function editAccount() {
 
 		const newDisplayName = editForm.querySelector('#displayNameInput').value;
 		const newBio = editForm.querySelector('#bioInput').value;
+		
+		const newPassword = editForm.querySelector('#passwordInput').value;
 
 		const requestBody = {};
 
@@ -210,6 +213,20 @@ function editAccount() {
 		}
 		if(beforeBioSection !== newBio) {
 			requestBody.bio = newBio;
+		}
+
+		if(newPassword.length > 0) {
+			const confirmPassword = editForm.querySelector('#confirmPasswordInput');
+
+			if(newPassword === confirmPassword.value) {
+				requestBody.password = newPassword;
+			} else {
+				confirmPassword.classList.add('input-error');
+
+				const passwordError = editForm.querySelector('#passwordError');
+				passwordError.classList.add('is-red-color');
+				return passwordError.textContent = 'Password does not match, please try again';
+			}
 		}
 
 		try {
