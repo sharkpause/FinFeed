@@ -127,6 +127,10 @@ body {
 	cursor: pointer;
 }
 
+.ml-0 {
+	margin-left: 0rem !important;
+}
+
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
 @import "../node_modules/bulma/sass/elements/_all.sass";

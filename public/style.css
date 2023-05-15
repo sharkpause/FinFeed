@@ -93,6 +93,9 @@ body {
 .clickable-button:hover {
   cursor: pointer; }
 
+.ml-0 {
+  margin-left: 0rem !important; }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name, .pagination-previous,

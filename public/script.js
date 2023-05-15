@@ -113,7 +113,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 						</div>
 						<nav class="level is-mobile">
 							<div class="level-left columns is-variable is-2">
-								<a class="level-item column">
+								<a class="level-item column" id="commentButton">
 									<span class="icon is-small"><i class="fas fa-comment"></i></span>
 								</a>
 								<a class="level-item column" id="likeButton">
@@ -126,8 +126,37 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 						</nav>
 					</div>
 				</article>
-				<div id="deleteConfirmation"></div>
+				<div id="underMedia"></div>
 			</div>`
+}
+
+function createCommentObject(likeCount, dislikeCount, commentID) {
+return `<div class="mt-6" id="${commentID}">
+			<article class="media">
+				<div class="media-content media-background" id="mainContent">
+					<div class="content">
+						<p class="is-white-text" id="mediaContent">
+							<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
+							<span class="is-pulled-right" id="deleteButtonContainer"></span>
+							<span class="is-pulled-right" id="editButtonContainer"></span>
+							<br>
+							<span id="commentContent"></span>
+						</p>
+					</div>
+					<nav class="level is-mobile">
+						<div class="level-left columns is-variable is-2 ml-0">
+							<a class="level-item column" id="likeButton">
+								<span class="icon is-small"><i class="fas fa-thumbs-up"></i>&nbsp;${likeCount}</span>
+							</a>
+							<a class="level-item column" id="dislikeButton">
+								<span class="icon is-small"><i class="fas fa-thumbs-down"></i>&nbsp;${dislikeCount}</span>
+							</a>
+						</div>
+					</nav>
+				</div>
+			</article>
+			<div id="underMedia"></div>
+		</div>`
 }
 
 function addPostInteractButtons(postElem, postAuthor, postID) {
@@ -139,9 +168,9 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	deleteButton.addEventListener('click', e => {
 		e.preventDefault();
 
-		const deleteConfirmation = postElem.querySelector('#deleteConfirmation');
-		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
-		deleteConfirmation.innerHTML = `Are you sure you want to delete this post?
+		const underMedia = postElem.querySelector('#underMedia');
+		underMedia.classList.add('delete-confirmation', 'is-white-text');
+		underMedia.innerHTML = `Are you sure you want to delete this post?
 			<span class="is-pulled-right">
 				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
 						<i class="fa-solid fa-check"></i>
@@ -151,17 +180,17 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 				</button>
 			</span>`;
 
-		deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
+		underMedia.querySelector('#confirmButton').addEventListener('click', e => {
 			e.preventDefault();
 
 			deletePost(postAuthor, postID);
 		});
 
-		deleteConfirmation.querySelector('#cancelButton').addEventListener('click', e => {
+		underMedia.querySelector('#cancelButton').addEventListener('click', e => {
 			e.preventDefault();
 
-			deleteConfirmation.innerHTML = '';
-			deleteConfirmation.classList.remove('delete-confirmation');
+			underMedia.innerHTML = '';
+			underMedia.classList.remove('delete-confirmation');
 		});
 	});
 
@@ -188,16 +217,20 @@ async function getPosts() {
 		for(let i = 0; i < posts.length; ++i) {
 			const postElem = document.createElement('div');
 			postElem.innerHTML = createMediaObject(posts[i].likes.count, posts[i].dislikes.count, posts[i]._id);
+
+			const posterUsername = posts[i].author;
+			const posterDisplayName = posts[i].authorDisplay;
+			const postID = posts[i]._id;
 			
 			// check if logged in
 			const mediaContent = postElem.querySelector('#mediaContent');
 			
 			const displayName = mediaContent.querySelector('#displayName');
-			displayName.textContent = posts[i].authorDisplay;
+			displayName.textContent = posterDisplayName;
 			
 			const username = mediaContent.querySelector('#username');
-			username.textContent += posts[i].author;
-			username.href = '/' + posts[i].author;
+			username.textContent += posterUsername;
+			username.href = '/' + posterUsername;
 			
 			const postContent = mediaContent.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
@@ -210,7 +243,7 @@ async function getPosts() {
 					return alert('You must be logged in to use this feature');
 				}
 
-				likePost(posts[i].author, posts[i]._id);
+				likePost(posterUsername, postID);
 			});
 
 			const dislikeButton = postElem.querySelector('#dislikeButton');
@@ -221,11 +254,85 @@ async function getPosts() {
 					return alert('You must be logged in to use this feature');
 				}
 
-				dislikePost(posts[i].author, posts[i]._id);
+				dislikePost(posterUsername, postID);
 			});
 
-			if(loggedUser === posts[i].author) {
-				addPostInteractButtons(postElem, posts[i].author, posts[i]._id);
+			const commentButton = postElem.querySelector('#commentButton');
+			commentButton.addEventListener('click', async e => {
+				e.preventDefault();
+
+				if(typeof loggedUser === 'undefined') {
+					return alert('You must be logged into use this feature');
+				}
+
+				const underMedia = postElem.querySelector('#underMedia');
+
+				if(underMedia.innerHTML === '') {
+					underMedia.innerHTML = `
+						<div class="media-background">
+							<form method="post" id="commentForm">
+								<div class="field is-grouped">
+									<p class="control is-expanded">
+										<input class="input input-transparent" placeholder="What do you think about this post?" id="commentInput">
+									</p>
+									<p class="control">
+										<button type="submit" class="button is-blue-color is-transparent-button">
+											<span class="icon">
+												<i class="fas fa-paper-plane"></i>
+											</span>
+										</button>
+									</p>
+								</div>
+							</form>
+							<div id="commentSection">
+							</div>
+						</div>
+					`;
+
+					const commentForm = underMedia.querySelector('#commentForm');
+					commentForm.addEventListener('submit', async e => {
+						e.preventDefault();
+
+						const commentInput = commentForm.querySelector('#commentInput').value;
+						if(commentInput.length > 0) {
+							try {
+								await axios.post('/api/' + posterUsername + '/posts/' + postID + '/comments', { commentator: loggedUser, content: commentInput });
+
+								location.reload();
+							} catch(err) {
+								alert('Something went wrong');
+								console.log(err);
+							}
+						}
+					});
+
+
+					const comments = (await axios.get('/api/' + posterUsername + '/posts/' + postID + '/comments')).data.comments; 
+
+					for(let i = 0; i < comments.length; ++i) {
+						const commentSection = underMedia.querySelector('#commentSection');
+						commentSection.innerHTML = createCommentObject(comments[i].likes.count, comments[i].dislikes.count, comments[i]._id);
+
+						const displayNameComment = commentSection.querySelector('#displayName');
+						displayNameComment.textContent = comments[i].authorDisplay;
+
+						const usernameComment = commentSection.querySelector('#username');
+						usernameComment.textContent = '@' + comments[i].author;
+
+						const contentComment = commentSection.querySelector('#commentContent');
+						contentComment.textContent = comments[i].content;
+
+						// TODO: Make like, dislike, edit comment, delete comment button
+					}
+				} else {
+					underMedia.classList.remove('delete-confirmation');
+					underMedia.classList.remove('is-white-text');
+					underMedia.innerHTML = '';
+				}
+			});
+
+			if(loggedUser === posterUsername) {
+				addPostInteractButtons(postElem, posterUsername, postID);
 			}
 			
 			mediaContainer.appendChild(postElem);
