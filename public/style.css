@@ -23,6 +23,9 @@ body {
 .is-red-color {
   color: #f03a5f !important; }
 
+.is-gray-color {
+  color: gray !important; }
+
 .is-dark {
   background-color: #1e2021; }
 

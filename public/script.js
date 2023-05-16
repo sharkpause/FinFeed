@@ -80,7 +80,7 @@ async function deleteComment(username, postID, commentID) {
 	}
 }
 
-async function editPost(postElem, postAuthor, postID) {
+function editPost(postElem, postAuthor, postID) {
 	const mainContent = postElem.querySelector('#mainContent');
 
 	const beforeHTML = mainContent.innerHTML;
@@ -105,6 +105,40 @@ async function editPost(postElem, postAuthor, postID) {
 
 		try {
 			await axios.patch('/api/' + loggedUser + '/posts/' + postID, { content: editValue });
+
+			location.reload();
+		} catch(err) {
+			console.log(err);
+			alert(err);
+		}
+	});
+}
+
+function editComment(commentElem, postAuthor, postID, commentID) {
+	const mainContent = commentElem.querySelector('#mainContent');
+
+	const beforeHTML = mainContent.innerHTML;
+	const beforeContent = commentElem.querySelector('#commentContent').textContent;
+
+	mainContent.innerHTML = createEditInput(beforeContent);
+
+	const cancelButton = mainContent.querySelector('#cancelButton');
+	cancelButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		mainContent.innerHTML = beforeHTML;
+
+		addCommentInteractButtons(commentElem, postAuthor, postID, commentID);
+	});
+
+	const editForm = mainContent.querySelector('#editForm');
+	editForm.addEventListener('submit', async e => {
+		e.preventDefault();
+
+		const editValue = mainContent.querySelector('#editPostInput').value;
+
+		try {
+			await axios.patch('/api/' + loggedUser + '/posts/' + postID + '/comments/' + commentID, { content: editValue });
 
 			location.reload();
 		} catch(err) {
@@ -147,6 +181,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
 								<span class="is-pulled-right" id="deleteButtonContainer"></span>
 								<span class="is-pulled-right" id="editButtonContainer"></span>
+								<span class="is-pulled-right is-gray-color" id="editedText"></span>
 								<br>
 								<span id="postContent"></span>
 							</p>
@@ -179,6 +214,7 @@ return `<div class="mt-6" id="${commentID}">
 							<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
 							<span class="is-pulled-right" id="deleteButtonContainer"></span>
 							<span class="is-pulled-right" id="editButtonContainer"></span>
+							<span class="is-pulled-right is-gray-color" id="editedText"></span>
 							<br>
 							<span id="commentContent"></span>
 						</p>
@@ -246,7 +282,7 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	});
 }
 
-function addCommentInteractButtons(commentElem, postID, commentAuthor, commentID) {
+function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 	const deleteButtonContainer = commentElem.querySelector('#deleteButtonContainer');
 	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
 
@@ -270,7 +306,7 @@ function addCommentInteractButtons(commentElem, postID, commentAuthor, commentID
 		underMedia.querySelector('#confirmButton').addEventListener('click', e => {
 			e.preventDefault();
 
-			deleteComment(commentAuthor, postID, commentID);
+			deleteComment(postAuthor, postID, commentID);
 		});
 
 		underMedia.querySelector('#cancelButton').addEventListener('click', e => {
@@ -279,6 +315,17 @@ function addCommentInteractButtons(commentElem, postID, commentAuthor, commentID
 			underMedia.innerHTML = '';
 			underMedia.classList.remove('delete-confirmation');
 		});
+	});
+
+	const editButtonContainer = commentElem.querySelector('#editButtonContainer');
+	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+
+	const editButton = editButtonContainer.querySelector('#editButton');
+
+	editButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		editComment(commentElem, postAuthor, postID, commentID);
 	});
 }
 
@@ -308,6 +355,15 @@ async function getPosts() {
 			
 			const postContent = mediaContent.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
+
+			if(posts[i].edited === true) {
+				const editedText = mediaContent.querySelector('#editedText');
+				editedText.textContent = '(edited)';
+
+				if(loggedUser === posterUsername) {
+					editedText.classList.add('mr-6');
+				}
+			}
 
 			const likeButton = postElem.querySelector('#likeButton');
 			likeButton.addEventListener('click', e => {
@@ -398,6 +454,15 @@ async function getPosts() {
 
 						const contentComment = commentElem.querySelector('#commentContent');
 						contentComment.textContent = comments[i].content;
+						
+						if(comments[i].edited === true) {
+							const editedText = commentElem.querySelector('#editedText');
+							editedText.textContent = '(edited)';
+
+							if(loggedUser === posterUsername) {
+								editedText.classList.add('mr-6');
+							}
+						}
 
 						commentElem.querySelector('#likeButton').addEventListener('click', e => {
 							e.preventDefault();
@@ -419,11 +484,9 @@ async function getPosts() {
 							dislikeComment(posterUsername, postID, comments[i]._id);
 						});
 
-						addCommentInteractButtons(commentElem, postID, comments[i].author, comments[i]._id);
+						addCommentInteractButtons(commentElem, posterUsername, postID, comments[i]._id);
 
 						commentSection.appendChild(commentElem);
-
-						// TODO: Make like, dislike, edit comment, delete comment button
 					}
 				} else {
 					underMedia.classList.remove('delete-confirmation');
