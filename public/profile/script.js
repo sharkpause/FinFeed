@@ -11,6 +11,8 @@ let username;
 let beforeDisplayName;
 let beforeBioSection;
 
+// Display posts on the profile page
+
 async function setInfo() {
 	try {
 		const usernameURL = getLastPart(window.location.href);

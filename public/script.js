@@ -4,25 +4,49 @@ function getCookie(name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+const loggedUser = getCookie('username');
+
 async function likePost(username, postID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/like', { liker: getCookie('username') });
+		await axios.patch('/api/' + username + '/posts/' + postID + '/like', { liker: loggedUser });
 
 		location.reload();
 	} catch(err) {
 		console.log(err);
-		alert(err);
+		alert('Something went wrong');
+	}
+}
+
+async function likeComment(username, postID, commentID) {
+	try {
+		await axios.patch('/api/' + username + '/posts/' + postID + '/comments/' + commentID + '/like', { liker: loggedUser });
+
+		location.reload();
+	} catch(err) {
+		console.log(err);
+		alert('Something went wrong');
 	}
 }
 
 async function dislikePost(username, postID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/dislike', { disliker: getCookie('username') });
+		await axios.patch('/api/' + username + '/posts/' + postID + '/dislike', { disliker: loggedUser });
 
 		location.reload();
 	} catch(err) {
 		console.log(err);
-		alert(err);
+		alert('Something went wrong');
+	}
+}
+
+async function dislikeComment(username, postID, commentID) {
+	try {
+		await axios.patch('/api/' + username + '/posts/' + postID + '/comments/' + commentID + '/dislike', { disliker: loggedUser });
+
+		location.reload();
+	} catch(err) {
+		console.log(err);
+		alert('Something went wrong');
 	}
 }
 
@@ -35,6 +59,22 @@ async function deletePost(username, postID) {
 		if(err.response.status === 401) {
 			alert('You are not authorized to delete this post');
 		} else {
+			console.log(err);
+			alert('Something went wrong');
+		}
+	}
+}
+
+async function deleteComment(username, postID, commentID) {
+	try {
+		await axios.delete('/api/' + username + '/posts/' + postID + '/comments/' + commentID);
+
+		location.reload();
+	} catch(err) {
+		if(err.response.status === 401) {
+			alert('You are not authorized to delete this post');
+		} else {
+			console.log(err);
 			alert('Something went wrong');
 		}
 	}
@@ -64,7 +104,7 @@ async function editPost(postElem, postAuthor, postID) {
 		const editValue = mainContent.querySelector('#editPostInput').value;
 
 		try {
-			await axios.patch('/api/' + getCookie('username') + '/posts/' + postID, { content: editValue });
+			await axios.patch('/api/' + loggedUser + '/posts/' + postID, { content: editValue });
 
 			location.reload();
 		} catch(err) {
@@ -206,13 +246,47 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	});
 }
 
+function addCommentInteractButtons(commentElem, postID, commentAuthor, commentID) {
+	const deleteButtonContainer = commentElem.querySelector('#deleteButtonContainer');
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
+
+	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
+	
+	deleteButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		const underMedia = commentElem.querySelector('#underMedia');
+		underMedia.classList.add('delete-confirmation', 'is-white-text');
+		underMedia.innerHTML = `Are you sure you want to delete this comment?
+			<span class="is-pulled-right">
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
+						<i class="fa-solid fa-check"></i>
+				</button>
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+						<i class="fa-solid fa-xmark"></i>
+				</button>
+			</span>`;
+
+		underMedia.querySelector('#confirmButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			deleteComment(commentAuthor, postID, commentID);
+		});
+
+		underMedia.querySelector('#cancelButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			underMedia.innerHTML = '';
+			underMedia.classList.remove('delete-confirmation');
+		});
+	});
+}
+
 async function getPosts() {
 	try {
 		const posts = (await axios.get('/api/posts')).data.posts;
 
 		const mediaContainer = document.getElementById('mediaContainer');
-
-		const loggedUser = getCookie('username');
 
 		for(let i = 0; i < posts.length; ++i) {
 			const postElem = document.createElement('div');
@@ -309,18 +383,45 @@ async function getPosts() {
 
 					const comments = (await axios.get('/api/' + posterUsername + '/posts/' + postID + '/comments')).data.comments; 
 
-					for(let i = 0; i < comments.length; ++i) {
-						const commentSection = underMedia.querySelector('#commentSection');
-						commentSection.innerHTML = createCommentObject(comments[i].likes.count, comments[i].dislikes.count, comments[i]._id);
+					const commentSection = underMedia.querySelector('#commentSection');
 
-						const displayNameComment = commentSection.querySelector('#displayName');
+					for(let i = 0; i < comments.length; ++i) {
+						const commentElem = document.createElement('div');
+						commentElem.innerHTML = createCommentObject(comments[i].likes.count, comments[i].dislikes.count, comments[i]._id);
+
+						const displayNameComment = commentElem.querySelector('#displayName');
 						displayNameComment.textContent = comments[i].authorDisplay;
 
-						const usernameComment = commentSection.querySelector('#username');
+						const usernameComment = commentElem.querySelector('#username');
 						usernameComment.textContent = '@' + comments[i].author;
+						usernameComment.href = '/' + comments[i].author;
 
-						const contentComment = commentSection.querySelector('#commentContent');
+						const contentComment = commentElem.querySelector('#commentContent');
 						contentComment.textContent = comments[i].content;
+
+						commentElem.querySelector('#likeButton').addEventListener('click', e => {
+							e.preventDefault();
+
+							if(typeof loggedUser === 'undefined') {
+								return alert('You must be logged in to use this feature');
+							}
+
+							likeComment(posterUsername, postID, comments[i]._id);
+						});
+
+						commentElem.querySelector('#dislikeButton').addEventListener('click', e => {
+							e.preventDefault();
+
+							if(typeof loggedUser === 'undefined') {
+								return alert('You must be logged in to use this feature');
+							}
+
+							dislikeComment(posterUsername, postID, comments[i]._id);
+						});
+
+						addCommentInteractButtons(commentElem, postID, comments[i].author, comments[i]._id);
+
+						commentSection.appendChild(commentElem);
 
 						// TODO: Make like, dislike, edit comment, delete comment button
 					}
@@ -353,7 +454,7 @@ async function getPosts() {
 				return alert('Post length exceeds 300 letter limit');
 			}
 
-			await axios.post('/api/' + getCookie('username') + '/posts', { content: makePostInput.value });
+			await axios.post('/api/' + loggedUser + '/posts', { content: makePostInput.value });
 
 			location.reload();
 
