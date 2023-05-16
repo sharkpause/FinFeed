@@ -11,8 +11,6 @@ let username;
 let beforeDisplayName;
 let beforeBioSection;
 
-// TODO: Display posts on the profile page
-
 async function setInfo() {
 	try {
 		const usernameURL = getLastPart(window.location.href);
@@ -574,7 +572,7 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 
 async function getPosts() {
 	try {
-		const posts = (await axios.get('/api/posts')).data.posts;
+		const posts = (await axios.get('/api/' + loggedUser + '/posts')).data.posts;
 
 		const mediaContainer = document.getElementById('mediaContainer');
 
@@ -586,7 +584,6 @@ async function getPosts() {
 			const posterDisplayName = posts[i].authorDisplay;
 			const postID = posts[i]._id;
 			
-			// check if logged in
 			const mediaContent = postElem.querySelector('#mediaContent');
 			
 			const displayName = mediaContent.querySelector('#displayName');
@@ -771,6 +768,8 @@ async function getPosts() {
 	}
 }
 
-getPosts();
+if(typeof loggedUser !== 'undefined') {
+	getPosts();
+}
 
 setInfo();

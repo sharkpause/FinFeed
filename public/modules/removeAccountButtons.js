@@ -1,15 +1,32 @@
 const signupButton = document.getElementById('signupButton');
 const loginButton = document.getElementById('loginButton');
 
-function getCookie(name) {
-	const value = `; ${document.cookie}`;
-	const parts = value.split(`; ${name}=`);
-	if (parts.length === 2) return parts.pop().split(';').shift();
-}
-
-if(typeof getCookie('username') !== 'undefined') {
+if(typeof loggedUser !== 'undefined') {
 	signupButton.innerHTML = '';
 	signupButton.outerHTML = '';
 	loginButton.innerHTML = '';
 	loginButton.outerHTML = '';
+	
+	const logoutButton = document.getElementById('logoutButton');
+	logoutButton.textContent = 'Log out';
+	logoutButton.addEventListener('click', async e => {
+		e.preventDefault();
+
+		const cookies = document.cookie.split(";");
+
+		for (let i = 0; i < cookies.length; i++) {
+		  const cookie = cookies[i];
+		  const eqPos = cookie.indexOf("=");
+		  const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+		  document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+		}
+
+		await axios.delete('/api/' + loggedUser + '/logout');
+
+		location.reload();
+	});
+} else {
+	logoutButton.classList.remove('button');
+	logoutButton.classList.remove('is-white');
+	logoutButton.style.visibility = 'hidden';
 }

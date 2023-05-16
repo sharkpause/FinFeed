@@ -45,6 +45,8 @@ form.addEventListener('submit', async e => {
 		const response = await axios.post('/api/login', { username, password });
 
 		successText.textContent = 'Succesfully logged into account';
+
+		window.location.href = '/';
 	} catch(err) {
 		if(err.response.status === 401) {
 			return passwordError.textContent = 'Either username or password is wrong, please try again';
