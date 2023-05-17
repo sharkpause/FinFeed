@@ -3,7 +3,7 @@ const router = require('express').Router({ mergeParams: true });
 const validateParams = require('../middleware/params');
 const auth = require('../middleware/auth');
 
-const { getAccount, deleteAccount, editAccount, followAccount } = require('../controllers/accounts');
+const { getAccount, deleteAccount, editAccount, followAccount, logOut } = require('../controllers/accounts');
 
 router.use(validateParams);
 
@@ -14,5 +14,8 @@ router.route('/')
 
 router.route('/follow')
 	.patch(auth, followAccount);
+
+router.route('/logout')
+	.delete(logOut);
 
 module.exports = router;

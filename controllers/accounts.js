@@ -134,4 +134,10 @@ async function followAccount(req, res) {
 	}
 }
 
-module.exports = { getAccount, deleteAccount, editAccount, followAccount };
+function logOut(req, res) {
+	res.clearCookie('jwtToken');
+	res.clearCookie('username');
+	res.end();
+}
+
+module.exports = { getAccount, deleteAccount, editAccount, followAccount, logOut };

@@ -42,6 +42,10 @@ const CommentSchema = mongoose.Schema({
 			type: String,
 			required: true
 		}]
+	},
+	edited: {
+		type: Boolean,
+		default: false
 	}
 });
 

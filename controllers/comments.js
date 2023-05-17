@@ -39,7 +39,7 @@ async function createComment(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 
-	const user = await Account.findOne({ commentator });
+	const user = await Account.findOne({ username: commentator });
 
 	if(req.token.username !== commentator || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to create comments on the behalf of ' + commentator);
@@ -131,7 +131,9 @@ async function dislikeComment(req, res) {
 }
 
 async function deleteComment(req, res) {
-	const { commentID } = req.params;
+	const { username, commentID } = req.params;
+
+	const user = await Account.findOne({ username });
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to delete comments on behalf of ' + username);
@@ -149,16 +151,19 @@ async function deleteComment(req, res) {
 
 async function editComment(req, res) {
 	const { username, commentID } = req.params;
+	const { content } = req.body;
 
-	if(!newContent) {
+	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
 	}
+
+	const user = await Account.findOne({ username });
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	await Comment.updateOne({ _id: commentID }, { content });
+	await Comment.updateOne({ _id: commentID }, { edited: true, content });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited comment' });
 }

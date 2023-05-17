@@ -158,7 +158,7 @@ async function editPost(req, res) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	await Post.updateOne({ _id: postID }, { content });
+	await Post.updateOne({ _id: postID }, { edited: true, content });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited post' });
 }
