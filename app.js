@@ -26,11 +26,18 @@ app.set('trust proxy', 1);
 
 app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
 
-app.use('/api/signup', [signup, rateLimiter({
+app.use('/api/signup', rateLimiter({
+	windowMs: 15 * 60 * 1000,
+	max: 10
+}));
+
+app.use('/api/', rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 1, // limit each IP to 1 request per windowMs
-  })]
+    max: 100, // limit each IP to 50 request per windowMs
+  })
 );
+
+app.use('/api/signup', signup);
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
 app.use('/api/:username', accounts);
