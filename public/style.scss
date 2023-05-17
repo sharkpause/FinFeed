@@ -1,4 +1,5 @@
-$navbar-breakpoint: 0px;
+$navbar-breakpoint: 770px;
+$navbar-burger-color: white;
 
 html,body {
     width: 100%;
@@ -69,7 +70,12 @@ body {
 	cursor: pointer;
 }
 
-.navbar-button:hover {
+.blue-on-hover:hover {
+	color: #9be0ff;
+	cursor: pointer;
+}
+
+.navbar-item:hover {
 	background-color: rgba(0, 0, 0, 0.5) !important;
 	color: #9be0ff !important;
 }
@@ -133,6 +139,22 @@ body {
 
 .ml-0 {
 	margin-left: 0rem !important;
+}
+
+.navbar-padding {
+	padding-left: 0rem;
+	padding-right: 0rem;
+}
+
+.form-top-margin {
+	margin-top: 15rem !important;
+}
+
+@media (orientation : landscape) {
+	.navbar-padding {
+		padding-left: 2.5rem;
+		padding-right: 2.5rem;
+	}
 }
 
 @import "../node_modules/bulma/sass/utilities/_all.sass";

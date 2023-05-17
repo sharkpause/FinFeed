@@ -521,3 +521,13 @@ async function getPosts() {
 }
 
 getPosts();
+
+document.getElementById('navbarBurger').addEventListener('click', e => {
+	const navbarMenu = document.querySelector('.navbar-menu')
+	navbarMenu.classList.toggle('is-active')
+	navbarMenu.classList.add('is-navbar-transparent');
+	
+	document.querySelector('.navbar-burger').classList.toggle('is-active');
+
+	document.getElementById('makePostForm').classList.toggle('form-top-margin');
+});
