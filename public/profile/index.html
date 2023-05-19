@@ -18,31 +18,37 @@
 </head>
 <body>
 
-	<nav class="navbar is-fixed-top pl-6 pr-6 is-navbar-transparent columns pt-3" role="navigation" aria-label="main navigation">
+	<nav class="navbar is-fixed-top navbar-padding is-navbar-transparent" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
-			<a class="navbar-item" href="/"><img src="/images/logo.png"></a>
+			<a class="navbar-item" href="/"><img src="images/logo.png"></a>
+
+			<a role="button" class="navbar-burger blue-on-hover" id="navbarBurger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
 		</div>
 
-		<div class="navbar-menu">
+		<div class="navbar-menu" id="navbarMenu">
 			<div class="navbar-start">
-				<a class="navbar-button navbar-item is-white-text" href="/">
+				<a class="navbar-item is-white-text navbar-on-hover" id="homeNav" href="/">
 					<i class="fa-solid fa-house mr-2"></i>
 					Home
 				</a>
-				<a class="navbar-button navbar-item is-white-text" id="profileNav">
+				<a class="navbar-item is-white-text navbar-on-hover" id="profileNav">
 					<i class="fa-solid fa-user mr-2"></i>
 					Profile
 				</a>
 			</div>
-		</div>
 
-		<div class="navbar-end">
-			<div class="navbar-item">
-				<div class="buttons">
-					<a class="button is-info" id="signupButton" href="/signup"><strong>Sign up</strong></a>
-					<a class="button is-white" id="loginButton" href="/login">Log in</a>
-					<a class="button is-white" id="logoutButton"></a>
-					<a class="button is-dark" href="https://www.github.com/sharkpause/FinFeed" target="_blank"><img src="/images/github-mark-white.png" class="mr-2"> Github</a>
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div class="buttons">
+						<a class="button is-info" id="signupButton" href="/signup"><strong>Sign up</strong></a>
+						<a class="button is-white" id="loginButton" href="/login">Log in</a>
+						<a class="button is-white" id="logoutButton"></a>
+						<a class="button is-dark" href="https://www.github.com/sharkpause/FinFeed" target="_blank"><img src="images/github-mark-white.png" class="mr-2"> Github</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -60,7 +66,7 @@
 		<div class="column" style="margin-left: -0.6rem" id="followAndNumPosts">
 			<span class="is-blue-color subtitle">Followers:&nbsp;</span>
 			<span id="followCount" class="is-white-text subtitle"></span>
-			<span class="is-blue-color ml-6 subtitle">Number of posts:&nbsp;</span>
+			<span class="is-blue-color ml-6 subtitle">Num of posts:&nbsp;</span>
 			<span id="numPosts" class="is-white-text subtitle"></span>
 		</div>
 		<div class="column">
@@ -76,8 +82,19 @@
 
 	<div id="deleteConfirmation"></div>
 
+	<script>
+		function getCookie(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+		const loggedUser = getCookie('username');
+	</script>
 	<script src="/modules/profileLink.js"></script>
 	<script src="/modules/removeAccountButtons.js"></script>
+	<script src="/modules/getPosts.js"></script>
+	<script src="/modules/navbarBurger.js"></script>
+	<script src="/modules/onClickNav.js"></script>
 	<script src="/profile/script.js"></script>
 
 </body>

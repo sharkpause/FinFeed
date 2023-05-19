@@ -171,11 +171,25 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
-								<span class="is-pulled-right" id="deleteButtonContainer"></span>
-								<span class="is-pulled-right" id="editButtonContainer"></span>
-								<span class="is-pulled-right is-gray-color" id="editedText"></span>
+								
+								<span class="dropdown is-active is-pulled-right">
+									<span class="dropdown-trigger">
+										<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+											<i class="fa-solid fa-ellipsis-vertical"></i>
+										</button>
+									</span>
+									
+									<span class="dropdown-menu" id="dropdown-menu" role="menu">
+										<span class="dropdown-content">
+											<span class="dropdown-item" id="editButtonContainer"></span>
+											<span class="dropdown-item" id="deleteButtonContainer"></span>
+										</span>
+									</span>
+								</span>
+
+								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
 								<br>
-								<span id="postContent"></span>
+								<span id="postContent" class="is-white-text"></span>
 							</p>
 						</div>
 						<nav class="level is-mobile">
@@ -345,11 +359,11 @@ async function getPosts() {
 			username.textContent += posterUsername;
 			username.href = '/' + posterUsername;
 			
-			const postContent = mediaContent.querySelector('#postContent');
+			const postContent = postElem.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
 
 			if(posts[i].edited === true) {
-				const editedText = mediaContent.querySelector('#editedText');
+				const editedText = postElem.querySelector('#editedText');
 				editedText.textContent = '(edited)';
 
 				if(loggedUser === posterUsername) {
@@ -496,38 +510,30 @@ async function getPosts() {
 
 		const makePostForm = document.getElementById('makePostForm');
 
-		makePostForm.addEventListener('submit', async e => {
-			e.preventDefault();
+		if(makePostForm) {
+			makePostForm.addEventListener('submit', async e => {
+				e.preventDefault();
 
-			if(typeof loggedUser === 'undefined') {
-				return alert('You must be logged in to use this feature');
-			}
+				if(typeof loggedUser === 'undefined') {
+					return alert('You must be logged in to use this feature');
+				}
 
-			const makePostInput = document.getElementById('makePostInput');
+				const makePostInput = document.getElementById('makePostInput');
 
-			if(makePostInput.value.length > 300) {
-				return alert('Post length exceeds 300 letter limit');
-			}
+				if(makePostInput.value.length > 300) {
+					return alert('Post length exceeds 300 letter limit');
+				}
 
-			await axios.post('/api/' + loggedUser + '/posts', { content: makePostInput.value });
+				await axios.post('/api/' + loggedUser + '/posts', { content: makePostInput.value });
 
-			location.reload();
+				location.reload();
 
-			makePostForm.reset();
-		});
+				makePostForm.reset();
+			});
+		}
 	} catch(err) {
 		console.log(err);
 	}
 }
 
 getPosts();
-
-document.getElementById('navbarBurger').addEventListener('click', e => {
-	const navbarMenu = document.querySelector('.navbar-menu')
-	navbarMenu.classList.toggle('is-active')
-	navbarMenu.classList.add('is-navbar-transparent');
-	
-	document.querySelector('.navbar-burger').classList.toggle('is-active');
-
-	document.getElementById('makePostForm').classList.toggle('form-top-margin');
-});

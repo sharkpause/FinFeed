@@ -57,7 +57,11 @@ body {
   color: #9be0ff;
   cursor: pointer; }
 
-.navbar-item:hover {
+.navbar-on-hover:hover {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  color: #9be0ff !important; }
+
+.navbar-on-click {
   background-color: rgba(0, 0, 0, 0.5) !important;
   color: #9be0ff !important; }
 
