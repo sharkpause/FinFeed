@@ -86,6 +86,14 @@ function editPost(postElem, postAuthor, postID) {
 
 		mainContent.innerHTML = beforeHTML;
 
+		const dropdownTrigger = mainContent.querySelector('.dropdown-trigger');
+		dropdownTrigger.innerHTML = '';
+		dropdownTrigger.outerHTML = '';
+
+		const dropdownMenu = mainContent.querySelector('.dropdown-menu');
+		dropdownMenu.innerHTML = '';
+		dropdownMenu.outerHTML = '';
+
 		addPostInteractButtons(postElem, postAuthor, postID);
 	});
 
@@ -172,19 +180,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
 								
-								<span class="dropdown is-active is-pulled-right">
-									<span class="dropdown-trigger">
-										<button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-											<i class="fa-solid fa-ellipsis-vertical"></i>
-										</button>
-									</span>
-									
-									<span class="dropdown-menu" id="dropdown-menu" role="menu">
-										<span class="dropdown-content">
-											<span class="dropdown-item" id="editButtonContainer"></span>
-											<span class="dropdown-item" id="deleteButtonContainer"></span>
-										</span>
-									</span>
+								<span class="dropdown is-right is-pulled-right" id="postMenu">
 								</span>
 
 								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
@@ -242,8 +238,29 @@ return `<div class="mt-6" id="${commentID}">
 }
 
 function addPostInteractButtons(postElem, postAuthor, postID) {
+	postElem.querySelector('#postMenu').innerHTML = `
+		<span class="dropdown-trigger">
+			<button class="button transparent-dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu">
+				<i class="fa-solid fa-ellipsis-vertical"></i>
+			</button>
+		</span>
+		
+		<span class="dropdown-menu dropdown-menu-background" id="dropdown-menu" role="menu">
+			<span class="dropdown-content">
+				<span class="dropdown-item" id="editButtonContainer"></span>
+				<span class="dropdown-item" id="deleteButtonContainer"></span>
+			</span>
+		</span>`;
+	
+	const dropdown = postElem.querySelector('.dropdown');
+	dropdown.addEventListener('click', e => {
+		e.preventDefault();
+
+		dropdown.classList.toggle('is-active');
+	});
+
 	const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
-	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete Post</button>';
 
 	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
 	
@@ -277,7 +294,7 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	});
 
 	const editButtonContainer = postElem.querySelector('#editButtonContainer');
-	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit Post</button>';
 
 	const editButton = editButtonContainer.querySelector('#editButton');
 
@@ -348,8 +365,7 @@ async function getPosts() {
 			const posterUsername = posts[i].author;
 			const posterDisplayName = posts[i].authorDisplay;
 			const postID = posts[i]._id;
-			
-			// check if logged in
+
 			const mediaContent = postElem.querySelector('#mediaContent');
 			
 			const displayName = mediaContent.querySelector('#displayName');
