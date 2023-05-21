@@ -122,6 +122,12 @@ body {
 .dropdown-menu-background {
   background-color: rgba(0, 0, 0, 0.5); }
 
+.dropdown-item-big {
+  font-size: 17px !important; }
+
+.visible-overflow {
+  overflow: visible !important; }
+
 @media (orientation: landscape) {
   .navbar-padding {
     padding-left: 2.5rem;
@@ -3273,7 +3279,7 @@ a.tag:hover {
 .dropdown-menu {
   display: none;
   left: 0;
-  min-width: 8rem;
+  min-width: 12rem;
   padding-top: 4px;
   position: absolute;
   top: 100%;

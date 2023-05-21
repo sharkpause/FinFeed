@@ -6,8 +6,6 @@ const numPosts = document.getElementById('numPosts');
 const mainUserInfo = document.getElementById('mainUserInfo');
 const profileSection = document.getElementById('profileSection');
 
-const loggedUser = getCookie('username');
-
 let username;
 
 let beforeDisplayName;
@@ -16,6 +14,17 @@ let beforeBioSection;
 async function setInfo() {
 	try {
 		const usernameURL = getLastPart(window.location.href);
+
+		if(usernameURL === 'undefined') {
+			displayNameSection.textContent = 'User does not exist';
+			displayNameSection.classList.add('is-red-color');
+			usernameSection.textContent = 'Error 404';
+			return bioSection.textContent = 'Please check the url if the username is mispelled';
+		}
+
+		const getPosts = document.createElement('script')
+		getPosts.src = '/modules/getPosts.js';
+		document.head.appendChild(getPosts);
 
 		const user = (await axios.get('/api/' + usernameURL)).data;
 
@@ -178,7 +187,7 @@ function editAccount() {
 				<p id="passwordError"></p>
 
 				<p class="control mt-6">
-					<button type="submit" class="button is-blue-color is-transparent-button mr-2">
+					<button type="submit" class="button is-blue-color is-transparent-button mr-2 mb-4">
 						<span class="icon mr-2">
 							<i class="fa-solid fa-check"></i>
 						</span>

@@ -175,7 +175,7 @@ function createEditInput(beforeContent) {
 function createMediaObject(likeCount, dislikeCount, postID) {
 	return `<div class="mt-6" id="${postID}">
 				<article class="media">
-					<div class="media-content media-background" id="mainContent">
+					<div class="media-content media-background visible-overflow" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
@@ -260,7 +260,7 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	});
 
 	const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
-	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete Post</button>';
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button dropdown-item-big" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete Post</button>';
 
 	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
 	
@@ -294,7 +294,7 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 	});
 
 	const editButtonContainer = postElem.querySelector('#editButtonContainer');
-	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit Post</button>';
+	editButtonContainer.innerHTML = '<button class="post-interact-button dropdown-item-big mb-1" id="editButton"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit Post</button>';
 
 	const editButton = editButtonContainer.querySelector('#editButton');
 
