@@ -80,6 +80,9 @@ function editPost(postElem, postAuthor, postID) {
 
 	mainContent.innerHTML = createEditInput(beforeContent);
 
+	const editPostInput = mainContent.querySelector('#editPostInput');
+	autoGrow(editPostInput);
+
 	const cancelButton = mainContent.querySelector('#cancelButton');
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
@@ -101,10 +104,8 @@ function editPost(postElem, postAuthor, postID) {
 	editForm.addEventListener('submit', async e => {
 		e.preventDefault();
 
-		const editValue = mainContent.querySelector('#editPostInput').value;
-
 		try {
-			await axios.patch('/api/' + loggedUser + '/posts/' + postID, { content: editValue });
+			await axios.patch('/api/' + loggedUser + '/posts/' + postID, { content: editPostInput.value });
 
 			location.reload();
 		} catch(err) {
@@ -153,7 +154,7 @@ function createEditInput(beforeContent) {
 			<form method="post" id="editForm">
 				<div class="field is-grouped">
 					<p class="control is-expanded">
-						<input type="text" class="input input-transparent" id="editPostInput" value="${beforeContent}">
+						<textarea class="input input-transparent auto-resize-textarea" id="editPostInput" wrap="soft" maxlength="300" type="text" oninput="autoGrow(this)">${beforeContent}</textarea>
 					</p>
 					<p class="control">
 						<button type="submit" class="button is-blue-color is-transparent-button">
@@ -550,6 +551,11 @@ async function getPosts() {
 	} catch(err) {
 		console.log(err);
 	}
+}
+
+function autoGrow(element) {
+	element.style.height = '5px';
+	element.style.height = (element.scrollHeight) + 'px';
 }
 
 getPosts();
