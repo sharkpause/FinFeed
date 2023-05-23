@@ -11,6 +11,13 @@ let username;
 let beforeDisplayName;
 let beforeBioSection;
 
+const lineBreak = document.getElementById('lineBreak');
+
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+	lineBreak.classList.add('line-break');
+	document.getElementById('numPostsText').classList.remove('ml-6');
+}
+
 async function setInfo() {
 	try {
 		const usernameURL = getLastPart(window.location.href);

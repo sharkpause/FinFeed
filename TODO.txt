@@ -9,6 +9,10 @@ DONE {{
 		- Changed the delete confirmation button when on mobile and desktop
 		- Changed nbsp into mr-1
 	}}
+	Commit 2 {{
+		- Changed nbsp to mr-1 in public/profile/index.html
+		- Added line break between follow count and number of posts if on mobile
+	}}
 }}
 
 }}
