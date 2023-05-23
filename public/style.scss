@@ -189,6 +189,15 @@ body {
 	$dropdown-menu-min-width: 8rem;
 }
 
+@media (orientation : portrait) {
+	.delete-confirmation {
+		border: 1px solid #f03a5f;
+		background-color: #ff4d52;
+		font-size: 20px !important;
+		height: 40px;
+	}
+}
+
 @import "../node_modules/bulma/sass/utilities/_all.sass";
 @import "../node_modules/bulma/sass/base/_all.sass";
 @import "../node_modules/bulma/sass/elements/_all.sass";

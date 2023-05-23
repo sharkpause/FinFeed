@@ -138,6 +138,13 @@ body {
     padding-left: 2.5rem;
     padding-right: 2.5rem; } }
 
+@media (orientation: portrait) {
+  .delete-confirmation {
+    border: 1px solid #f03a5f;
+    background-color: #ff4d52;
+    font-size: 20px !important;
+    height: 40px; } }
+
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
 .file-name, .pagination-previous,

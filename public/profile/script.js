@@ -88,12 +88,12 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer) {
 		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
 		deleteConfirmation.innerHTML = `Are you sure you want to delete your account?
 			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-transparent-button clickable-button mr-2">
-						<i class="fa-solid fa-check"></i>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-4">
+						<i class="fa-solid fa-check m-1"></i>
 						Yes
 				</button>
-				<button id="cancelButton" class="is-white-text is-transparent-button clickable-button">
-						<i class="fa-solid fa-xmark"></i>
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+						<i class="fa-solid fa-xmark mr-1"></i>
 						No
 				</button>
 			</span>`;

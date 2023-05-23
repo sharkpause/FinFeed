@@ -1,0 +1,20 @@
+DONE {{
+
+23 May 2023 {{
+	Commit 1 {{
+		- Fixed multiline input
+		- Fixed comment button after edit cancel
+		- Fixed comment like and dislike button after edit cancel
+		- Changed post limit from 300 characters to 1000
+		- Changed the delete confirmation button when on mobile and desktop
+		- Changed nbsp into mr-1
+	}}
+}}
+
+}}
+
+TODO {{
+
+- Fix user profile posts | public/profile/script.js
+
+}}
