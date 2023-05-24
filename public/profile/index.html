@@ -58,8 +58,21 @@
 		<div class="column" id="mainUserSection">
 			<strong class="profile-display-name title mr-2 is-white-text" id="displayNameSection"></strong>
 
-			<div class="is-pulled-right" id="deleteButtonContainer"></div>
-			<div class="is-pulled-right" id="editButtonContainer"></div>
+			<div class="dropdown is-right is-pulled-right" id="postMenu">
+				<span class="dropdown-trigger">
+					<button class="button transparent-dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu">
+						<i class="fa-solid fa-ellipsis-vertical"></i>
+					</button>
+				</span>
+				
+				<span class="dropdown-menu dropdown-menu-background" id="dropdown-menu" role="menu">
+					<span class="dropdown-content">
+						<span class="dropdown-item" id="editButtonContainer"></span>
+						<span class="dropdown-item" id="deleteButtonContainer"></span>
+						<span class="dropdown-item" id="followButtonContainer"></span>
+					</span>
+				</span>
+			</div>
 
 			<span class="is-white-text" id="usernameSection">@</span>
 		<div>
@@ -76,7 +89,7 @@
 		<div class="column" id="deleteConfirmation"></div>
 		<div class="column">
 			<p class="title is-white-text mt-6" style="margin-left: -0.6rem">User posts:</p>
-		<?div>
+		</div>
 	</div>
 
 	<div class="container media-margin" id="mediaContainer">

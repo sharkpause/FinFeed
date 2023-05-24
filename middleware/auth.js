@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Unauthorized = require('../errors/unauthorized');
 
 async function authMiddleware(req, res, next) {
+	console.log(req.cookies);
 	const token = req.cookies.jwtToken;
 
 	try {

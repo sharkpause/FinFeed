@@ -274,14 +274,16 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 		const underMedia = postElem.querySelector('#underMedia');
 		underMedia.classList.add('delete-confirmation', 'is-white-text');
 		underMedia.innerHTML = `Are you sure you want to delete this post?
-			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-4">
-						<i class="fa-solid fa-check"></i>
+			<div>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-6">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 				<button id="cancelButton" class="is-white-text is-completely-transparent-button">
-						<i class="fa-solid fa-xmark"></i>
+						<i class="fa-solid fa-xmark mr-1"></i>
+						No
 				</button>
-			</span>`;
+			</div>`;
 
 		const confirmButton = underMedia.querySelector('#confirmButton');
 		const cancelButton = underMedia.querySelector('#cancelButton');
@@ -336,11 +338,13 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 		underMedia.classList.add('delete-confirmation', 'is-white-text');
 		underMedia.innerHTML = `Are you sure you want to delete this comment?
 			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-2">
-						<i class="fa-solid fa-check"></i>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
-						<i class="fa-solid fa-xmark"></i>
+						<i class="fa-solid fa-xmark mr-1"></i>
+						No
 				</button>
 			</span>`;
 
@@ -372,7 +376,19 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 
 async function getPosts() {
 	try {
-		const posts = (await axios.get('/api/posts')).data.posts;
+		const url = window.location.href;
+		let posts;
+
+		if(/^.+\/\w+$/.test(url)) {
+			let username = url.split('/');
+			username = url.lastIndexOf('/') !== url.length - 1
+				? username[username.length - 1]
+				: username[username.length - 2];
+
+			posts = (await axios.get('/api/' + username + '/posts')).data.posts;
+		} else {
+			posts = (await axios.get('/api/posts')).data.posts;
+		}
 
 		const mediaContainer = document.getElementById('mediaContainer');
 

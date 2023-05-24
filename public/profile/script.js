@@ -5,6 +5,8 @@ const followCount = document.getElementById('followCount');
 const numPosts = document.getElementById('numPosts');
 const mainUserInfo = document.getElementById('mainUserInfo');
 const profileSection = document.getElementById('profileSection');
+const deleteButtonContainer = document.getElementById('deleteButtonContainer');
+const editButtonContainer = document.getElementById('editButtonContainer');
 
 let username;
 
@@ -13,9 +15,20 @@ let beforeBioSection;
 
 const lineBreak = document.getElementById('lineBreak');
 
-if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+const onMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+if(onMobile){
 	lineBreak.classList.add('line-break');
 	document.getElementById('numPostsText').classList.remove('ml-6');
+}
+
+function addDropDown() {
+	const dropdown = document.querySelector('.dropdown');
+	dropdown.addEventListener('click', e => {
+		e.preventDefault();
+
+		dropdown.classList.toggle('is-active');
+	});
 }
 
 async function setInfo() {
@@ -35,22 +48,60 @@ async function setInfo() {
 
 		const user = (await axios.get('/api/' + usernameURL)).data;
 
-		usernameSection.textContent += user.user.username;
+		username = user.user.username;
+
+		usernameSection.textContent += username;
 		displayNameSection.textContent = user.user.displayName;
 		bioSection.textContent = user.user.bio;
 		followCount.textContent = user.user.follows.count;
 		numPosts.textContent = user.numPosts;
 
-		if(getCookie('username') === user.user.username) {
-			const deleteButtonContainer = document.getElementById('deleteButtonContainer');
-			const editButtonContainer = document.getElementById('editButtonContainer');
+		addDropDown();
 
-			username = user.user.username;
+		if(loggedUser !== username) {
+			const isFollowing = (await axios.get('/api/' + username)).data.user.follows.followers.includes(loggedUser);
 
-			addAccountInteractButtons(editButtonContainer, deleteButtonContainer);
+			if(isFollowing) {
+				followButtonContainer.innerHTML = '<button class="post-interact-button is-white-text dropdown-item-big" id="followButton"><i class="fa-solid fa-user-minus mr-1"></i>Unfollow account</button>';
+
+				followButtonContainer.querySelector('#followButton').addEventListener('click', async e => {
+					e.preventDefault();
+
+					try {
+						await axios.patch('/api/' + username + '/follow', { follower: loggedUser });
+
+						location.reload();
+					} catch(err) {
+						console.log(err);
+						alert('Something went wrong');
+					}
+				});
+			} else {
+				followButtonContainer.innerHTML = '<button class="post-interact-button is-white-text dropdown-item-big" id="followButton"><i class="fa-solid fa-user-plus mr-1"></i>Follow account</button>';
+
+				followButtonContainer.querySelector('#followButton').addEventListener('click', async e => {
+					e.preventDefault();
+
+					try {
+						await axios.patch('/api/' + username + '/follow', { follower: loggedUser });
+					} catch(err) {
+						console.log(err);
+						alert('Something went wrong');
+					}
+
+					location.reload();
+				});
+			}
+		} else {
+			followButtonContainer.outerHTML = '';
+		}	
+
+		if(loggedUser === user.user.username) {
+			addAccountInteractButtons();
+		} else {
+			editButtonContainer.outerHTML = '';
+			deleteButtonContainer.outerHTML = '';
 		}
-
-		
 	} catch(err) {
 		if(err.response) {
 			if(err.response.status === 404) {
@@ -82,8 +133,8 @@ function getLastPart(url) {
 	  : parts[parts.length - 2]);
 }
 
-function addAccountInteractButtons(editButtonContainer, deleteButtonContainer) {
-	deleteButtonContainer.innerHTML = '<button class="post-interact-button subtitle is-white-text ml-3" id="deleteButton"><i class="fa-solid fa-trash"></i>&nbsp;Delete account</button>';
+async function addAccountInteractButtons() {
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button is-white-text dropdown-item-big" id="deleteButton"><i class="fa-solid fa-trash mr-1"></i>Delete account</button>';
 
 	const deleteButton = profileSection.querySelector('#deleteButton');
 	
@@ -92,18 +143,35 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer) {
 
 		const deleteConfirmation = profileSection.querySelector('#deleteConfirmation');
 
-		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text');
-		deleteConfirmation.innerHTML = `Are you sure you want to delete your account?
-			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-4">
+		deleteConfirmation.classList.add('delete-confirmation', 'is-white-text', 'mb-6', 'mt-6');
+
+		if(onMobile) {
+			deleteConfirmation.innerHTML = `
+				<span>Are you sure you want to delete your account?</span>
+				<span class="line-break mb-4"></span>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button button mr-6">
 						<i class="fa-solid fa-check m-1"></i>
 						Yes
 				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button button">
 						<i class="fa-solid fa-xmark mr-1"></i>
 						No
 				</button>
-			</span>`;
+			`;
+		} else {
+			deleteConfirmation.innerHTML = `
+				Are you sure you want to delete your account?
+				<span class="is-pulled-right">
+					<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
+							<i class="fa-solid fa-check m-1"></i>
+							Yes
+					</button>
+					<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+							<i class="fa-solid fa-xmark mr-1"></i>
+							No
+					</button>
+				</span>`;
+		}
 
 		deleteConfirmation.querySelector('#confirmButton').addEventListener('click', e => {
 			e.preventDefault();
@@ -115,11 +183,11 @@ function addAccountInteractButtons(editButtonContainer, deleteButtonContainer) {
 			e.preventDefault();
 
 			deleteConfirmation.innerHTML = '';
-			deleteConfirmation.classList.remove('delete-confirmation');
+			deleteConfirmation.classList.remove('delete-confirmation', 'mt-6', 'mb-6');
 		});
 	});
 
-	editButtonContainer.innerHTML = '<button class="post-interact-button subtitle is-white-text" id="editButton"><i class="fa-solid fa-pen-to-square"></i>&nbsp;Edit account</button>';
+	editButtonContainer.innerHTML = '<button class="post-interact-button is-white-text dropdown-item-big" id="editButton"><i class="fa-solid fa-pen-to-square mr-1"></i>Edit account</button>';
 	const editButton = profileSection.querySelector('#editButton');
 
 	editButton.addEventListener('click', e => {
@@ -216,9 +284,7 @@ function editAccount() {
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
 
-		profileSection.innerHTML = beforeProfileSection;
-
-		addAccountInteractButtons(editButtonContainer, deleteButtonContainer);
+		location.reload();
 	});
 
 	const editForm = profileSection.querySelector('#editForm');

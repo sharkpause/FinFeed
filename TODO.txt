@@ -15,10 +15,24 @@ DONE {{
 	}}
 }}
 
+24 May 2023 {{
+
+	Commit 1 {[
+		- Fixed user posts from getting all posts to all posts only from user
+		- Changed edit and delete account buttons into a dropdown menu
+		- Changed some nbsp into mr-1
+		- Added follow feature
+		- Changed account deletion UI for mobile
+		- Changed deletion UI a little for desktop, added space between yes and no
+		- Changed to reload after cancelling edit account
+	}}
+
+}}
+
 }}
 
 TODO {{
 
-- Fix user profile posts | public/profile/script.js
+
 
 }}

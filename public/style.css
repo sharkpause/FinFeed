@@ -145,8 +145,7 @@ body {
   .delete-confirmation {
     border: 1px solid #f03a5f;
     background-color: #ff4d52;
-    font-size: 20px !important;
-    height: 40px; } }
+    font-size: 20px; } }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,
@@ -3294,7 +3293,7 @@ a.tag:hover {
 .dropdown-menu {
   display: none;
   left: 0;
-  min-width: 12rem;
+  min-width: 13rem;
   padding-top: 4px;
   position: absolute;
   top: 100%;

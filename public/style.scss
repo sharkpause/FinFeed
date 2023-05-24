@@ -1,6 +1,6 @@
 $navbar-breakpoint: 770px;
 $navbar-burger-color: white;
-$dropdown-menu-min-width: 12rem;
+$dropdown-menu-min-width: 13rem;
 
 html,body {
     width: 100%;
@@ -197,8 +197,7 @@ body {
 	.delete-confirmation {
 		border: 1px solid #f03a5f;
 		background-color: #ff4d52;
-		font-size: 20px !important;
-		height: 40px;
+		font-size: 20px;
 	}
 }
 
