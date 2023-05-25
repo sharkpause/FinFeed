@@ -34,6 +34,10 @@ DONE {{
 		- Fixed post deletion UI for desktop
 		- Changed edit and delete buttons in comment object into a drop down menu
 	}}
+	Commit 2 {{
+		- Added loading animation for when waiting for posts and comments loading
+		- Added so post author can delete the comments other people make on their post
+	}}
 }}
 
 }}

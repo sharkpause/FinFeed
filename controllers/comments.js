@@ -26,7 +26,7 @@ async function getComment(req, res) {
 }
 
 async function createComment(req, res) {
-	const { username, postID } = req.params;
+	const { postID } = req.params;
 	const { commentator, content } = req.body;
 
 	if(!commentator) {
@@ -131,13 +131,18 @@ async function dislikeComment(req, res) {
 }
 
 async function deleteComment(req, res) {
-	const { commentID } = req.params;
+	const { username, commentID } = req.params;
 
 	const comment = await Comment.findOne({ _id: commentID });
 	const user = await Account.findOne({ username: comment.author });
 
 	if(req.token.username !== user.username || req.token.id !== String(user._id)) {
-		throw new Unauthorized('You are not authorized to delete comments on behalf of ' + username);
+		if(req.token.username === username) {
+			if(req.token.id !== String((await Account.findOne({ username }))._id))
+				throw new Unauthorized('You are not authorized to delete this comment');
+		} else {
+			throw new Unauthorized('You are not authorized to delete this comment');
+		}
 	}
 
 	const result = await Comment.deleteOne({ _id: commentID });

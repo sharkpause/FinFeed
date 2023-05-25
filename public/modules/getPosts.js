@@ -399,6 +399,10 @@ async function getPosts() {
 		const url = window.location.href;
 		let posts;
 
+		const mediaContainer = document.getElementById('mediaContainer');
+
+		mediaContainer.innerHTML = '<div class="columns is-centered"><div class="column is-narrow has-text-centered"><div class="loader"></div></div></div>';
+
 		if(/^.+\/\w+$/.test(url)) {
 			let username = url.split('/');
 			username = url.lastIndexOf('/') !== url.length - 1
@@ -410,7 +414,9 @@ async function getPosts() {
 			posts = (await axios.get('/api/posts')).data.posts;
 		}
 
-		const mediaContainer = document.getElementById('mediaContainer');
+		if(posts) {
+			mediaContainer.innerHTML = '';
+		}
 
 		for(let i = 0; i < posts.length; ++i) {
 			const postElem = document.createElement('div');
@@ -550,10 +556,14 @@ function addCommentButton(postElem, postAuthor, postID) {
 				}
 			});
 
+			const commentSection = underMedia.querySelector('#commentSection');
+			commentSection.innerHTML = '<div class="loader mt-4"></div>';
 
 			const comments = (await axios.get('/api/' + postAuthor + '/posts/' + postID + '/comments')).data.comments; 
 
-			const commentSection = underMedia.querySelector('#commentSection');
+			if(comments) {
+				commentSection.innerHTML = '';
+			}
 
 			for(let i = 0; i < comments.length; ++i) {
 				const commentElem = document.createElement('div');

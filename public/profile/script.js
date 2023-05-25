@@ -22,7 +22,7 @@ if(onMobile){
 	document.getElementById('numPostsText').classList.remove('ml-6');
 }
 
-function addDropDown() {
+function addDropdown() {
 	const dropdown = document.querySelector('.dropdown');
 	dropdown.addEventListener('click', e => {
 		e.preventDefault();
@@ -56,7 +56,7 @@ async function setInfo() {
 		followCount.textContent = user.user.follows.count;
 		numPosts.textContent = user.numPosts;
 
-		addDropDown();
+		addDropdown();
 
 		if(loggedUser !== username) {
 			const isFollowing = (await axios.get('/api/' + username)).data.user.follows.followers.includes(loggedUser);
