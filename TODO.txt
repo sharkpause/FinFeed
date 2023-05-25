@@ -38,6 +38,10 @@ DONE {{
 		- Added loading animation for when waiting for posts and comments loading
 		- Added so post author can delete the comments other people make on their post
 	}}
+	Commit 3 {{
+		- Fixed TODO description
+		- Flipped Yes and No's places
+	}}
 }}
 
 }}

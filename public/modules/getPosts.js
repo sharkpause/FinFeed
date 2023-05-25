@@ -257,25 +257,25 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
 			underMedia.innerHTML = `Are you sure you want to delete this post?
 			<div>
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-6">
-						<i class="fa-solid fa-check mr-1"></i>
-						Yes
-				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button">
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button mr-6">
 						<i class="fa-solid fa-xmark mr-1"></i>
 						No
+				</button>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 			</div>`;
 		} else {
 			underMedia.innerHTML = `Are you sure you want to delete this post?
 			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-6">
-						<i class="fa-solid fa-check mr-1"></i>
-						Yes
-				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button">
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button mr-6">
 						<i class="fa-solid fa-xmark mr-1"></i>
 						No
+				</button>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 			</span>`;
 		}
@@ -335,13 +335,13 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 		underMedia.classList.add('delete-confirmation', 'is-white-text');
 		underMedia.innerHTML = `Are you sure you want to delete this comment?
 			<span class="is-pulled-right">
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
-						<i class="fa-solid fa-check mr-1"></i>
-						Yes
-				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
 						<i class="fa-solid fa-xmark mr-1"></i>
 						No
+				</button>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 			</span>`;
 
@@ -511,10 +511,6 @@ function addCommentButton(postElem, postAuthor, postID) {
 	commentButton.addEventListener('click', async e => {
 		e.preventDefault();
 
-		if(typeof loggedUser === 'undefined') {
-			return alert('You must be logged into use this feature');
-		}
-
 		const underMedia = postElem.querySelector('#underMedia');
 
 		if(underMedia.innerHTML === '') {
@@ -544,6 +540,11 @@ function addCommentButton(postElem, postAuthor, postID) {
 				e.preventDefault();
 
 				const commentInput = commentForm.querySelector('#commentInput').value;
+
+				if(typeof loggedUser === 'undefined') {
+					return alert('You must be logged into use this feature');
+				}
+
 				if(commentInput.length > 0) {
 					try {
 						await axios.post('/api/' + postAuthor + '/posts/' + postID + '/comments', { commentator: loggedUser, content: commentInput });

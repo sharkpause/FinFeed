@@ -149,26 +149,26 @@ async function addAccountInteractButtons() {
 			deleteConfirmation.innerHTML = `
 				<span>Are you sure you want to delete your account?</span>
 				<span class="line-break"></span>
-				<button id="confirmButton" class="is-white-text is-completely-transparent-button button mr-6">
-						<i class="fa-solid fa-check mr-1"></i>
-						Yes
-				</button>
-				<button id="cancelButton" class="is-white-text is-completely-transparent-button button">
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button button mr-6">
 						<i class="fa-solid fa-xmark mr-1"></i>
 						No
+				</button>
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button button">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
 				</button>
 			`;
 		} else {
 			deleteConfirmation.innerHTML = `
 				Are you sure you want to delete your account?
 				<span class="is-pulled-right">
-					<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
-							<i class="fa-solid fa-check mr-1"></i>
-							Yes
-					</button>
-					<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
+					<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
 							<i class="fa-solid fa-xmark mr-1"></i>
 							No
+					</button>
+					<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button">
+							<i class="fa-solid fa-check mr-1"></i>
+							Yes
 					</button>
 				</span>`;
 		}
