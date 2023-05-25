@@ -25,11 +25,14 @@ const AccountSchema = mongoose.Schema({
 	},
 	bio: {
 		type: String,
-		default: ''
+		default: '',
+		maxlength: 100
 	},
 	displayName: {
 		type: String,
-		default: ''
+		default: '',
+		maxlength: 50,
+		minlength: 1
 	},
 	follows: {
 		count: {

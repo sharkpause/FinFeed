@@ -16,8 +16,7 @@ DONE {{
 }}
 
 24 May 2023 {{
-
-	Commit 1 {[
+	Commit 1 {{
 		- Fixed user posts from getting all posts to all posts only from user
 		- Changed edit and delete account buttons into a dropdown menu
 		- Changed some nbsp into mr-1
@@ -26,13 +25,21 @@ DONE {{
 		- Changed deletion UI a little for desktop, added space between yes and no
 		- Changed to reload after cancelling edit account
 	}}
+}}
 
+25 May 2023 {{
+	Commit 1 {{
+		- Changed display name input and make post input into textarea
+		- Added some space between navigation bar and make post form
+		- Fixed post deletion UI for desktop
+		- Changed edit and delete buttons in comment object into a drop down menu
+	}}
 }}
 
 }}
 
 TODO {{
 
-
+- Check for any bugs in backend
 
 }}

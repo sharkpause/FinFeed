@@ -131,7 +131,7 @@ body {
 .auto-resize-textarea {
   resize: none;
   overflow: hidden;
-  min-height: 50px; }
+  min-height: 25px; }
 
 .line-break {
   display: block; }

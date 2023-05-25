@@ -148,9 +148,9 @@ async function addAccountInteractButtons() {
 		if(onMobile) {
 			deleteConfirmation.innerHTML = `
 				<span>Are you sure you want to delete your account?</span>
-				<span class="line-break mb-4"></span>
+				<span class="line-break"></span>
 				<button id="confirmButton" class="is-white-text is-completely-transparent-button button mr-6">
-						<i class="fa-solid fa-check m-1"></i>
+						<i class="fa-solid fa-check mr-1"></i>
 						Yes
 				</button>
 				<button id="cancelButton" class="is-white-text is-completely-transparent-button button">
@@ -163,7 +163,7 @@ async function addAccountInteractButtons() {
 				Are you sure you want to delete your account?
 				<span class="is-pulled-right">
 					<button id="confirmButton" class="is-white-text is-completely-transparent-button clickable-button mr-6">
-							<i class="fa-solid fa-check m-1"></i>
+							<i class="fa-solid fa-check mr-1"></i>
 							Yes
 					</button>
 					<button id="cancelButton" class="is-white-text is-completely-transparent-button clickable-button">
@@ -249,10 +249,10 @@ function editAccount() {
 			<div class="field mt-6">
 
 				<label class="label is-light-white-color">Display name</label>
-				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput">
+				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput" maxlength="50">
 
 				<label class="label is-light-white-color mt-5">Bio</label>
-				<input class="input input-transparent" placeholder="Bio" type="text" value="${bioSection.textContent}" id="bioInput">
+				<textarea class="input input-transparent auto-resize-textarea" id="bioInput" placeholder="Bio" wrap="soft" maxlength="100" type="text" oninput="autoGrow(this)">${bioSection.textContent}</textarea>
 
 				<label class="label is-light-white-color mt-5">Password</label>
 				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput">

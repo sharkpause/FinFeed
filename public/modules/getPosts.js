@@ -64,7 +64,7 @@ async function deleteComment(username, postID, commentID) {
 		location.reload();
 	} catch(err) {
 		if(err.response.status === 401) {
-			alert('You are not authorized to delete this post');
+			alert('You are not authorized to delete this comment');
 		} else {
 			console.log(err);
 			alert('Something went wrong');
@@ -184,8 +184,7 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
 								
-								<span class="dropdown is-right is-pulled-right" id="postMenu">
-								</span>
+								<span class="dropdown is-right is-pulled-right" id="dropdownMenu"></span>
 
 								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
 								<br>
@@ -218,8 +217,9 @@ return `<div class="mt-6" id="${commentID}">
 					<div class="content">
 						<p class="is-white-text" id="mediaContent">
 							<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
-							<span class="is-pulled-right" id="deleteButtonContainer"></span>
-							<span class="is-pulled-right" id="editButtonContainer"></span>
+
+							<span class="dropdown is-right is-pulled-right" id="dropdownMenu"></span>
+
 							<span class="is-pulled-right is-gray-color" id="editedText"></span>
 							<br>
 							<span id="commentContent"></span>
@@ -242,26 +242,7 @@ return `<div class="mt-6" id="${commentID}">
 }
 
 function addPostInteractButtons(postElem, postAuthor, postID) {
-	postElem.querySelector('#postMenu').innerHTML = `
-		<span class="dropdown-trigger">
-			<button class="button transparent-dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu">
-				<i class="fa-solid fa-ellipsis-vertical"></i>
-			</button>
-		</span>
-		
-		<span class="dropdown-menu dropdown-menu-background" id="dropdown-menu" role="menu">
-			<span class="dropdown-content">
-				<span class="dropdown-item" id="editButtonContainer"></span>
-				<span class="dropdown-item" id="deleteButtonContainer"></span>
-			</span>
-		</span>`;
-	
-	const dropdown = postElem.querySelector('.dropdown');
-	dropdown.addEventListener('click', e => {
-		e.preventDefault();
-
-		dropdown.classList.toggle('is-active');
-	});
+	addDropDown(postElem);
 
 	const deleteButtonContainer = postElem.querySelector('#deleteButtonContainer');
 	deleteButtonContainer.innerHTML = '<button class="post-interact-button dropdown-item-big" id="deleteButton"><i class="fa-solid fa-trash mr-1"></i>Delete Post</button>';
@@ -273,7 +254,8 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 
 		const underMedia = postElem.querySelector('#underMedia');
 		underMedia.classList.add('delete-confirmation', 'is-white-text');
-		underMedia.innerHTML = `Are you sure you want to delete this post?
+		if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+			underMedia.innerHTML = `Are you sure you want to delete this post?
 			<div>
 				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-6">
 						<i class="fa-solid fa-check mr-1"></i>
@@ -284,6 +266,19 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 						No
 				</button>
 			</div>`;
+		} else {
+			underMedia.innerHTML = `Are you sure you want to delete this post?
+			<span class="is-pulled-right">
+				<button id="confirmButton" class="is-white-text is-completely-transparent-button mr-6">
+						<i class="fa-solid fa-check mr-1"></i>
+						Yes
+				</button>
+				<button id="cancelButton" class="is-white-text is-completely-transparent-button">
+						<i class="fa-solid fa-xmark mr-1"></i>
+						No
+				</button>
+			</span>`;
+		}
 
 		const confirmButton = underMedia.querySelector('#confirmButton');
 		const cancelButton = underMedia.querySelector('#cancelButton');
@@ -326,8 +321,10 @@ function addPostInteractButtons(postElem, postAuthor, postID) {
 }
 
 function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
+	addDropDown(commentElem);
+
 	const deleteButtonContainer = commentElem.querySelector('#deleteButtonContainer');
-	deleteButtonContainer.innerHTML = '<button class="post-interact-button" id="deleteButton"><i class="fa-solid fa-trash"></i></button>';
+	deleteButtonContainer.innerHTML = '<button class="post-interact-button dropdown-item-big" id="deleteButton"><i class="fa-solid fa-trash mr-1"></i>Delete comment</button>';
 
 	const deleteButton = deleteButtonContainer.querySelector('#deleteButton');
 	
@@ -363,7 +360,7 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 	});
 
 	const editButtonContainer = commentElem.querySelector('#editButtonContainer');
-	editButtonContainer.innerHTML = '<button class="post-interact-button" id="editButton"><i class="fa-solid fa-pen-to-square"></i></button>';
+	editButtonContainer.innerHTML = '<button class="post-interact-button dropdown-item-big" id="editButton"><i class="fa-solid fa-pen-to-square mr-1"></i>Edit comment</button>';
 
 	const editButton = editButtonContainer.querySelector('#editButton');
 
@@ -371,6 +368,29 @@ function addCommentInteractButtons(commentElem, postAuthor, postID, commentID) {
 		e.preventDefault();
 
 		editComment(commentElem, postAuthor, postID, commentID);
+	});
+}
+
+function addDropDown(elem) {
+	elem.querySelector('#dropdownMenu').innerHTML = `
+		<span class="dropdown-trigger">
+			<button class="button transparent-dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu">
+				<i class="fa-solid fa-ellipsis-vertical"></i>
+			</button>
+		</span>
+		
+		<span class="dropdown-menu dropdown-menu-background" id="dropdown-menu" role="menu">
+			<span class="dropdown-content">
+				<span class="dropdown-item" id="editButtonContainer"></span>
+				<span class="dropdown-item" id="deleteButtonContainer"></span>
+			</span>
+		</span>`;
+
+	const dropdown = elem.querySelector('.dropdown');
+	dropdown.addEventListener('click', e => {
+		e.preventDefault();
+
+		dropdown.classList.toggle('is-active');
 	});
 }
 
