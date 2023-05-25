@@ -42,6 +42,9 @@ DONE {{
 		- Fixed TODO description
 		- Flipped Yes and No's places
 	}}
+	Commit 4 {{
+		- Added logo and description
+	}}
 }}
 
 }}
