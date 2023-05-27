@@ -1,7 +1,7 @@
 {
   "name": "finfeed",
   "version": "1.0.0",
-  "description": "",
+  "description": "A shark themed social media website",
   "main": "index.js",
   "scripts": {
     "start": "nodemon app.js",
@@ -10,7 +10,7 @@
     "css-watch": "npm run css-build -- --watch"
   },
   "keywords": [],
-  "author": "",
+  "author": "sharkPause",
   "license": "GPL-3.0",
   "dependencies": {
     "bcrypt": "^5.1.0",
