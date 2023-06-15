@@ -5,9 +5,9 @@ const app = express();
 
 const rateLimiter = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+const xss = require('xss');
 const { StatusCodes } = require('http-status-codes');
-
-const path = require('path');
 
 const connect = require('./db/connect');
 
@@ -24,12 +24,14 @@ require('dotenv').config();
 
 app.set('trust proxy', 1);
 
-app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
-
+app.use(cors());
+app.use(xss());
 app.use('/api/signup', rateLimiter({
 	windowMs: 15 * 60 * 1000,
 	max: 10
 }));
+
+app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
 
 app.use('/api/', rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
