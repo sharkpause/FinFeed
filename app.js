@@ -7,6 +7,7 @@ const rateLimiter = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const xss = require('xss');
+const helmet = require('helmet');
 const { StatusCodes } = require('http-status-codes');
 
 const connect = require('./db/connect');
@@ -26,6 +27,7 @@ app.set('trust proxy', 1);
 
 app.use(cors());
 app.use(xss());
+app.use(helmet());
 app.use('/api/signup', rateLimiter({
 	windowMs: 15 * 60 * 1000,
 	max: 10
