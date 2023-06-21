@@ -42,16 +42,20 @@ form.addEventListener('submit', async e => {
 	};
 
 	try {
-		await axios.post('/api/signup', { username, password });
+		await axios.post('http://api.localhost:3000/signup', { username, password });
 
 		successText.textContent = 'Account successfully created!';
 
 		window.location.href = '/login';
 	} catch(err) {
-		if(err.response.status === 409) {
-			usernameError.textContent = 'Username is unavailable';
-			return usernameInput.classList.add('input-error');
+		if(err.response) {
+			if(err.response.status === 409) {
+				usernameError.textContent = 'Username is unavailable';
+				return usernameInput.classList.add('input-error');
+			}
 		}
+
+		console.log(err);
 
 		passwordError.textContent = 'Something went wrong, please try again later';
 	}

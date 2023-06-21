@@ -6,7 +6,6 @@ const app = express();
 const rateLimiter = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const xss = require('xss');
 const helmet = require('helmet');
 const { StatusCodes } = require('http-status-codes');
 
@@ -18,16 +17,28 @@ const posts = require('./routes/posts');
 const comments = require('./routes/comments');
 const accounts = require('./routes/accounts');
 const accountProfile = require('./routes/accountProfile');
+const apiDocs = require('./routes/apiDocs.js');
 
 const { getHomePosts } = require('./controllers/posts');
+
+const sanitizeInput = require('./middleware/xss');
 
 require('dotenv').config();
 
 app.set('trust proxy', 1);
 
 app.use(cors());
-app.use(xss());
-app.use(helmet());
+app.use(
+	helmet({
+    	contentSecurityPolicy: {
+      		directives: {
+        		'script-src': ["'self'", 'kit.fontawesome.com', 'cdnjs.cloudflare.com'],
+				'default-src': ["'self'", 'ka-f.fontawesome.com', 'api.localhost:3000'],
+				'script-src-attr': ["'self'"]
+      		},
+    	},
+  	})
+);
 app.use('/api/signup', rateLimiter({
 	windowMs: 15 * 60 * 1000,
 	max: 10
@@ -41,7 +52,8 @@ app.use('/api/', rateLimiter({
   })
 );
 
-app.use('/api/signup', signup);
+app.use('/api-docs', apiDocs);
+app.use('/signup', signup);
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
 app.use('/api/:username', accounts);

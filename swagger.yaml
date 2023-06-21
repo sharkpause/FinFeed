@@ -1,0 +1,20 @@
+openapi: 3.0.0
+
+info:
+  title: FinFeed API
+  description: Open APIs for FinFeed and its data
+  version: 1.0.0
+
+servers:
+  - url: "{URL}/api/"
+    description: API Route
+
+paths:
+  /signup:
+    post:
+      summary: Creates an account
+      responses:
+        - '200':
+          description: Account successfully created
+        - '409':
+          description: The username is already taken

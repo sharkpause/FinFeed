@@ -157,7 +157,7 @@ function createEditInput(beforeContent) {
 			<form method="post" id="editForm">
 				<div class="field is-grouped">
 					<p class="control is-expanded">
-						<textarea class="input input-transparent auto-resize-textarea" id="editPostInput" wrap="soft" maxlength="1000" type="text" oninput="autoGrow(this)">${beforeContent}</textarea>
+						<textarea class="input input-transparent auto-resize-textarea" id="editPostInput" wrap="soft" maxlength="1000" type="text">${beforeContent}</textarea>
 					</p>
 					<p class="control">
 						<button type="submit" class="button is-blue-color is-transparent-button">
@@ -623,11 +623,6 @@ function addCommentLikeDislike(commentElem, postAuthor, postID, commentID) {
 
 		dislikeComment(postAuthor, postID, commentID);
 	});
-}
-
-function autoGrow(element) {
-	element.style.height = '5px';
-	element.style.height = (element.scrollHeight) + 'px';
 }
 
 getPosts();
