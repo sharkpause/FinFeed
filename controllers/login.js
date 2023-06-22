@@ -7,7 +7,7 @@ const Account = require('../models/accounts');
 const BadRequest = require('../errors/badrequest');
 const Unauthorized = require('../errors/unauthorized');
 
-async function login(req, res) {
+async function login(req, res, next) {
 	const { username, password } = req.body;
 
 	if(!username) {
@@ -31,10 +31,12 @@ async function login(req, res) {
 		httpOnly: true,
 		secure: true,
 		sameSite: 'none',
-		maxAge: 3600000
+		maxAge: 3600000,
+		domain: '.localhost.com',
+		path: '/'
 	});
 
-	res.cookie('username', username);
+	res.cookie('username', username, { domain: '.localhost.com', path: '/', sameSite: 'none', secure: true });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'token and username set in cookies' });
 }

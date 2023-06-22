@@ -47,6 +47,12 @@ DONE {{
 	}}
 }}
 
+22 Jun 2023 {{
+	Commit 1 {{
+		- Changed hard coding API url to saving in variable for easier changing
+	}}
+}}
+
 }}
 
 TODO {{

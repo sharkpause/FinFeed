@@ -27,7 +27,7 @@ require('dotenv').config();
 
 app.set('trust proxy', 1);
 
-app.use(cors());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(
 	helmet({
     	contentSecurityPolicy: {
@@ -54,11 +54,11 @@ app.use('/api/', rateLimiter({
 
 app.use('/api-docs', apiDocs);
 app.use('/signup', signup);
-app.use('/api/login', login);
-app.use('/api/posts', getHomePosts);
-app.use('/api/:username', accounts);
-app.use('/api/:username/posts', posts);
-app.use('/api/:username/posts/:postID/comments', comments);
+app.use('/login', login);
+app.use('/posts', getHomePosts);
+app.use('/:username', accounts);
+app.use('/:username/posts', posts);
+app.use('/:username/posts/:postID/comments', comments);
 
 app.use('/:username', accountProfile);
 

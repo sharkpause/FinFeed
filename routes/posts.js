@@ -1,4 +1,5 @@
 const router = require('express').Router({ mergeParams: true });
+const subdomain = require('express-subdomain');
 
 const auth = require('../middleware/auth');
 const validateParams = require('../middleware/params');
@@ -23,5 +24,15 @@ router.route('/:postID/like')
 
 router.route('/:postID/dislike')
 	.patch(auth, dislikePost);
+
+router.use(
+	subdomain('api', getAllPosts),
+	subdomain('api', getPost),
+	subdomain('api', createPost),
+	subdomain('api', likePost),
+	subdomain('api', dislikePost),
+	subdomain('api', deletePost),
+	subdomain('api', editPost)
+);
 
 module.exports = router;

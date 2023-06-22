@@ -7,19 +7,19 @@ const Unauthorized = require('../errors/unauthorized');
 
 const { StatusCodes } = require('http-status-codes');
 
-async function getHomePosts(req, res) {
+async function getHomePosts(req, res, next) {
 	let posts = (await Post.find({})).reverse();
 
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
 
-async function getAllPosts(req, res) {
+async function getAllPosts(req, res, next) {
 	const posts = await Post.find({ author: req.params.username });
 
 	res.status(StatusCodes.OK).json({ posts, numPosts: posts.length });
 }
 
-async function getPost(req, res) {
+async function getPost(req, res, next) {
 	const { postID } = req.params;
 
 	const post = await Post.findOne({ _id: postID });
@@ -27,7 +27,7 @@ async function getPost(req, res) {
 	res.status(StatusCodes.OK).json({ post });
 }
 
-async function createPost(req, res) {
+async function createPost(req, res, next) {
 	const { content } = req.body;
 	const { username } = req.params;
 
@@ -50,7 +50,7 @@ async function createPost(req, res) {
 	res.status(StatusCodes.CREATED).json({ success: true, message: 'Succesfully created post' });
 }
 
-async function likePost(req, res) {
+async function likePost(req, res, next) {
 	const { postID } = req.params;
 	const { liker } = req.body;
 
@@ -88,7 +88,7 @@ async function likePost(req, res) {
 	}
 }
 
-async function dislikePost(req, res) {
+async function dislikePost(req, res, next) {
 	const { postID } = req.params;
 	const { disliker } = req.body;
 
@@ -126,7 +126,7 @@ async function dislikePost(req, res) {
 	}
 }
 
-async function deletePost(req, res) {
+async function deletePost(req, res, next) {
 	const { username, postID } = req.params;
 
 	const userID = (await Account.findOne({ username }))._id;
@@ -144,7 +144,7 @@ async function deletePost(req, res) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted post' });
 }
 
-async function editPost(req, res) {
+async function editPost(req, res, next) {
 	const { username, postID } = req.params;
 	const { content } = req.body;
 

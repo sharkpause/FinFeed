@@ -1,4 +1,5 @@
 const router = require('express').Router({ mergeParams: true });
+const subdomain = require('express-subdomain');
 
 const validateParams = require('../middleware/params');
 const auth = require('../middleware/auth');
@@ -17,5 +18,13 @@ router.route('/follow')
 
 router.route('/logout')
 	.delete(logOut);
+
+router.use(
+	subdomain('api', getAccount),
+	subdomain('api', deleteAccount),
+	subdomain('api', editAccount),
+	subdomain('api', followAccount),
+	subdomain('api', logOut)
+);
 
 module.exports = router;

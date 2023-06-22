@@ -1,6 +1,6 @@
 async function likePost(username, postID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/like', { liker: loggedUser });
+		await axios.patch(apiURL + username + '/posts/' + postID + '/like', { liker: loggedUser });
 
 		location.reload();
 	} catch(err) {
@@ -11,7 +11,7 @@ async function likePost(username, postID) {
 
 async function likeComment(username, postID, commentID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/comments/' + commentID + '/like', { liker: loggedUser });
+		await axios.patch(apiURL + username + '/posts/' + postID + '/comments/' + commentID + '/like', { liker: loggedUser });
 
 		location.reload();
 	} catch(err) {
@@ -22,7 +22,7 @@ async function likeComment(username, postID, commentID) {
 
 async function dislikePost(username, postID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/dislike', { disliker: loggedUser });
+		await axios.patch(apiURL + username + '/posts/' + postID + '/dislike', { disliker: loggedUser });
 
 		location.reload();
 	} catch(err) {
@@ -33,7 +33,7 @@ async function dislikePost(username, postID) {
 
 async function dislikeComment(username, postID, commentID) {
 	try {
-		await axios.patch('/api/' + username + '/posts/' + postID + '/comments/' + commentID + '/dislike', { disliker: loggedUser });
+		await axios.patch(apiURL + username + '/posts/' + postID + '/comments/' + commentID + '/dislike', { disliker: loggedUser });
 
 		location.reload();
 	} catch(err) {
@@ -44,7 +44,7 @@ async function dislikeComment(username, postID, commentID) {
 
 async function deletePost(username, postID) {
 	try {
-		await axios.delete('/api/' + username + '/posts/' + postID);
+		await axios.delete(apiURL + username + '/posts/' + postID);
 
 		location.reload();
 	} catch(err) {
@@ -59,7 +59,7 @@ async function deletePost(username, postID) {
 
 async function deleteComment(username, postID, commentID) {
 	try {
-		await axios.delete('/api/' + username + '/posts/' + postID + '/comments/' + commentID);
+		await axios.delete(apiURL + username + '/posts/' + postID + '/comments/' + commentID);
 
 		location.reload();
 	} catch(err) {
@@ -107,7 +107,7 @@ function editPost(postElem, postAuthor, postID) {
 		e.preventDefault();
 
 		try {
-			await axios.patch('/api/' + loggedUser + '/posts/' + postID, { content: editPostInput.value });
+			await axios.patch(apiURL + loggedUser + '/posts/' + postID, { content: editPostInput.value });
 
 			location.reload();
 		} catch(err) {
@@ -142,7 +142,7 @@ function editComment(commentElem, postAuthor, postID, commentID) {
 		const editValue = mainContent.querySelector('#editPostInput').value;
 
 		try {
-			await axios.patch('/api/' + loggedUser + '/posts/' + postID + '/comments/' + commentID, { content: editValue });
+			await axios.patch(apiURL + loggedUser + '/posts/' + postID + '/comments/' + commentID, { content: editValue });
 
 			location.reload();
 		} catch(err) {
@@ -409,9 +409,9 @@ async function getPosts() {
 				? username[username.length - 1]
 				: username[username.length - 2];
 
-			posts = (await axios.get('/api/' + username + '/posts')).data.posts;
+			posts = (await axios.get(apiURL + username + '/posts')).data.posts;
 		} else {
-			posts = (await axios.get('/api/posts')).data.posts;
+			posts = (await axios.get(apiURL + 'posts')).data.posts;
 		}
 
 		if(posts) {
@@ -494,7 +494,7 @@ async function getPosts() {
 					return alert('Post length exceeds 1000 letter limit');
 				}
 
-				await axios.post('/api/' + loggedUser + '/posts', { content: makePostInput.value });
+				await axios.post(apiURL + loggedUser + '/posts', { content: makePostInput.value });
 
 				location.reload();
 
@@ -547,7 +547,7 @@ function addCommentButton(postElem, postAuthor, postID) {
 
 				if(commentInput.length > 0) {
 					try {
-						await axios.post('/api/' + postAuthor + '/posts/' + postID + '/comments', { commentator: loggedUser, content: commentInput });
+						await axios.post(apiURL + postAuthor + '/posts/' + postID + '/comments', { commentator: loggedUser, content: commentInput });
 
 						location.reload();
 					} catch(err) {
@@ -560,7 +560,7 @@ function addCommentButton(postElem, postAuthor, postID) {
 			const commentSection = underMedia.querySelector('#commentSection');
 			commentSection.innerHTML = '<div class="loader mt-4"></div>';
 
-			const comments = (await axios.get('/api/' + postAuthor + '/posts/' + postID + '/comments')).data.comments; 
+			const comments = (await axios.get(apiURL + postAuthor + '/posts/' + postID + '/comments')).data.comments; 
 
 			if(comments) {
 				commentSection.innerHTML = '';

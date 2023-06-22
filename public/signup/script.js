@@ -42,7 +42,7 @@ form.addEventListener('submit', async e => {
 	};
 
 	try {
-		await axios.post('http://api.localhost:3000/signup', { username, password });
+		await axios.post(apiURL + 'signup', { username, password });
 
 		successText.textContent = 'Account successfully created!';
 

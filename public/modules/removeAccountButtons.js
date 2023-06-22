@@ -12,9 +12,9 @@ if(typeof loggedUser !== 'undefined') {
 	logoutButton.addEventListener('click', async e => {
 		e.preventDefault();
 
-		console.log('/api/' + loggedUser + '/logout');
+		console.log('apiURL' + loggedUser + '/logout');
 
-		await axios.delete('/api/' + loggedUser + '/logout');
+		await axios.delete('apiURL' + loggedUser + '/logout');
 
 		window.location.href = '/login';
 	});
