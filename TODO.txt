@@ -57,12 +57,17 @@ DONE {{
 	Commit 1 {{
 		- Changed API subdomain into routes because subdomains don't work with localhost
 	}}
+
+	Commit 2 {{
+		- Changed /api/api-docs to /api-docs
+		- Fixed profile button on home
+	}}
 }}
 
 }}
 
 TODO {{
 
-- Check for any bugs in backend
+- Only send 10 posts per post request unless user scrolls down and shit
 
 }}

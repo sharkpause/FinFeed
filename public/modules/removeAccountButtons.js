@@ -12,11 +12,13 @@ if(typeof loggedUser !== 'undefined') {
 	logoutButton.addEventListener('click', async e => {
 		e.preventDefault();
 
-		console.log('apiURL' + loggedUser + '/logout');
+		await axios.delete(apiURL + 'user/' + loggedUser + '/logout');
 
-		await axios.delete('apiURL' + loggedUser + '/logout');
-
-		window.location.href = '/login';
+		if(window.location.href === '/login') {
+			window.location.reload();
+		} else {
+			window.location.href = '/login';
+		}
 	});
 } else {
 	logoutButton.classList.remove('button');

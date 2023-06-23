@@ -46,7 +46,7 @@ async function setInfo() {
 		getPosts.src = '/modules/getPosts.js';
 		document.head.appendChild(getPosts);
 
-		const user = (await axios.get('apiURL' + usernameURL)).data;
+		const user = (await axios.get(apiURL + 'user/' + usernameURL)).data;
 
 		username = user.user.username;
 
@@ -59,7 +59,7 @@ async function setInfo() {
 		addDropdown();
 
 		if(loggedUser !== username) {
-			const isFollowing = (await axios.get('apiURL' + username)).data.user.follows.followers.includes(loggedUser);
+			const isFollowing = (await axios.get(apiURL + 'user/' + username)).data.user.follows.followers.includes(loggedUser);
 
 			if(isFollowing) {
 				followButtonContainer.innerHTML = '<button class="post-interact-button is-white-text dropdown-item-big" id="followButton"><i class="fa-solid fa-user-minus mr-1"></i>Unfollow account</button>';
@@ -68,7 +68,7 @@ async function setInfo() {
 					e.preventDefault();
 
 					try {
-						await axios.patch('apiURL' + username + '/follow', { follower: loggedUser });
+						await axios.patch(apiURL + 'user/' + username + '/follow', { follower: loggedUser });
 
 						location.reload();
 					} catch(err) {
@@ -83,7 +83,7 @@ async function setInfo() {
 					e.preventDefault();
 
 					try {
-						await axios.patch('apiURL' + username + '/follow', { follower: loggedUser });
+						await axios.patch(apiURL + 'user/' + username + '/follow', { follower: loggedUser });
 					} catch(err) {
 						console.log(err);
 						alert('Something went wrong');
@@ -199,7 +199,7 @@ async function addAccountInteractButtons() {
 
 async function deleteAccount() {
 	try {
-		await axios.delete('apiURL' + username);
+		await axios.delete(apiURL + 'user/' + username);
 
 		const cookies = document.cookie.split(";");
 
@@ -320,7 +320,7 @@ function editAccount() {
 		}
 
 		try {
-			await axios.patch('apiURL' + username, requestBody);
+			await axios.patch(apiURL + 'user/' + username, requestBody);
 			location.reload();
 		} catch(err) {
 			alert('Something went wrong');

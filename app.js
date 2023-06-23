@@ -33,7 +33,7 @@ app.use(
     	contentSecurityPolicy: {
       		directives: {
         		'script-src': ["'self'", 'kit.fontawesome.com', 'cdnjs.cloudflare.com'],
-				'default-src': ["'self'", 'ka-f.fontawesome.com', 'api.localhost:3000'],
+				'default-src': ["'self'", 'ka-f.fontawesome.com'],
 				'script-src-attr': ["'self'"]
       		},
     	},
@@ -52,15 +52,15 @@ app.use('/api/', rateLimiter({
   })
 );
 
-app.use('/api/api-docs', apiDocs);
+app.use('/api-docs', apiDocs);
 app.use('/api/signup', signup);
 app.use('/api/login', login);
 app.use('/api/posts', getHomePosts);
-app.use('/api/:username', accounts);
-app.use('/api/:username/posts', posts);
-app.use('/api/:username/posts/:postID/comments', comments);
+app.use('/api/user/:username', accounts);
+app.use('/api/user/:username/posts', posts);
+app.use('/api/user/:username/posts/:postID/comments', comments);
 
-app.use('/api/:username', accountProfile);
+app.use('/user/:username', accountProfile);
 
 const PORT = process.env.PORT || 3000;
 

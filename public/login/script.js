@@ -46,7 +46,7 @@ form.addEventListener('submit', async e => {
 
 		successText.textContent = 'Succesfully logged into account';
 
-		//window.location.href = '/';
+		window.location.href = '/';
 	} catch(err) {
 		if(err.response.status === 401) {
 			return passwordError.textContent = 'Either username or password is wrong, please try again';

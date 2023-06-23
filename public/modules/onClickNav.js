@@ -14,5 +14,5 @@ profileNav.addEventListener('click', e => {
 	
 	profileNav.classList.add('navbar-on-click');
 
-	window.location.href = loggedUser;
+	window.location.href = '/user/' + loggedUser;
 });

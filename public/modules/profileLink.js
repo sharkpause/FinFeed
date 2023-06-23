@@ -6,4 +6,4 @@ function getCookie(name) {
 
 let profileLink = document.getElementById('profileNav');
 
-profileLink.href = '/' + getCookie('username');;
+profileLink.href = '/user/' + getCookie('username');;
