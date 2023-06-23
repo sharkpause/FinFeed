@@ -53,6 +53,12 @@ DONE {{
 	}}
 }}
 
+23 Jun 2023 {{
+	Commit 1 {{
+		- Changed API subdomain into routes because subdomains don't work with localhost
+	}}
+}}
+
 }}
 
 TODO {{
