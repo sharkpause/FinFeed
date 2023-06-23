@@ -52,15 +52,15 @@ app.use('/api/', rateLimiter({
   })
 );
 
-app.use('/api-docs', apiDocs);
-app.use('/signup', signup);
-app.use('/login', login);
-app.use('/posts', getHomePosts);
-app.use('/:username', accounts);
-app.use('/:username/posts', posts);
-app.use('/:username/posts/:postID/comments', comments);
+app.use('/api/api-docs', apiDocs);
+app.use('/api/signup', signup);
+app.use('/api/login', login);
+app.use('/api/posts', getHomePosts);
+app.use('/api/:username', accounts);
+app.use('/api/:username/posts', posts);
+app.use('/api/:username/posts/:postID/comments', comments);
 
-app.use('/:username', accountProfile);
+app.use('/api/:username', accountProfile);
 
 const PORT = process.env.PORT || 3000;
 

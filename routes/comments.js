@@ -1,5 +1,4 @@
 const router = require('express').Router({ mergeParams: true });
-const subdomain = require('express-subdomain');
 
 const { getAllComments, getComment, createComment, likeComment, dislikeComment, deleteComment, editComment } = require('../controllers/comments.js');
 
@@ -22,15 +21,5 @@ router.route('/:commentID/like')
 
 router.route('/:commentID/dislike')
 	.patch(auth, dislikeComment);
-
-router.use(
-	subdomain('api', getAllComments),
-	subdomain('api', getComment),
-	subdomain('api', createComment),
-	subdomain('api', likeComment),
-	subdomain('api', dislikeComment),
-	subdomain('api', deleteComment),
-	subdomain('api', editComment)
-);
 
 module.exports = router;

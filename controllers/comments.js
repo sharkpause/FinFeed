@@ -8,7 +8,7 @@ const Unauthorized = require('../errors/unauthorized');
 const BadRequest = require('../errors/badrequest');
 const NotFound = require('../errors/notfound');
 
-async function getAllComments(req, res, next) {
+async function getAllComments(req, res) {
 	const { postID } = req.params;
 
 	const comments = await Comment.find({ postID });
@@ -16,7 +16,7 @@ async function getAllComments(req, res, next) {
 	res.status(StatusCodes.OK).json({ comments, numPosts: comments.length });
 }
 
-async function getComment(req, res, next) {
+async function getComment(req, res) {
 	const { commentID } = req.params;
 
 	const comment = await Comment.findOne({ _id: commentID });
@@ -25,7 +25,7 @@ async function getComment(req, res, next) {
 
 }
 
-async function createComment(req, res, next) {
+async function createComment(req, res) {
 	const { postID } = req.params;
 	const { commentator, content } = req.body;
 
@@ -55,7 +55,7 @@ async function createComment(req, res, next) {
 	res.status(StatusCodes.CREATED).json({ success: true, message: 'Succesfully created comment' });
 }
 
-async function likeComment(req, res, next) {
+async function likeComment(req, res) {
 	const { commentID } = req.params;
 	const { liker } = req.body;
 
@@ -93,7 +93,7 @@ async function likeComment(req, res, next) {
 	}
 }
 
-async function dislikeComment(req, res, next) {
+async function dislikeComment(req, res) {
 	const { commentID } = req.params;
 	const { disliker } = req.body;
 
@@ -130,7 +130,7 @@ async function dislikeComment(req, res, next) {
 	}
 }
 
-async function deleteComment(req, res, next) {
+async function deleteComment(req, res) {
 	const { username, commentID } = req.params;
 
 	const comment = await Comment.findOne({ _id: commentID });
@@ -155,7 +155,7 @@ async function deleteComment(req, res, next) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted comment' });
 }
 
-async function editComment(req, res, next) {
+async function editComment(req, res) {
 	const { username, commentID } = req.params;
 	const { content } = req.body;
 

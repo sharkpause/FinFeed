@@ -4,7 +4,7 @@ const Conflict = require('../errors/conflict');
 
 const { StatusCodes }  = require('http-status-codes');
 
-async function signup(req, res, next) {
+async function signup(req, res) {
 	const { username, password } = req.body;
 
 	const displayName = req.body.displayName || req.body.username;

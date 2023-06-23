@@ -9,7 +9,7 @@ const Unauthorized = require('../errors/unauthorized');
 const NotFound = require('../errors/notfound');
 const BadRequest = require('../errors/badrequest');
 
-async function getAccount(req, res, next) {
+async function getAccount(req, res) {
 	const { username } = req.params;
 
 	const user = await Account.findOne({ username }).select({ username: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
@@ -19,7 +19,7 @@ async function getAccount(req, res, next) {
 	res.status(StatusCodes.OK).json({ user, posts, numPosts: posts.length });
 }
 
-async function deleteAccount(req, res, next) {
+async function deleteAccount(req, res) {
 	const { username } = req.params;
 
 	const user = await Account.findOne({ username });
@@ -69,7 +69,7 @@ async function deleteAccount(req, res, next) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully deleted' });
 }
 
-async function editAccount(req, res, next) {
+async function editAccount(req, res) {
 	const { username } = req.params;
 
 	const user = await Account.findOne({ username });
@@ -99,7 +99,7 @@ async function editAccount(req, res, next) {
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully edited' });
 }
 
-async function followAccount(req, res, next) {
+async function followAccount(req, res) {
 	const { username } = req.params;
 	const { follower } = req.body;
 
@@ -134,7 +134,7 @@ async function followAccount(req, res, next) {
 	}
 }
 
-function logOut(req, res, next) {
+function logOut(req, res) {
 	res.clearCookie('jwtToken');
 	res.clearCookie('username');
 	res.end();
