@@ -182,7 +182,9 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 					<div class="media-content media-background visible-overflow" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
-								<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
+								<strong class="is-white-text mr-2" id="displayName"></strong>
+								<a id="username" class="mr-2">@</a>
+								<span id="creationDate" class="is-gray-color"></span>
 								
 								<span class="dropdown is-right is-pulled-right" id="dropdownMenu"></span>
 
@@ -216,7 +218,9 @@ return `<div class="mt-6" id="${commentID}">
 				<div class="media-content media-background" id="mainContent">
 					<div class="content">
 						<p class="is-white-text" id="mediaContent">
-							<strong class="is-white-text mr-2" id="displayName"></strong><a id="username">@</a>
+							<strong class="is-white-text mr-2" id="displayName"></strong>
+							<a id="username">@</a>
+							<span id="creationDate" class="is-gray-color"></span>
 
 							<span class="dropdown is-right is-pulled-right" id="dropdownMenu"></span>
 
@@ -434,6 +438,11 @@ async function getPosts() {
 			const username = mediaContent.querySelector('#username');
 			username.textContent += postAuthor;
 			username.href = '/user/' + postAuthor;
+
+			const creationDate = mediaContent.querySelector('#creationDate');
+			const dateObject = (new Date(posts[i].createdAt));
+			const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+			creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 			
 			const postContent = postElem.querySelector('#postContent');
 			postContent.textContent = posts[i].content;
@@ -579,6 +588,11 @@ function addCommentButton(postElem, postAuthor, postID) {
 
 				const contentComment = commentElem.querySelector('#commentContent');
 				contentComment.textContent = comments[i].content;
+
+				const creationDate = commentElem.querySelector('#creationDate');
+				const dateObject = (new Date(comments[i].createdAt));
+				const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+				creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 				
 				if(comments[i].edited === true) {
 					const editedText = commentElem.querySelector('#editedText');
@@ -626,3 +640,13 @@ function addCommentLikeDislike(commentElem, postAuthor, postID, commentID) {
 }
 
 getPosts();
+
+const mediaContainer = document.getElementById('mediaContainer');
+
+window.addEventListener('scroll', e => {
+	alert(e);
+
+	const scrollableHeight = mediaContainer.scrollHeight;
+
+	alert(scrollableHeight);
+});

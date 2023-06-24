@@ -64,6 +64,13 @@ DONE {{
 	}}
 }}
 
+24 Jun 2023 {{
+	Commit 1 {{
+		- Changed .reverse to .sort('-createdAt') in mongoose
+		- Now displays post creation date on site
+	}}
+}}
+
 }}
 
 TODO {{
