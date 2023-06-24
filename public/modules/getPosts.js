@@ -641,12 +641,8 @@ function addCommentLikeDislike(commentElem, postAuthor, postID, commentID) {
 
 getPosts();
 
-const mediaContainer = document.getElementById('mediaContainer');
-
 window.addEventListener('scroll', e => {
-	alert(e);
-
-	const scrollableHeight = mediaContainer.scrollHeight;
-
-	alert(scrollableHeight);
-});
+	if(document.body.scrollTop) {
+		alert(e);
+    }
+}, true);

@@ -69,6 +69,10 @@ DONE {{
 		- Changed .reverse to .sort('-createdAt') in mongoose
 		- Now displays post creation date on site
 	}}
+
+	Commit 2 {{
+		- Started working on detecting user scrolls down and shit
+	}}
 }}
 
 }}
