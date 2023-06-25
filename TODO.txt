@@ -83,6 +83,7 @@ DONE {{
 		- Fixed security bug where users can just edit other users comments
 		- Fixed loader on mobile being not centered
 		- Fixed the posts being uninteractable because of loader by changing concatinating to mediaContainer with += to just using appendChild like a normal rational person
+		- Added submit on enter and newline on shift + enter
 	}}
 }}
 
