@@ -8,7 +8,9 @@ const Unauthorized = require('../errors/unauthorized');
 const { StatusCodes } = require('http-status-codes');
 
 async function getHomePosts(req, res) {
-	let posts = (await Post.find({}).limit(10).sort('-createdAt'));
+	const from = req.query.from || 0;
+
+	let posts = (await Post.find({}).skip(from).limit(10).sort('-createdAt'));
 
 	res.status(StatusCodes.OK).json({ posts });
 }

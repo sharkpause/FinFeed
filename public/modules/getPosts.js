@@ -398,28 +398,33 @@ function addDropDown(elem) {
 	});
 }
 
-async function getPosts() {
+async function getPosts(queryString) {
 	try {
 		const url = window.location.href;
 		let posts;
 
 		const mediaContainer = document.getElementById('mediaContainer');
 
-		mediaContainer.innerHTML = '<div class="columns is-centered"><div class="column is-narrow has-text-centered"><div class="loader"></div></div></div>';
+		const loaderElem = document.createElement('div');
+		loaderElem.innerHTML = '<div class="columns is-centered mt-6" id="loader"><div class="column is-narrow has-text-centered"><div class="loader"></div></div></div>';
+		mediaContainer.appendChild(loaderElem);
 
-		if(/^.+\/\w+$/.test(url)) {
+		if(/^.+\/user\/\w+$/.test(url)) {
 			let username = url.split('/');
 			username = url.lastIndexOf('/') !== url.length - 1
 				? username[username.length - 1]
 				: username[username.length - 2];
 
-			posts = (await axios.get(apiURL + 'user/' + username + '/posts')).data.posts;
+			posts = (await axios.get(apiURL + 'user/' + username + '/posts' + queryString)).data.posts;
 		} else {
-			posts = (await axios.get(apiURL + 'posts')).data.posts;
+			posts = (await axios.get(apiURL + 'posts' + queryString)).data.posts;
 		}
 
 		if(posts) {
-			mediaContainer.innerHTML = '';
+			const loader = mediaContainer.querySelector('#loader');
+			if(loader) {
+				loader.outerHTML = '';
+			}
 		}
 
 		for(let i = 0; i < posts.length; ++i) {
@@ -528,10 +533,10 @@ function addCommentButton(postElem, postAuthor, postID) {
 					<form method="post" id="commentForm">
 						<div class="field is-grouped">
 							<p class="control is-expanded">
-								<input class="input input-transparent" placeholder="What do you think about this post?" id="commentInput">
+								<textarea class="input input-transparent auto-resize-textarea" id="commentInput" wrap="soft" maxlength="1000" type="text" placeholder="What's on your mind?"></textarea>
 							</p>
 							<p class="control">
-								<button type="submit" class="button is-blue-color is-transparent-button">
+								<button type="submit" class="button is-blue-color is-transparent-button" id="commentSubmit">
 									<span class="icon">
 										<i class="fas fa-paper-plane"></i>
 									</span>
@@ -543,6 +548,20 @@ function addCommentButton(postElem, postAuthor, postID) {
 					</div>
 				</div>
 			`;
+
+			commentInput.addEventListener('input', function(e) {
+				e.preventDefault();
+
+				autoGrow(this);
+			});
+
+			commentInput.addEventListener('keypress', e => {
+				if(e.key === 'Enter' && !e.shiftKey) {
+					e.preventDefault();
+
+					document.getElementById('commentSubmit').click();
+				}
+			});
 
 			const commentForm = underMedia.querySelector('#commentForm');
 			commentForm.addEventListener('submit', async e => {
@@ -605,7 +624,9 @@ function addCommentButton(postElem, postAuthor, postID) {
 
 				addCommentLikeDislike(commentElem, postAuthor, postID, comments[i]._id);
 
-				addCommentInteractButtons(commentElem, postAuthor, postID, comments[i]._id);
+				if(loggedUser === comments[i].author) {
+					addCommentInteractButtons(commentElem, postAuthor, postID, comments[i]._id);
+				}
 
 				commentSection.appendChild(commentElem);
 			}
@@ -639,10 +660,14 @@ function addCommentLikeDislike(commentElem, postAuthor, postID, commentID) {
 	});
 }
 
-getPosts();
+getPosts('?from=0');
+
+let fromCount = 10;
 
 window.addEventListener('scroll', e => {
-	if(document.body.scrollTop) {
-		alert(e);
+	if(document.body.scrollTop + document.body.clientHeight === document.body.scrollHeight) {
+		getPosts('?from=' + fromCount);
+
+		fromCount += 10;
     }
 }, true);

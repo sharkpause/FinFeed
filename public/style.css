@@ -10,6 +10,9 @@ body {
   background-attachment: fixed;
   background-image: url("../images/background.jpeg"); }
 
+#postContent, #commentContent {
+  white-space: pre-wrap; }
+
 .is-light-white-color {
   color: white !important;
   font-weight: normal !important; }
@@ -161,7 +164,17 @@ body {
   .delete-confirmation {
     border: 1px solid #f03a5f;
     background-color: #ff4d52;
-    font-size: 20px; } }
+    font-size: 20px; }
+  .loader {
+    border: 16px solid #f3f3f3;
+    /* Light grey */
+    border-top: 16px solid #3498db;
+    /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto; } }
 
 /* Bulma Utilities */
 .button, .input, .textarea, .select select, .file-cta,

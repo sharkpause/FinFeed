@@ -75,10 +75,21 @@ DONE {{
 	}}
 }}
 
+25 Jun 2023 {{
+	Commit 1 {{
+		- Added user scrolling down to page detection
+		- Fixed user posts URL regex
+		- Added user scrolling down to page get posts and display I'm not good with words I'm sorry man
+		- Fixed security bug where users can just edit other users comments
+		- Fixed loader on mobile being not centered
+		- Fixed the posts being uninteractable because of loader by changing concatinating to mediaContainer with += to just using appendChild like a normal rational person
+	}}
+}}
+
 }}
 
 TODO {{
 
-- Only send 10 posts per post request unless user scrolls down and shit
+
 
 }}

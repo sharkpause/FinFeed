@@ -32,11 +32,9 @@ async function login(req, res) {
 		secure: true,
 		sameSite: 'none',
 		maxAge: 3600000,
-		domain: '.localhost',
-		path: '/'
 	});
 
-	res.cookie('username', username, { domain: '.localhost', path: '/', sameSite: 'none', secure: true });
+	res.cookie('username', username, { sameSite: 'none', secure: true });
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'token and username set in cookies' });
 }

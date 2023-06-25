@@ -163,7 +163,8 @@ async function editComment(req, res) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const user = await Account.findOne({ username });
+	const comment = await Comment.findOne({ _id: commentID });
+	const user = await Account.findOne({ username: comment.author });
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
