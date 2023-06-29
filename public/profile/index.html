@@ -57,8 +57,6 @@
 
 	<div class="section profile-section" id="profileSection">
 		<div class="column" id="mainUserSection">
-			<strong class="profile-display-name title mr-2 is-white-text" id="displayNameSection"></strong>
-
 			<div class="dropdown is-right is-pulled-right" id="postMenu">
 				<span class="dropdown-trigger">
 					<button class="button transparent-dropdown-trigger" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -74,6 +72,12 @@
 					</span>
 				</span>
 			</div>
+
+			<figure class="image is-128x128 mb-6">
+				<img id="profilePicture">
+			</figure>
+
+			<strong class="profile-display-name title mr-2 is-white-text" id="displayNameSection"></strong>
 
 			<span class="is-white-text" id="usernameSection">@</span>
 		<div>
@@ -96,6 +100,8 @@
 	<div class="container media-margin" id="mediaContainer">
 	</div>
 
+	<script src="/modules/autoGrow.js"></script>
+	<script src="/modules/imageExist.js"></script>
 	<script src="/modules/apiURL.js"></script>
 	<script src="/modules/getLoggedUser.js"></script>
 	<script src="/modules/removeAccountButtons.js"></script>

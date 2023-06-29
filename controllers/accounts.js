@@ -3,6 +3,8 @@ const Post = require('../models/posts');
 const Comment = require('../models/comments');
 
 const bcrypt = require('bcrypt');
+const easyimg = require('easyimage');
+const fs = require('fs');
 const { StatusCodes } = require('http-status-codes');
 
 const Unauthorized = require('../errors/unauthorized');
@@ -66,11 +68,14 @@ async function deleteAccount(req, res) {
 
 	await Account.deleteOne({ _id: user._id });
 
+	fs.unlink('public/profilePictures/' + username + '.jpeg', err => { if(err) throw err });
+
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully deleted' });
 }
 
 async function editAccount(req, res) {
 	const { username } = req.params;
+	const file = req.file;
 
 	const user = await Account.findOne({ username });
 
@@ -81,22 +86,27 @@ async function editAccount(req, res) {
 	if(req.body.username) {
 		user.username = req.body.username;
 	}
-
 	if(req.body.password) {
 		user.password = req.body.password;
 	}
-
 	if(req.body.displayName) {
 		user.displayName = req.body.displayName;
 	}
-
 	if(req.body.bio) {
 		user.bio = req.body.bio;
+	}
+	if(file) {
+		const tmp_path = 'public/profilePictures/' + username + '.jpg';
+		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
+
+		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
+		fs.unlink(tmp_path, err => { if(err) throw err });
 	}
 
 	await user.save();
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully edited' });
+	res.status(StatusCodes.OK)
+	res.redirect('http://localhost:3000/user/' + username);
 }
 
 async function followAccount(req, res) {

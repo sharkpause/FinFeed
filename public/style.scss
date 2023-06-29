@@ -1,6 +1,7 @@
 $navbar-breakpoint: 770px;
 $navbar-burger-color: white;
 $dropdown-menu-min-width: 13rem;
+$file-name-border-color: black;
 
 html,body {
     width: 100%;
@@ -31,6 +32,14 @@ body {
 
 .is-blue-color {
 	color: #008dcc !important;
+}
+
+.is-blue-background-color {
+	background-color: #008ccb !important;
+}
+
+.is-blue-border {
+	border-color: #008ccb !important;
 }
 
 .is-red-color {

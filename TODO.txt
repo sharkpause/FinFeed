@@ -87,10 +87,21 @@ DONE {{
 	}}
 }}
 
+29 Jun 2023 {{
+	Commit 1 {{
+		- Fixed profile picture not loading on the first load of the website
+		- Changed hard coded image on edit account to dynamic images
+		- Changed choose a JPEG/JPG file to choose an image file
+		- Added previewing onto image upload
+		- Added converting all incoming pfp files into jpeg
+		- Added deleting uploaded pfp file when deleting account
+	}}
+}}
+
 }}
 
 TODO {{
 
-
+- Add images into posts
 
 }}

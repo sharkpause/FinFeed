@@ -176,10 +176,15 @@ function createEditInput(beforeContent) {
 			`;
 }
 
-function createMediaObject(likeCount, dislikeCount, postID) {
+function createMediaObject(likeCount, dislikeCount, postID, profileURL) {
 	return `<div class="mt-6" id="${postID}">
-				<article class="media">
-					<div class="media-content media-background visible-overflow" id="mainContent">
+				<article class="media media-background">
+					<figure class="media-left">
+						<p class="image is-48x48">
+							<img src="${profileURL}">
+						</p>
+					</figure>
+					<div class="media-content visible-overflow" id="mainContent">
 						<div class="content">
 							<p class="is-white-text" id="mediaContent">
 								<strong class="is-white-text mr-2" id="displayName"></strong>
@@ -212,10 +217,15 @@ function createMediaObject(likeCount, dislikeCount, postID) {
 			</div>`
 }
 
-function createCommentObject(likeCount, dislikeCount, commentID) {
+function createCommentObject(likeCount, dislikeCount, commentID, profileURL) {
 return `<div class="mt-6" id="${commentID}">
-			<article class="media">
-				<div class="media-content media-background" id="mainContent">
+			<article class="media media-background">
+				<figure class="media-left">
+						<p class="image is-48x48">
+							<img src="${profileURL}">
+						</p>
+					</figure>
+				<div class="media-content" id="mainContent">
 					<div class="content">
 						<p class="is-white-text" id="mediaContent">
 							<strong class="is-white-text mr-2" id="displayName"></strong>
@@ -428,10 +438,20 @@ async function getPosts(queryString) {
 		}
 
 		for(let i = 0; i < posts.length; ++i) {
-			const postElem = document.createElement('div');
-			postElem.innerHTML = createMediaObject(posts[i].likes.count, posts[i].dislikes.count, posts[i]._id);
-
 			const postAuthor = posts[i].author;
+			let profileURL;
+
+			if(imageExist('/profilePictures/' + postAuthor + '.jpeg')) {
+				profileURL = '/profilePictures/' + postAuthor + '.jpeg';
+			} else if(imageExist('/profilePictures/' + postAuthor + '.jpg')) {
+				profileURL = '/profilePictures/' + postAuthor + '.jpg';
+			} else {
+				profileURL = '/profilePictures/default.png';
+			}
+		
+			const postElem = document.createElement('div');
+			postElem.innerHTML = createMediaObject(posts[i].likes.count, posts[i].dislikes.count, posts[i]._id, profileURL);
+
 			const posterDisplayName = posts[i].authorDisplay;
 			const postID = posts[i]._id;
 
@@ -595,15 +615,24 @@ function addCommentButton(postElem, postAuthor, postID) {
 			}
 
 			for(let i = 0; i < comments.length; ++i) {
+				const commentAuthor = comments[i].author;
+				let profileURL;
+
+				if(imageExist('/profilePictures/' + commentAuthor + '.png')) {
+					profileURL = '/profilePictures/' + postAuthor + '.png';
+				} else {
+					profileURL = '/profilePictures/default.png';
+				}
+
 				const commentElem = document.createElement('div');
-				commentElem.innerHTML = createCommentObject(comments[i].likes.count, comments[i].dislikes.count, comments[i]._id);
+				commentElem.innerHTML = createCommentObject(comments[i].likes.count, comments[i].dislikes.count, comments[i]._id, profileURL);
 
 				const displayNameComment = commentElem.querySelector('#displayName');
 				displayNameComment.textContent = comments[i].authorDisplay;
 
 				const usernameComment = commentElem.querySelector('#username');
-				usernameComment.textContent = '@' + comments[i].author;
-				usernameComment.href = '/' + comments[i].author;
+				usernameComment.textContent = '@' + commentAuthor;
+				usernameComment.href = '/' + commentAuthor;
 
 				const contentComment = commentElem.querySelector('#commentContent');
 				contentComment.textContent = comments[i].content;

@@ -10,6 +10,9 @@ async function signup(req, res) {
 	const displayName = req.body.displayName || req.body.username;
 	const bio = req.body.bio || '';
 
+	if(username === 'default' || username === 'undefined') throw new Conflict('Username forbidden'); // default - To prevent breaking profile pictures
+																									 // undefined - To reserve user not found (user/undefined)
+
 	try {
 		if((await Account.find({ username })).length > 0) {
 			throw new Conflict('Username already exists');

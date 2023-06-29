@@ -7,6 +7,7 @@ const mainUserInfo = document.getElementById('mainUserInfo');
 const profileSection = document.getElementById('profileSection');
 const deleteButtonContainer = document.getElementById('deleteButtonContainer');
 const editButtonContainer = document.getElementById('editButtonContainer');
+const profilePicture = document.getElementById('profilePicture');
 
 let username;
 
@@ -39,6 +40,7 @@ async function setInfo() {
 			displayNameSection.textContent = 'User does not exist';
 			displayNameSection.classList.add('is-red-color');
 			usernameSection.textContent = 'Error 404';
+			profilePicture.src = '/profilePictures/default.png';
 			return bioSection.textContent = 'Please check the url if the username is mispelled';
 		}
 
@@ -55,6 +57,12 @@ async function setInfo() {
 		bioSection.textContent = user.user.bio;
 		followCount.textContent = user.user.follows.count;
 		numPosts.textContent = user.numPosts;
+
+		if(imageExist('/profilePictures/' + username + '.jpeg')) {
+			profilePicture.src = '/profilePictures/' + username + '.jpeg';
+		} else {
+			profilePicture.src = '/profilePictures/default.png';
+		}
 
 		addDropdown();
 
@@ -240,22 +248,53 @@ function editAccount() {
 
 	followAndNumPosts.innerHTML = '';
 
-	profileSection.innerHTML = `
+	let profilePictureURL;
 
+	if(imageExist('/profilePictures/' + beforeUsername + '.jpeg')) {
+		profilePictureURL = '/profilePictures/' + beforeUsername + '.jpeg';
+	} else if(imageExist('/profilePictures/' + beforeUsername + '.jpg')) {
+		profilePictureURL = '/profilePictures/' + beforeUsername + '.jpg';
+	} else {
+		profilePictureURL = '/profilePictures/default.png';
+	}
+
+	profileSection.innerHTML = `
 	<div>
 		<strong class="title is-white-text">Edit account information</strong>
 
-		<form id="editForm" method="post">
+		<form id="editForm" method="post" action="/api/user/${beforeUsername}/edit" enctype="multipart/form-data">
 			<div class="field mt-6">
 
-				<label class="label is-light-white-color">Display name</label>
-				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput" maxlength="50">
+				<div class="columns profilePictureForm">
+					<div class="column is-narrow">
+						<figure class="image is-128x128">
+							<img src="${profilePictureURL}" id="profilePictureElem">
+						</figure>
+					</div>
+
+					<div class="file has-name column mt-6 is-fullwidth is-narrow">
+						<label class="file-label">
+						<input class="file-input" type="file" name="profilePicture" id="fileInput" accept="image/*">
+						<span class="file-cta is-blue-background-color is-blue-border">
+							<span class="file-icon">
+								<i class="fas fa-upload"></i>
+							</span>
+							<span class="file-label is-white-text">
+								Choose an image file
+							</span>
+						</span>
+						</label>
+					</div>
+				</div>
+
+				<label class="label is-light-white-color mt-5">Display name</label>
+				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput" maxlength="50" name="displayName">
 
 				<label class="label is-light-white-color mt-5">Bio</label>
-				<textarea class="input input-transparent auto-resize-textarea" id="bioInput" placeholder="Bio" wrap="soft" maxlength="100" type="text" oninput="autoGrow(this)">${bioSection.textContent}</textarea>
+				<textarea class="input input-transparent auto-resize-textarea" id="bioInput" placeholder="Bio" wrap="soft" maxlength="100" type="text" name="bio">${bioSection.textContent}</textarea>
 
 				<label class="label is-light-white-color mt-5">Password</label>
-				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput">
+				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput" name="password">
 
 				<label class="label is-light-white-color mt-5">Confirm Password</label>
 				<input class="input input-transparent" type="password" placeholder="Confirm password (this input will only function if the password input above is filled)" id="confirmPasswordInput"">
@@ -280,52 +319,24 @@ function editAccount() {
 		</form>
 	</div>`;
 
+	profileSection.querySelector('#bioInput').addEventListener('input', function() { autoGrow(this) });
+
+	profileSection.querySelector('#fileInput').addEventListener('change', e => {
+		const selectedImage = e.target.files[0];
+		const reader = new FileReader();
+
+		reader.onload = e => {
+			profileSection.querySelector('#profilePictureElem').src = e.target.result;
+		};
+
+		reader.readAsDataURL(selectedImage);
+	})
+
 	const cancelButton = document.getElementById('cancelButton');
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
 
 		location.reload();
-	});
-
-	const editForm = profileSection.querySelector('#editForm');
-	editForm.addEventListener('submit', async e => {
-		e.preventDefault();
-
-		const newDisplayName = editForm.querySelector('#displayNameInput').value;
-		const newBio = editForm.querySelector('#bioInput').value;
-		
-		const newPassword = editForm.querySelector('#passwordInput').value;
-
-		const requestBody = {};
-
-		if(beforeDisplayName !== newDisplayName) {
-			requestBody.displayName = newDisplayName;
-		}
-		if(beforeBioSection !== newBio) {
-			requestBody.bio = newBio;
-		}
-
-		if(newPassword.length > 0) {
-			const confirmPassword = editForm.querySelector('#confirmPasswordInput');
-
-			if(newPassword === confirmPassword.value) {
-				requestBody.password = newPassword;
-			} else {
-				confirmPassword.classList.add('input-error');
-
-				const passwordError = editForm.querySelector('#passwordError');
-				passwordError.classList.add('is-red-color');
-				return passwordError.textContent = 'Password does not match, please try again';
-			}
-		}
-
-		try {
-			await axios.patch(apiURL + 'user/' + username, requestBody);
-			location.reload();
-		} catch(err) {
-			alert('Something went wrong');
-			console.log(err);
-		}
 	});
 }
 
