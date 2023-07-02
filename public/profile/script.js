@@ -230,114 +230,123 @@ async function deleteAccount() {
 	}
 }
 
-function editAccount() {
-	const beforeProfileSection = profileSection.innerHTML;
+async function editAccount() {
+	try {
+		const beforeProfileSection = profileSection.innerHTML;
 
-	const displayNameSection = profileSection.querySelector('#displayNameSection');
-	const usernameSection = profileSection.querySelector('#usernameSection');
-	const editButtonContainer = profileSection.querySelector('#editButtonContainer');
-	const deleteButtonContainer = profileSection.querySelector('#deleteButtonContainer');
-	const followAndNumPosts = profileSection.querySelector('#followAndNumPosts');
+		const displayNameSection = profileSection.querySelector('#displayNameSection');
+		const usernameSection = profileSection.querySelector('#usernameSection');
+		const editButtonContainer = profileSection.querySelector('#editButtonContainer');
+		const deleteButtonContainer = profileSection.querySelector('#deleteButtonContainer');
+		const followAndNumPosts = profileSection.querySelector('#followAndNumPosts');
 
-	beforeDisplayName = displayNameSection.textContent;
-	beforeUsername = usernameSection.textContent.slice(1);
-	beforeBioSection = bioSection.textContent;
+		beforeDisplayName = displayNameSection.textContent;
+		beforeUsername = usernameSection.textContent.slice(1);
+		beforeBioSection = bioSection.textContent;
+		
+		const email = (await axios.get(apiURL + 'user/' + beforeUsername)).data.user.email;
 
-	editButtonContainer.innerHTML = '';
-	deleteButtonContainer.innerHTML = '';
+		editButtonContainer.innerHTML = '';
+		deleteButtonContainer.innerHTML = '';
 
-	followAndNumPosts.innerHTML = '';
+		followAndNumPosts.innerHTML = '';
 
-	let profilePictureURL;
+		let profilePictureURL;
 
-	if(imageExist('/profilePictures/' + beforeUsername + '.jpeg')) {
-		profilePictureURL = '/profilePictures/' + beforeUsername + '.jpeg';
-	} else if(imageExist('/profilePictures/' + beforeUsername + '.jpg')) {
-		profilePictureURL = '/profilePictures/' + beforeUsername + '.jpg';
-	} else {
-		profilePictureURL = '/profilePictures/default.png';
-	}
+		if(imageExist('/profilePictures/' + beforeUsername + '.jpeg')) {
+			profilePictureURL = '/profilePictures/' + beforeUsername + '.jpeg';
+		} else if(imageExist('/profilePictures/' + beforeUsername + '.jpg')) {
+			profilePictureURL = '/profilePictures/' + beforeUsername + '.jpg';
+		} else {
+			profilePictureURL = '/profilePictures/default.png';
+		}
 
-	profileSection.innerHTML = `
-	<div>
-		<strong class="title is-white-text">Edit account information</strong>
+		profileSection.innerHTML = `
+		<div>
+			<strong class="title is-white-text">Edit account information</strong>
 
-		<form id="editForm" method="post" action="/api/user/${beforeUsername}/edit" enctype="multipart/form-data">
-			<div class="field mt-6">
+			<form id="editForm" method="post" action="/api/user/${beforeUsername}/edit" enctype="multipart/form-data">
+				<div class="field mt-6">
 
-				<div class="columns profilePictureForm">
-					<div class="column is-narrow">
-						<figure class="image is-128x128">
-							<img src="${profilePictureURL}" id="profilePictureElem">
-						</figure>
+					<div class="columns profilePictureForm">
+						<div class="column is-narrow">
+							<figure class="image is-128x128">
+								<img src="${profilePictureURL}" id="profilePictureElem">
+							</figure>
+						</div>
+
+						<div class="file has-name column mt-6 is-fullwidth is-narrow">
+							<label class="file-label">
+							<input class="file-input" type="file" name="profilePicture" id="fileInput" accept="image/*">
+							<span class="file-cta is-blue-background-color is-blue-border">
+								<span class="file-icon">
+									<i class="fas fa-upload"></i>
+								</span>
+								<span class="file-label is-white-text">
+									Choose an image file
+								</span>
+							</span>
+							</label>
+						</div>
 					</div>
 
-					<div class="file has-name column mt-6 is-fullwidth is-narrow">
-						<label class="file-label">
-						<input class="file-input" type="file" name="profilePicture" id="fileInput" accept="image/*">
-						<span class="file-cta is-blue-background-color is-blue-border">
-							<span class="file-icon">
-								<i class="fas fa-upload"></i>
+					<label class="label is-light-white-color mt-5">Email</label>
+					<input class="input input-transparent" placeholder="Email" type="text" value="${email}" id="emailInput" name="email">
+
+					<label class="label is-light-white-color mt-5">Display name</label>
+					<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput" maxlength="50" name="displayName">
+
+					<label class="label is-light-white-color mt-5">Bio</label>
+					<textarea class="input input-transparent auto-resize-textarea" id="bioInput" placeholder="Bio" wrap="soft" maxlength="100" type="text" name="bio">${bioSection.textContent}</textarea>
+
+					<label class="label is-light-white-color mt-5">Password</label>
+					<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput" name="password">
+
+					<label class="label is-light-white-color mt-5">Confirm Password</label>
+					<input class="input input-transparent" type="password" placeholder="Confirm password (this input will only function if the password input above is filled)" id="confirmPasswordInput"">
+					<p id="passwordError"></p>
+
+					<p class="control mt-6">
+						<button type="submit" class="button is-blue-color is-transparent-button mr-2 mb-4">
+							<span class="icon mr-2">
+								<i class="fa-solid fa-check"></i>
 							</span>
-							<span class="file-label is-white-text">
-								Choose an image file
+							Confirm and edit account info
+						</button>
+						<button id="cancelButton" class="button is-blue-color is-transparent-button">
+							<span class="icon mr-2">
+								<i class="fa-solid fa-xmark"></i>
 							</span>
-						</span>
-						</label>
-					</div>
+							Cancel
+						</button>
+					</p>
+
 				</div>
+			</form>
+		</div>`;
 
-				<label class="label is-light-white-color mt-5">Display name</label>
-				<input class="input input-transparent" placeholder="Display name" type="text" value="${displayNameSection.textContent}" id="displayNameInput" maxlength="50" name="displayName">
+		profileSection.querySelector('#bioInput').addEventListener('input', function() { autoGrow(this) });
 
-				<label class="label is-light-white-color mt-5">Bio</label>
-				<textarea class="input input-transparent auto-resize-textarea" id="bioInput" placeholder="Bio" wrap="soft" maxlength="100" type="text" name="bio">${bioSection.textContent}</textarea>
+		profileSection.querySelector('#fileInput').addEventListener('change', e => {
+			const selectedImage = e.target.files[0];
+			const reader = new FileReader();
 
-				<label class="label is-light-white-color mt-5">Password</label>
-				<input class="input input-transparent" type="password" placeholder="Password (leave empty to not change)" id="passwordInput" name="password">
+			reader.onload = e => {
+				profileSection.querySelector('#profilePictureElem').src = e.target.result;
+			};
 
-				<label class="label is-light-white-color mt-5">Confirm Password</label>
-				<input class="input input-transparent" type="password" placeholder="Confirm password (this input will only function if the password input above is filled)" id="confirmPasswordInput"">
-				<p id="passwordError"></p>
+			reader.readAsDataURL(selectedImage);
+		})
 
-				<p class="control mt-6">
-					<button type="submit" class="button is-blue-color is-transparent-button mr-2 mb-4">
-						<span class="icon mr-2">
-							<i class="fa-solid fa-check"></i>
-						</span>
-						Confirm and edit account info
-					</button>
-					<button id="cancelButton" class="button is-blue-color is-transparent-button">
-						<span class="icon mr-2">
-							<i class="fa-solid fa-xmark"></i>
-						</span>
-						Cancel
-					</button>
-				</p>
+		const cancelButton = document.getElementById('cancelButton');
+		cancelButton.addEventListener('click', e => {
+			e.preventDefault();
 
-			</div>
-		</form>
-	</div>`;
-
-	profileSection.querySelector('#bioInput').addEventListener('input', function() { autoGrow(this) });
-
-	profileSection.querySelector('#fileInput').addEventListener('change', e => {
-		const selectedImage = e.target.files[0];
-		const reader = new FileReader();
-
-		reader.onload = e => {
-			profileSection.querySelector('#profilePictureElem').src = e.target.result;
-		};
-
-		reader.readAsDataURL(selectedImage);
-	})
-
-	const cancelButton = document.getElementById('cancelButton');
-	cancelButton.addEventListener('click', e => {
-		e.preventDefault();
-
-		location.reload();
-	});
+			location.reload();
+		});
+	} catch(err) {
+		console.log(err);
+	}
 }
 
 setInfo();

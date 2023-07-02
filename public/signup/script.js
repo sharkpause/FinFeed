@@ -1,9 +1,11 @@
 const form = document.getElementById('signupForm');
 const usernameInput = document.getElementById('usernameInput');
 const passwordInput = document.getElementById('passwordInput');
+const emailInput = document.getElementById('emailInput');
 
 const usernameError = document.getElementById('usernameError');
 const passwordError = document.getElementById('passwordError');
+const emailError = document.getElementById('emailError');
 
 const successText = document.getElementById('successText');
 
@@ -12,9 +14,13 @@ form.addEventListener('submit', async e => {
 
 	const username = usernameInput.value;
 	const password = passwordInput.value;
+	const email = emailInput.value;
 
 	usernameError.textContent = '';
 	usernameInput.classList.remove('input-error');
+	
+	emailError.textContent = '';
+	emailError.classList.remove('input-error');
 
 	passwordError.textContent = '';
 	passwordInput.classList.remove('input-error');
@@ -24,6 +30,11 @@ form.addEventListener('submit', async e => {
 	if(username === '') {
 		usernameError.textContent = 'Please provide username';
 		return usernameInput.classList.add('input-error');
+	}
+
+	if(email === '') {
+		emailError.textContent = 'Please provide email';
+		return emailInput.classList.add('input-error');
 	}
 
 	if(password === '') {
@@ -40,9 +51,14 @@ form.addEventListener('submit', async e => {
 		usernameError.textContent = 'Username may only contain uppercase amd lowercase letters and underscores';
 		return usernameInput.classList.add('input-error');
 	};
+	
+	if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/gm) {
+		emailError.textContent = 'Invalid email';
+		return emailInput.classList.add('input-error');
+	}
 
 	try {
-		await axios.post(apiURL + 'signup', { username, password });
+		await axios.post(apiURL + 'signup', { username, email, password });
 
 		successText.textContent = 'Account successfully created!';
 

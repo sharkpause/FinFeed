@@ -15,6 +15,17 @@ const AccountSchema = new mongoose.Schema({
 			message: 'Username may only contain letters, numbers, and underscores'
 		}
 	},
+	email: {
+		type: String,
+		required: true,
+		unique: true,
+		validate: {
+			validator: email => {
+				return /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/gm;
+			},
+			message: 'Invalid email'
+		}
+	},
 	password: {
 		type: String,
 		required: true

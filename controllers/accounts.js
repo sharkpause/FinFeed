@@ -14,7 +14,7 @@ const BadRequest = require('../errors/badrequest');
 async function getAccount(req, res) {
 	const { username } = req.params;
 
-	const user = await Account.findOne({ username }).select({ username: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
+	const user = await Account.findOne({ username }).select({ username: 1, email: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
 
 	const posts = await Post.find({ author: username});
 
@@ -85,6 +85,9 @@ async function editAccount(req, res) {
 
 	if(req.body.username) {
 		user.username = req.body.username;
+	}
+	if(req.body.email) {
+		user.email = req.body.email;
 	}
 	if(req.body.password) {
 		user.password = req.body.password;

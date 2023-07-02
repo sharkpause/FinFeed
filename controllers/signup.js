@@ -5,20 +5,20 @@ const Conflict = require('../errors/conflict');
 const { StatusCodes }  = require('http-status-codes');
 
 async function signup(req, res) {
-	const { username, password } = req.body;
+	const { username, email, password } = req.body;
 
 	const displayName = req.body.displayName || req.body.username;
 	const bio = req.body.bio || '';
 
 	if(username === 'default' || username === 'undefined') throw new Conflict('Username forbidden'); // default - To prevent breaking profile pictures
-																									 // undefined - To reserve user not found (user/undefined)
+																									 // undefined - To reserve for user not found (user/undefined)
 
 	try {
 		if((await Account.find({ username })).length > 0) {
 			throw new Conflict('Username already exists');
 		}
 		const user = await Account.create({
-			username, password, displayName, bio
+			username, email, password, displayName, bio
 		});
 	} catch(err) {
 		if(err.statusCode === 409) {
