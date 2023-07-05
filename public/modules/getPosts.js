@@ -87,7 +87,6 @@ function editPost(postElem, postAuthor, postID) {
 	const cancelButton = mainContent.querySelector('#cancelButton');
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
-
 		mainContent.innerHTML = beforeHTML;
 
 		const dropdownTrigger = mainContent.querySelector('.dropdown-trigger');
@@ -97,6 +96,18 @@ function editPost(postElem, postAuthor, postID) {
 		const dropdownMenu = mainContent.querySelector('.dropdown-menu');
 		dropdownMenu.innerHTML = '';
 		dropdownMenu.outerHTML = '';
+
+		mainContent.querySelector('#likeButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			likePost(postAuthor, postID);
+		});
+
+		mainContent.querySelector('#dislikeButton').addEventListener('click', e => {
+			e.preventDefault();
+
+			dislikePost(postAuthor, postID);
+		});
 
 		addPostInteractButtons(postElem, postAuthor, postID);
 		addCommentButton(postElem, postAuthor, postID);
@@ -443,8 +454,6 @@ async function getPosts(queryString) {
 
 			if(imageExist('/profilePictures/' + postAuthor + '.jpeg')) {
 				profileURL = '/profilePictures/' + postAuthor + '.jpeg';
-			} else if(imageExist('/profilePictures/' + postAuthor + '.jpg')) {
-				profileURL = '/profilePictures/' + postAuthor + '.jpg';
 			} else {
 				profileURL = '/profilePictures/default.png';
 			}
@@ -618,8 +627,8 @@ function addCommentButton(postElem, postAuthor, postID) {
 				const commentAuthor = comments[i].author;
 				let profileURL;
 
-				if(imageExist('/profilePictures/' + commentAuthor + '.png')) {
-					profileURL = '/profilePictures/' + postAuthor + '.png';
+				if(imageExist('/profilePictures/' + commentAuthor + '.jpeg')) {
+					profileURL = '/profilePictures/' + commentAuthor + '.jpeg';
 				} else {
 					profileURL = '/profilePictures/default.png';
 				}

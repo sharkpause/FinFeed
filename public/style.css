@@ -155,6 +155,9 @@ body {
   height: 120px;
   animation: spin 2s linear infinite; }
 
+.confirm-email-margin {
+  margin-top: 25rem !important; }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg); }

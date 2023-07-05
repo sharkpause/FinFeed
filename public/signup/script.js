@@ -58,11 +58,17 @@ form.addEventListener('submit', async e => {
 	}
 
 	try {
+		document.getElementById('signupSection').remove();
+
+		document.getElementById('confirmEmailSection').innerHTML = `<div class="columns is-centered confirm-email-margin">
+			<div class="column is-narrow has-text-centered">
+				<div class="is-white-text is-size-3 mb-6">Please check your email inbox to confirm your email...</div>
+				<a class="is-size-4">Resend email</a>
+			</div>
+		</div>`;
+
+		
 		await axios.post(apiURL + 'signup', { username, email, password });
-
-		successText.textContent = 'Account successfully created!';
-
-		window.location.href = '/login';
 	} catch(err) {
 		if(err.response) {
 			if(err.response.status === 409) {

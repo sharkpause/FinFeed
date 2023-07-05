@@ -78,6 +78,10 @@ DONE:
 			- Added emails into schema and sign up
 			- Added editing email in profile edit section
 			- Added editing email in controller
+	
+	5 Jul 2023:
+		Commit 1:
+			- Started implementing email confirmation after signing up
 
 TODO:
 	- Add images into posts
