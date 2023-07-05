@@ -1,7 +1,8 @@
 const form = document.getElementById('signupForm');
 const usernameInput = document.getElementById('usernameInput');
-const passwordInput = document.getElementById('passwordInput');
 const emailInput = document.getElementById('emailInput');
+const passwordInput = document.getElementById('passwordInput');
+const confirmPasswordInput = document.getElementById('confirmPasswordInput');
 
 const usernameError = document.getElementById('usernameError');
 const passwordError = document.getElementById('passwordError');
@@ -14,6 +15,7 @@ form.addEventListener('submit', async e => {
 
 	const username = usernameInput.value;
 	const password = passwordInput.value;
+	const confirmedPassword = confirmPasswordInput.value;
 	const email = emailInput.value;
 
 	usernameError.textContent = '';
@@ -52,9 +54,14 @@ form.addEventListener('submit', async e => {
 		return usernameInput.classList.add('input-error');
 	};
 	
-	if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/gm) {
+	if(!/^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-]+)(\.[a-zA-Z]{2,5}){1,2}$/gm.test(email)) {
 		emailError.textContent = 'Invalid email';
 		return emailInput.classList.add('input-error');
+	}
+
+	if(confirmedPassword !== password) {
+		passwordError.textContent = "Password and confirmed password does not match!";
+		return passwordError.classList.add('input-error');
 	}
 
 	try {

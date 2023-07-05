@@ -2,6 +2,7 @@ const Account = require('../models/accounts');
 
 const Conflict = require('../errors/conflict');
 
+const crypto = require('crypto');
 const { StatusCodes }  = require('http-status-codes');
 
 async function signup(req, res) {
@@ -17,6 +18,9 @@ async function signup(req, res) {
 		if((await Account.find({ username })).length > 0) {
 			throw new Conflict('Username already exists');
 		}
+
+		const emailToken = crypto.randomBytes(32).toString('hex');
+
 		const user = await Account.create({
 			username, email, password, displayName, bio
 		});
