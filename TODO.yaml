@@ -1,89 +1,91 @@
 DONE:
-	23 May 2023:
-		Commit 1:
-			- Fixed multiline input
-			- Fixed comment button after edit cancel
-			- Fixed comment like and dislike button after edit cancel
-			- Changed post limit from 300 characters to 1000
-			- Changed the delete confirmation button when on mobile and desktop
-			- Changed nbsp into mr-1
-		Commit 2:
-			- Changed nbsp to mr-1 in public/profile/index.html
-			- Added line break between follow count and number of posts if on mobile
+  23 May 2023:
+    Commit 1:
+      - Fixed multiline input
+      - Fixed comment button after edit cancel
+      - Fixed comment like and dislike button after edit cancel
+      - Changed post limit from 300 characters to 1000
+      - Changed the delete confirmation button when on mobile and desktop
+      - Changed nbsp into mr-1
+    Commit 2:
+      - Changed nbsp to mr-1 in public/profile/index.html
+      - Added line break between follow count and number of posts if on mobile
 
-	24 May 2023:
-		Commit 1:
-			- Fixed user posts from getting all posts to all posts only from user
-			- Changed edit and delete account buttons into a dropdown menu
-			- Changed some nbsp into mr-1
-			- Added follow feature
-			- Changed account deletion UI for mobile
-			- Changed deletion UI a little for desktop, added space between yes and no
-			- Changed to reload after cancelling edit account
+  24 May 2023:
+    Commit 1:
+      - Fixed user posts from getting all posts to all posts only from user
+      - Changed edit and delete account buttons into a dropdown menu
+      - Changed some nbsp into mr-1
+      - Added follow feature
+      - Changed account deletion UI for mobile
+      - Changed deletion UI a little for desktop, added space between yes and no
+      - Changed to reload after cancelling edit account
 
-	25 May 2023:
-		Commit 1:
-			- Changed display name input and make post input into textarea
-			- Added some space between navigation bar and make post form
-			- Fixed post deletion UI for desktop
-			- Changed edit and delete buttons in comment object into a drop down menu
-		Commit 2:
-			- Added loading animation for when waiting for posts and comments loading
-			- Added so post author can delete the comments other people make on their post
-		Commit 3:
-			- Fixed TODO description
-			- Flipped Yes and No's places
-		Commit 4:
-			- Added logo and description
+  25 May 2023:
+    Commit 1:
+      - Changed display name input and make post input into textarea
+      - Added some space between navigation bar and make post form
+      - Fixed post deletion UI for desktop
+      - Changed edit and delete buttons in comment object into a drop down menu
+    Commit 2:
+      - Added loading animation for when waiting for posts and comments loading
+      - Added so post author can delete the comments other people make on their post
+    Commit 3:
+      - Fixed TODO description
+      - Flipped Yes and No's places
+    Commit 4:
+      - Added logo and description
 
-	22 Jun 2023:
-		Commit 1:
-			- Changed hard coding API url to saving in variable for easier changing
+  22 Jun 2023:
+    Commit 1:
+      - Changed hard coding API url to saving in variable for easier changing
 
-	23 Jun 2023:
-		Commit 1:
-			- Changed API subdomain into routes because subdomains don't work with localhost
-		Commit 2:
-			- Changed /api/api-docs to /api-docs
-			- Fixed profile button on home
+  23 Jun 2023:
+    Commit 1:
+      - Changed API subdomain into routes because subdomains don't work with localhost
+    Commit 2:
+      - Changed /api/api-docs to /api-docs
+      - Fixed profile button on home
 
-	24 Jun 2023:
-		Commit 1:
-			- Changed .reverse to .sort('-createdAt') in mongoose
-			- Now displays post creation date on site
-		Commit 2:
-			- Started working on detecting user scrolls down and shit
+  24 Jun 2023:
+    Commit 1:
+      - Changed .reverse to .sort('-createdAt') in mongoose
+      - Now displays post creation date on site
+    Commit 2:
+      - Started working on detecting user scrolls down and shit
 
-	25 Jun 2023:
-		Commit 1:
-			- Added user scrolling down to page detection
-			- Fixed user posts URL regex
-			- Added user scrolling down to page get posts and display I'm not good with words I'm sorry man
-			- Fixed security bug where users can just edit other users comments
-			- Fixed loader on mobile being not centered
-			- Fixed the posts being uninteractable because of loader by changing concatinating to mediaContainer with += to just using appendChild like a normal rational person
-			- Added submit on enter and newline on shift + enter
+  25 Jun 2023:
+    Commit 1:
+      - Added user scrolling down to page detection
+      - Fixed user posts URL regex
+      - Added user scrolling down to page get posts and display I'm not good with words I'm sorry man
+      - Fixed security bug where users can just edit other users comments
+      - Fixed loader on mobile being not centered
+      - Fixed the posts being uninteractable because of loader by changing concatinating to mediaContainer with += to just using appendChild like a normal rational person
+      - Added submit on enter and newline on shift + enter
 
-	29 Jun 2023:
-		Commit 1:
-			- Fixed profile picture not loading on the first load of the website
-			- Changed hard coded image on edit account to dynamic images
-			- Changed choose a JPEG/JPG file to choose an image file
-			- Added previewing onto image upload
-			- Added converting all incoming pfp files into jpeg
-			- Added deleting uploaded pfp file when deleting account
+  29 Jun 2023:
+    Commit 1:
+      - Fixed profile picture not loading on the first load of the website
+      - Changed hard coded image on edit account to dynamic images
+      - Changed choose a JPEG/JPG file to choose an image file
+      - Added previewing onto image upload
+      - Added converting all incoming pfp files into jpeg
+      - Added deleting uploaded pfp file when deleting account
 
-	2 Jul 2023:
-		Commit 1:
-			- Added emails into schema and sign up
-			- Added editing email in profile edit section
-			- Added editing email in controller
-	
-	5 Jul 2023:
-		Commit 1:
-			- Started implementing email confirmation after signing up
+  2 Jul 2023:
+    Commit 1:
+      - Added emails into schema and sign up
+      - Added editing email in profile edit section
+      - Added editing email in controller
+
+  5 Jul 2023:
+    Commit 1:
+      - Started implementing email confirmation after signing up
+    Commit 2:
+      - Added confirming password before signing up
 
 TODO:
-	- Add images into posts
-	- Add confirming email before signing up and editing
-	- Add privacy policy and terms of conditions to sign up
+  - Add images into posts
+  - Add confirming email before signing up and editing
+  - Add privacy policy and terms of conditions to sign up
