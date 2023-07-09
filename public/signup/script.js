@@ -61,26 +61,31 @@ form.addEventListener('submit', async e => {
 
 	if(confirmedPassword !== password) {
 		passwordError.textContent = "Password and confirmed password does not match!";
-		return passwordError.classList.add('input-error');
+		passwordInput.classList.add('input-error');
+		return confirmPasswordInput.classList.add('input-error');
 	}
 
 	try {
-		document.getElementById('signupSection').remove();
+		const res = await axios.post(apiURL + 'signup', { username, email, password });
 
-		document.getElementById('confirmEmailSection').innerHTML = `<div class="columns is-centered confirm-email-margin">
-			<div class="column is-narrow has-text-centered">
-				<div class="is-white-text is-size-3 mb-6">Please check your email inbox to confirm your email...</div>
-				<a class="is-size-4">Resend email</a>
-			</div>
-		</div>`;
+		if(res.data.emailSent === 'Email sent') {
+			document.getElementById('signupSection').remove();
 
-		
-		await axios.post(apiURL + 'signup', { username, email, password });
+			document.getElementById('confirmEmailSection').innerHTML = `<div class="columns is-centered confirm-email-margin">
+				<div class="column is-narrow has-text-centered">
+					<div class="is-white-text is-size-3 mb-6">Please check your email inbox to confirm your email...</div>
+					<a class="is-size-4">Resend email</a>
+				</div>
+			</div>`;
+		}
 	} catch(err) {
 		if(err.response) {
-			if(err.response.status === 409) {
+			if(err.response.data.errorCode === 1) {
 				usernameError.textContent = 'Username is unavailable';
 				return usernameInput.classList.add('input-error');
+			} else if(err.response.data.errorCode === 2) {
+				emailError.textContent = 'Email is already in use';
+				return emailInput.classList.add('input-error');
 			}
 		}
 
