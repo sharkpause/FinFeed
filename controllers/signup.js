@@ -26,27 +26,36 @@ async function signup(req, res) {
 			return res.status(409).json({ errorCode: 2 });
 		}
 
-		const emailToken = crypto.randomBytes(32).toString('hex');
-		await Token.create({ token: emailToken, email });
+		let emailToken;
 
-		// Send email here
+		const searchedToken = await Token.findOne({ email });
+
+		if(!searchedToken) {
+			emailToken = crypto.randomBytes(32).toString('base64')
+				.replace(/\+/g, '-')
+				.replace(/\//g, '-')
+				.replace(/=+$/g, '-');
+			await Token.create({ token: emailToken, username, email, password });
+		} else {
+			emailToken = searchedToken.token;
+		}
 
 		const transporter = nodemailer.createTransport({
-			host: 'smtp.gmail.com',
-			port: 587,
-			secure: false,
+			service: 'gmail',
 			auth: {
-				user: process.env.EMAIL,
-				pass: process.env.EMAIL_PASS
-			}
+				   user: process.env.EMAIL_USER,
+				   pass: process.env.EMAIL_PASS
+			   }
 		});
 
-		const info = await transporter.sendMail({
-			from: 'FinFeed',
+		const mailOptions = {
+			from: 'finfeedapp@gmail.com',
 			to: email,
 			subject: 'Verify FinFeed email',
-			text: emailToken
-		});
+			html: `<p>Click the following link to verify your FinFeed email: </p><a href="${process.env.EMAIL_URL + emailToken}">${process.env.EMAIL_URL + emailToken}</a>`
+		};
+		
+		await transporter.sendMail(mailOptions);
 
 		res.status(200).json({ emailSent: true });
 	} catch(err) {
@@ -59,16 +68,22 @@ async function signup(req, res) {
 }
 
 async function success(req, res) {
-	const { username, email, password } = req.body;
+	const { token } = req.params;
 
-	const displayName = req.body.displayName || req.body.username;
-	const bio = req.body.bio || '';
+	const userData = await Token.findOne({ token });
 
 	const user = await Account.create({
-		username, email, password, displayName, bio
+		username: userData.username,
+		email: userData.email,
+		password: userData.password,
+		displayName: userData.username,
+		bio: ''
 	});
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });
+	await Token.deleteOne({ token });
+
+	res.status(StatusCodes.OK);
+	res.redirect(process.env.WEBSITE_URL + '/login');
 }
 
-module.exports = signup;
+module.exports = { signup, success };
