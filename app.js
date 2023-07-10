@@ -7,7 +7,6 @@ const rateLimiter = require('express-rate-limit');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const helmet = require('helmet');
-const { StatusCodes } = require('http-status-codes');
 
 const connect = require('./db/connect');
 
@@ -66,6 +65,7 @@ const PORT = process.env.PORT || 3000;
 
 async function start() {
 	try {
+		
 		//console.log(await connect(process.env.MONGO_URI)); // Connect to online database
 		console.log(await connect('mongodb://127.0.0.1/finfeed')); // Connect to local database
 		app.listen(PORT, () => {

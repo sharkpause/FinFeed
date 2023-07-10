@@ -8,7 +8,7 @@ const usernameError = document.getElementById('usernameError');
 const passwordError = document.getElementById('passwordError');
 const emailError = document.getElementById('emailError');
 
-const successText = document.getElementById('successText');
+const loader = document.getElementById('loader');
 
 form.addEventListener('submit', async e => {
 	e.preventDefault();
@@ -27,7 +27,7 @@ form.addEventListener('submit', async e => {
 	passwordError.textContent = '';
 	passwordInput.classList.remove('input-error');
 
-	successText.textContent = '';
+	loader.textContent = '';
 
 	if(username === '') {
 		usernameError.textContent = 'Please provide username';
@@ -61,26 +61,45 @@ form.addEventListener('submit', async e => {
 
 	if(confirmedPassword !== password) {
 		passwordError.textContent = "Password and confirmed password does not match!";
-		return passwordError.classList.add('input-error');
+		passwordInput.classList.add('input-error');
+		return confirmPasswordInput.classList.add('input-error');
 	}
 
 	try {
+		loader.innerHTML = '<div class="loader"></div>';
+
+		await axios.post(apiURL + 'signup', { username, email, password });
+
 		document.getElementById('signupSection').remove();
 
 		document.getElementById('confirmEmailSection').innerHTML = `<div class="columns is-centered confirm-email-margin">
 			<div class="column is-narrow has-text-centered">
 				<div class="is-white-text is-size-3 mb-6">Please check your email inbox to confirm your email...</div>
-				<a class="is-size-4">Resend email</a>
+				<a class="is-size-4" id="resendEmail">Resend email</a>
+
+				<div id="emailLoader"></div>
 			</div>
 		</div>`;
 
-		
-		await axios.post(apiURL + 'signup', { username, email, password });
+		document.getElementById('resendEmail').addEventListener('click', async e => {
+			e.preventDefault();
+
+			const emailLoader = document.getElementById('emailLoader');
+
+			emailLoader.innerHTML = '<div class="loader"></div>';
+
+			await axios.post(apiURL + 'signup', { username, email, password });
+
+			emailLoader.innerHTML = '';
+		})
 	} catch(err) {
 		if(err.response) {
-			if(err.response.status === 409) {
+			if(err.response.data.errorCode === 1) {
 				usernameError.textContent = 'Username is unavailable';
 				return usernameInput.classList.add('input-error');
+			} else if(err.response.data.errorCode === 2) {
+				emailError.textContent = 'Email is already in use';
+				return emailInput.classList.add('input-error');
 			}
 		}
 

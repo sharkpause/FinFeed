@@ -1,9 +1,13 @@
 const Account = require('../models/accounts');
+const Token = require('../models/tokens');
 
 const Conflict = require('../errors/conflict');
 
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const { StatusCodes }  = require('http-status-codes');
+
+require('dotenv').config();
 
 async function signup(req, res) {
 	const { username, email, password } = req.body;
@@ -16,14 +20,44 @@ async function signup(req, res) {
 
 	try {
 		if((await Account.find({ username })).length > 0) {
-			throw new Conflict('Username already exists');
+			return res.status(409).json({ errorCode: 1 });
+		}
+		if((await Account.find({ email })).length > 0) {
+			return res.status(409).json({ errorCode: 2 });
 		}
 
-		const emailToken = crypto.randomBytes(32).toString('hex');
+		let emailToken;
 
-		const user = await Account.create({
-			username, email, password, displayName, bio
+		const searchedToken = await Token.findOne({ email });
+
+		if(!searchedToken) {
+			emailToken = crypto.randomBytes(32).toString('base64')
+				.replace(/\+/g, '-')
+				.replace(/\//g, '-')
+				.replace(/=+$/g, '-');
+			await Token.create({ token: emailToken, username, email, password });
+		} else {
+			emailToken = searchedToken.token;
+		}
+
+		const transporter = nodemailer.createTransport({
+			service: 'gmail',
+			auth: {
+				   user: process.env.EMAIL_USER,
+				   pass: process.env.EMAIL_PASS
+			   }
 		});
+
+		const mailOptions = {
+			from: 'finfeedapp@gmail.com',
+			to: email,
+			subject: 'Verify FinFeed email',
+			html: `<p>Click the following link to verify your FinFeed email: </p><a href="${process.env.EMAIL_URL + emailToken}">${process.env.EMAIL_URL + emailToken}</a>`
+		};
+		
+		await transporter.sendMail(mailOptions);
+
+		res.status(200).json({ emailSent: true });
 	} catch(err) {
 		if(err.statusCode === 409) {
 			throw err;
@@ -31,7 +65,25 @@ async function signup(req, res) {
 		console.log(err);
 	}
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'user created succesfully' });
 }
 
-module.exports = signup;
+async function success(req, res) {
+	const { token } = req.params;
+
+	const userData = await Token.findOne({ token });
+
+	const user = await Account.create({
+		username: userData.username,
+		email: userData.email,
+		password: userData.password,
+		displayName: userData.username,
+		bio: ''
+	});
+
+	await Token.deleteOne({ token });
+
+	res.status(StatusCodes.OK);
+	res.redirect(process.env.WEBSITE_URL + '/login');
+}
+
+module.exports = { signup, success };

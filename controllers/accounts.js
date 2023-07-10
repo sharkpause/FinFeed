@@ -11,6 +11,8 @@ const Unauthorized = require('../errors/unauthorized');
 const NotFound = require('../errors/notfound');
 const BadRequest = require('../errors/badrequest');
 
+require('dotenv').config();
+
 async function getAccount(req, res) {
 	const { username } = req.params;
 
@@ -68,7 +70,11 @@ async function deleteAccount(req, res) {
 
 	await Account.deleteOne({ _id: user._id });
 
-	fs.unlink('public/profilePictures/' + username + '.jpeg', err => { if(err) throw err });
+	if(fs.existsSync('public/profilePicures/' + username + '.jpeg'))
+		fs.unlink('public/profilePictures/' + username + '.jpeg', err => { if(err) throw err });
+
+	res.clearCookie('jwtToken');
+	res.clearCookie('username');
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Account succesfully deleted' });
 }
@@ -83,11 +89,9 @@ async function editAccount(req, res) {
 		throw new Unauthorized('You are not authorized to edit this account');
 	}
 
-	if(req.body.username) {
-		user.username = req.body.username;
-	}
 	if(req.body.email) {
-		user.email = req.body.email;
+		if(!Account.findOne({ email }))
+			user.email = req.body.email;
 	}
 	if(req.body.password) {
 		user.password = req.body.password;
@@ -109,7 +113,7 @@ async function editAccount(req, res) {
 	await user.save();
 
 	res.status(StatusCodes.OK)
-	res.redirect('http://localhost:3000/user/' + username);
+	res.redirect(WEBSITE_URL + 'user/' + username);
 }
 
 async function followAccount(req, res) {
