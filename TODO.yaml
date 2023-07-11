@@ -87,6 +87,10 @@ DONE:
   10 Jul 2023:
     Commit 1:
       - Implemented email confimation before account is created
+  11 Jul 2023:
+    Commit 1:
+      - Started implementing password resetting
+      - Add ability to reset password in case of forgetting
 
 TODO:
 <<<<<<< HEAD
@@ -95,6 +99,5 @@ TODO:
 	- Add privacy policy and terms of conditions to sign up
 =======
   - Add images into posts
-  - Add ability to reset password in case of forgetting
   - Add privacy policy and terms of conditions to sign up
 >>>>>>> development

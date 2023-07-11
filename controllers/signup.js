@@ -1,5 +1,5 @@
 const Account = require('../models/accounts');
-const Token = require('../models/tokens');
+const verifyToken = require('../models/verifyTokens');
 
 const Conflict = require('../errors/conflict');
 
@@ -28,14 +28,14 @@ async function signup(req, res) {
 
 		let emailToken;
 
-		const searchedToken = await Token.findOne({ email });
+		const searchedToken = await verifyToken.findOne({ email });
 
 		if(!searchedToken) {
 			emailToken = crypto.randomBytes(32).toString('base64')
 				.replace(/\+/g, '-')
 				.replace(/\//g, '-')
 				.replace(/=+$/g, '-');
-			await Token.create({ token: emailToken, username, email, password });
+			await verifyToken.create({ token: emailToken, username, email, password });
 		} else {
 			emailToken = searchedToken.token;
 		}
@@ -52,7 +52,7 @@ async function signup(req, res) {
 			from: 'finfeedapp@gmail.com',
 			to: email,
 			subject: 'Verify FinFeed email',
-			html: `<p>Click the following link to verify your FinFeed email: </p><a href="${process.env.EMAIL_URL + emailToken}">${process.env.EMAIL_URL + emailToken}</a>`
+			html: `<p>Click the following link to verify your FinFeed email: </p><a href="${process.env.VERIFY_URL + emailToken}">${process.env.VERIFY_URL + emailToken}</a>`
 		};
 		
 		await transporter.sendMail(mailOptions);
@@ -70,7 +70,7 @@ async function signup(req, res) {
 async function success(req, res) {
 	const { token } = req.params;
 
-	const userData = await Token.findOne({ token });
+	const userData = await verifyToken.findOne({ token });
 
 	const user = await Account.create({
 		username: userData.username,
@@ -80,7 +80,7 @@ async function success(req, res) {
 		bio: ''
 	});
 
-	await Token.deleteOne({ token });
+	await verifyToken.deleteOne({ token });
 
 	res.status(StatusCodes.OK);
 	res.redirect(process.env.WEBSITE_URL + '/login');

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const TokenSchema = new mongoose.Schema({
+const VerifyTokenSchema = new mongoose.Schema({
 	token: {
 		type: String,
 		unique: true
@@ -37,7 +37,7 @@ const TokenSchema = new mongoose.Schema({
 	},
 });
 
-TokenSchema.pre('save',  async function(next) {
+VerifyTokenSchema.pre('save',  async function(next) {
 	const user = this;
 
 	if(!user.isModified('password')) next();
@@ -54,4 +54,4 @@ TokenSchema.pre('save',  async function(next) {
 });
 
 
-module.exports = mongoose.model('Token', TokenSchema, 'tokens');
+module.exports = mongoose.model('VerifyToken', VerifyTokenSchema, 'verifyTokens');

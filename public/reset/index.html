@@ -2,20 +2,19 @@
 
 <html lang="en">
 <head>
+        <meta charset="utf-8" />
+        <meta name="description" content="Description Goes Here" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<meta name="description" content="FinFeed, a shark themed social media website">
 
-  <meta charset="utf-8">
-  <meta name="description" content="Description Goes Here">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" href="/images/favicon.ico">
-  <meta name="description" content="Sign up on FinFeed">
+        <title>FinFeed</title>
 
-  <title>FinFeed</title>
+        <link rel="stylesheet" href="/style.css">
 
-  <link rel="stylesheet" href="/style.css">
-
-  <script src="https://kit.fontawesome.com/bee6c87f05.js" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
-
+        <script src="https://kit.fontawesome.com/bee6c87f05.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
 
@@ -55,44 +54,21 @@
 		</div>
 	</nav>
 
-	<div id="confirmEmailSection"></div>
-
 	<section class="hero mt-6" id="signupSection">
 		<div class="hero-body">
 			<div class="columns is-centered is-vcentered">
 				<div class="column is-5">
-					<p class="is-size-2 has-text-centered mb-6 is-light-blue-color">Create a FinFeed account</p>
+					<p class="is-size-2 has-text-centered mb-6 is-light-blue-color">Reset Password</p>
 					<div class="has-text-centered">
 						<figure class="image is-256x256 is-inline-block mb-6">
 							<img src="/images/logo.png" alt="Logo">
 						</figure>
 					</div>
-					<form id="signupForm" method="post">
-						<div class="field">
-							<label class="label is-light-white-color" id="usernameLabel">Username</label>
-							<strong class="is-red-color">WARNING: YOU CANNOT CHANGE THE USERNAME AFTER THE ACCOUNT IS MADE</strong>
-							<div class="control has-icons-left">
-								<input class="input input-transparent" type="text" placeholder="JohnDoe" name="username" id="usernameInput" required>
-								<span class="icon is-small is-left">
-									<i class="fa-solid fa-user" id="usernameIcon"></i>
-								</span>
-								<p class="help is-danger is-size-6 white-icon" id="usernameError"></p>
-							</div>
-						</div>
+					<form id="resetForm" method="post">
 						<div class="field mt-3">
-							<label class="label is-light-white-color" id="emailLabel">Email</label>
+							<label class="label is-light-white-color" id="passwordLabel">New Password</label>
 							<div class="control has-icons-left">
-								<input class="input input-transparent" type="text" placeholder="JohnDoe" name="email" id="emailInput" required>
-								<span class="icon is-small is-left">
-									<i class="fa-solid fa-envelope" id="emailIcon"></i>
-								</span>
-								<p class="help is-danger is-size-6 white-icon" id="emailError"></p>
-							</div>
-						</div>
-						<div class="field mt-3">
-							<label class="label is-light-white-color" id="passwordLabel">Password</label>
-							<div class="control has-icons-left">
-								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput" required>
+								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput">
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-lock white-icon" id="passwordIcon"></i>
 								</span>
@@ -101,16 +77,16 @@
 						<div class="field mt-3 mb-6">
 							<label class="label is-light-white-color" id="passwordLabel">Confirm Password</label>
 							<div class="control has-icons-left">
-								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="confirmPassword" id="confirmPasswordInput" required>
+								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="confirmPassword" id="confirmPasswordInput">
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-lock white-icon" id="passwordIcon"></i>
 								</span>
-								<p class="help is-danger is-size-6" id="passwordError"></p>
+								<p class="help is-danger is-size-6" id="confirmPasswordError"></p>
 							</div>
 						</div>
 						<div class="field mt-6 has-text-centered">
 							<div class="control has-icons-left">
-								<input type="submit" class="button is-medium submit-input" id="submitInput" value="Sign up and make and account">
+								<input type="submit" class="button is-medium submit-input" id="submitInput" value="Reset password">
 							</div>
 						</div>
 
@@ -121,11 +97,8 @@
 		</div>
 	</section>
 
-	<script src="/modules/apiURL.js"></script>
-	<script src="/modules/getLoggedUser.js"></script>
 	<script src="/modules/removeAccountButtons.js"></script>
-	<script src="/modules/onClickNav.js"></script>
-	<script src="/modules/navbarBurger.js"></script>
+	<script src="/modules/apiURL.js"></script>
 	<script src="./script.js"></script>
 
 </body>

@@ -90,11 +90,15 @@ async function editAccount(req, res) {
 	}
 
 	if(req.body.email) {
-		if(!Account.findOne({ email }))
+		if(!Account.findOne({ email: req.body.email }))
 			user.email = req.body.email;
 	}
 	if(req.body.password) {
-		user.password = req.body.password;
+		const salt = await bcrypt.genSalt(10);
+
+		const hash = await bcrypt.hash(req.body.password, salt);
+
+		user.password = hash;
 	}
 	if(req.body.displayName) {
 		user.displayName = req.body.displayName;
@@ -113,7 +117,7 @@ async function editAccount(req, res) {
 	await user.save();
 
 	res.status(StatusCodes.OK)
-	res.redirect(WEBSITE_URL + 'user/' + username);
+	res.redirect(process.env.WEBSITE_URL + 'user/' + username);
 }
 
 async function followAccount(req, res) {
