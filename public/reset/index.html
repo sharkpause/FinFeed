@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="description" content="Description Goes Here" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<meta name="description" content="FinFeed, a shark themed social media website">
+
+        <title>FinFeed</title>
+
+        <link rel="stylesheet" href="/style.css">
+
+        <script src="https://kit.fontawesome.com/bee6c87f05.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+	<nav class="navbar is-fixed-top navbar-padding is-navbar-transparent" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="navbar-item" href="/"><img src="/images/logo.png"></a>
+
+			<a role="button" class="navbar-burger blue-on-hover" id="navbarBurger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
+		</div>
+
+		<div class="navbar-menu" id="navbarMenu">
+			<div class="navbar-start">
+				<a class="navbar-item is-white-text navbar-on-hover" id="homeNav" href="/">
+					<i class="fa-solid fa-house mr-2"></i>
+					Home
+				</a>
+				<a class="navbar-item is-white-text navbar-on-hover" id="profileNav">
+					<i class="fa-solid fa-user mr-2"></i>
+					Profile
+				</a>
+			</div>
+
+			<div class="navbar-end">
+				<div class="navbar-item">
+					<div class="buttons">
+						<a class="button is-info" id="signupButton" href="/signup"><strong>Sign up</strong></a>
+						<a class="button is-white" id="loginButton" href="/login">Log in</a>
+						<a class="button is-white" id="logoutButton"></a>
+						<a class="button is-dark" href="https://www.github.com/sharkpause/FinFeed" target="_blank"><img src="/images/github-mark-white.png" class="mr-2"> Github</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	<section class="hero mt-6" id="signupSection">
+		<div class="hero-body">
+			<div class="columns is-centered is-vcentered">
+				<div class="column is-5">
+					<p class="is-size-2 has-text-centered mb-6 is-light-blue-color">Reset Password</p>
+					<div class="has-text-centered">
+						<figure class="image is-256x256 is-inline-block mb-6">
+							<img src="/images/logo.png" alt="Logo">
+						</figure>
+					</div>
+					<form id="signupForm" method="post">
+						<div class="field mt-3">
+							<label class="label is-light-white-color" id="passwordLabel">New Password</label>
+							<div class="control has-icons-left">
+								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput">
+								<span class="icon is-small is-left">
+									<i class="fa-solid fa-lock white-icon" id="passwordIcon"></i>
+								</span>
+							</div>
+						</div>
+						<div class="field mt-3 mb-6">
+							<label class="label is-light-white-color" id="passwordLabel">Confirm Password</label>
+							<div class="control has-icons-left">
+								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="confirmPassword" id="confirmPasswordInput">
+								<span class="icon is-small is-left">
+									<i class="fa-solid fa-lock white-icon" id="passwordIcon"></i>
+								</span>
+								<p class="help is-danger is-size-6" id="passwordError"></p>
+							</div>
+						</div>
+						<div class="field mt-6 has-text-centered">
+							<div class="control has-icons-left">
+								<input type="submit" class="button is-medium submit-input" id="submitInput" value="Reset password">
+							</div>
+						</div>
+
+						<p class="is-size-3 has-text-centered" id="loader"></p>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="/modules/removeAccountButtons.js"></script>
+
+</body>
+</html>
