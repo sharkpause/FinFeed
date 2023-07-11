@@ -17,6 +17,10 @@ const ResetTokenSchema = new mongoose.Schema({
 			},
 			message: 'Invalid email'
 		}
+	},
+	createdAt: {
+		type: Date,
+		expires: 1
 	}
 });
 

@@ -55,7 +55,9 @@
 		</div>
 	</nav>
 
-	<section class="hero mt-6">
+	<div id="confirmEmailSection"></div>
+
+	<section class="hero mt-6" id="loginSection">
 		<div class="hero-body">
 			<div class="columns is-centered is-vcentered">
 				<div class="column is-5">
@@ -65,32 +67,35 @@
 							<img src="/images/logo.png" alt="Logo">
 						</figure>
 					</div>
-					<form id="signupForm" method="post">
+					<form id="loginForm" method="post">
 						<div class="field">
 							<label class="label is-light-white-color" id="usernameLabel">Username</label>
 							<div class="control has-icons-left">
-								<input class="input input-transparent" type="text" placeholder="JohnDoe" name="username" id="usernameInput">
+								<input class="input input-transparent" type="text" placeholder="JohnDoe" name="username" id="usernameInput" required>
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-user" id="usernameIcon"></i>
 								</span>
 								<p class="help is-danger is-size-6 white-icon" id="usernameError"></p>
 							</div>
 						</div>
-						<div class="field mt-3 mb-6">
+						<div class="field mt-3">
 							<label class="label is-light-white-color" id="passwordLabel">Password</label>
 							<div class="control has-icons-left">
-								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput">
+								<input class="input input-transparent" type="password" placeholder="supersecurepassword123" name="password" id="passwordInput" required>
 								<span class="icon is-small is-left">
 									<i class="fa-solid fa-lock white-icon" id="passwordIcon"></i>
 								</span>
 								<p class="help is-danger is-size-6" id="passwordError"></p>
 							</div>
 						</div>
+						<a id="forgotPasswordLink" class="mb-6">Forgot password?</a>
 						<div class="field mt-6 has-text-centered">
 							<div class="control has-icons-left">
 								<input type="submit" class="button is-medium submit-input" id="submitInput" value="Log into account">
 							</div>
 						</div>
+
+						<div id="loader"></div>
 
 						<p class="has-text-success is-size-3 has-text-centered mt-6" id="successText"></p>
 					</form>
