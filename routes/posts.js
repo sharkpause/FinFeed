@@ -8,7 +8,12 @@ const storage = multer.diskStorage({
 		cb(null, 'public/postPictures/');
 	},
 	filename: async (req, file, cb) => {
-		const count = await Count.findOne({ username: req.params.username });
+		let count = await Count.findOne({ username: req.params.username });
+
+		if(!count) {
+			count = await Count.create({ username: req.params.username });
+		}
+
 		cb(null, req.params.username + count.count + '.jpg');
 		++count.count;
 		await count.save();
@@ -25,7 +30,7 @@ const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, edi
 router.use('/', validateParams);
 
 router.route('/')
-	.post(auth, upload.single('postImage'), createPost);
+	.post(auth, upload.single('postPicture'), createPost);
 
 router.route('/')
 	.get(getAllPosts);

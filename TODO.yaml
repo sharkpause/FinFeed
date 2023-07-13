@@ -94,6 +94,9 @@ DONE:
   13 Jul 2023:
     Commit 1:
       - Started implementing adding images to posts
+    Commit 2:
+      - Changed form submission and added multer to make the image uploading work
+      - Added image previewing before uploading
 
 TODO:
   - Add images into posts
