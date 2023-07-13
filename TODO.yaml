@@ -91,6 +91,9 @@ DONE:
     Commit 1:
       - Started implementing password resetting
       - Add ability to reset password in case of forgetting
+  13 Jul 2023:
+    Commit 1:
+      - Started implementing adding images to posts
 
 TODO:
   - Add images into posts

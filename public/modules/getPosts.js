@@ -520,30 +520,6 @@ async function getPosts(queryString) {
 			
 			mediaContainer.appendChild(postElem);
 		}
-
-		const makePostForm = document.getElementById('makePostForm');
-
-		if(makePostForm) {
-			makePostForm.addEventListener('submit', async e => {
-				e.preventDefault();
-
-				if(typeof loggedUser === 'undefined') {
-					return alert('You must be logged in to use this feature');
-				}
-
-				const makePostInput = document.getElementById('makePostInput');
-
-				if(makePostInput.value.length > 1000) {
-					return alert('Post length exceeds 1000 letter limit');
-				}
-
-				await axios.post(apiURL + 'user/' + loggedUser + '/posts', { content: makePostInput.value });
-
-				location.reload();
-
-				makePostForm.reset();
-			});
-		}
 	} catch(err) {
 		console.log(err);
 	}
