@@ -137,6 +137,10 @@ body {
 .visible-overflow {
   overflow: visible !important; }
 
+.image.is-512x512 {
+  height: 512px;
+  width: 512px; }
+
 .auto-resize-textarea {
   resize: none;
   overflow: hidden;
