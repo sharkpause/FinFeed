@@ -55,12 +55,23 @@
 	</nav>
 
 	<div class="container is-centered">
-		<form method="post" id="makePostForm" class="media-margin">
+		<div id="uploadContainer" class="inline">
+			<figure id="pictureContainer">
+				<img id="picture" class="media-margin">
+			</figure>
+		</div>
+		<form method="post" id="makePostForm" enctype="multipart/form-data" class="mt-5">
 			<div class="field is-grouped">
-				<p class="control is-expanded mt-5">
-					<textarea class="input input-transparent auto-resize-textarea" id="makePostInput" wrap="soft" maxlength="1000" type="text" placeholder="What's on your mind?"></textarea>
+				<p class="control">
+					<label for="file-upload" class="button is-blue-color is-transparent-button">
+						<i class="fas fa-image"></i>
+					</label>
+					<input type="file" id="file-upload" class="invisible" name="postPicture" accept="image/*">
 				</p>
-				<p class="control mt-5">
+				<p class="control is-expanded">
+					<textarea class="input input-transparent auto-resize-textarea" id="makePostInput" wrap="soft" maxlength="3000" type="text" name="content" placeholder="What's on your mind?"></textarea>
+				</p>
+				<p class="control">
 					<button type="submit" class="button is-blue-color is-transparent-button" id="makePostSubmit">
 						<span class="icon">
 							<i class="fas fa-paper-plane"></i>

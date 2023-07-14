@@ -86,7 +86,7 @@ async function likePost(req, res) {
 
 		await post.save();
 
-		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully liked post' });
+		res.status(StatusCodes.OK);
 	}
 }
 

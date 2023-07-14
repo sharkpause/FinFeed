@@ -91,6 +91,15 @@ DONE:
     Commit 1:
       - Started implementing password resetting
       - Add ability to reset password in case of forgetting
+  13 Jul 2023:
+    Commit 1:
+      - Started implementing adding images to posts
+    Commit 2:
+      - Changed form submission and added multer to make the image uploading work
+      - Added image previewing before uploading
+  14 Jul 2023:
+    Commit 1:
+      - Resized all images to 512x512
 
 TODO:
 <<<<<<< HEAD

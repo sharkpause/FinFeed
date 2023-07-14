@@ -18,7 +18,7 @@ const PostSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 		minlength: 1,
-		maxlength: 1000
+		maxlength: 3000
 	},
 	likes: {
 		count: {
@@ -45,7 +45,8 @@ const PostSchema = new mongoose.Schema({
 	edited: {
 		type: Boolean,
 		default: false
-	}
+	},
+	picturePath: String
 });
 
 PostSchema.pre('save', async function(next) {

@@ -137,6 +137,10 @@ body {
 .visible-overflow {
   overflow: visible !important; }
 
+.image.is-512x512 {
+  height: 512px;
+  width: 512px; }
+
 .auto-resize-textarea {
   resize: none;
   overflow: hidden;
@@ -144,6 +148,9 @@ body {
 
 .line-break {
   display: block; }
+
+.invisible {
+  display: none; }
 
 .loader {
   border: 16px solid #f3f3f3;
