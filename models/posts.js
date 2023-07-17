@@ -46,7 +46,7 @@ const PostSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	picturePath: String
+	picNum: Number
 });
 
 PostSchema.pre('save', async function(next) {

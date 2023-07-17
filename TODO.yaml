@@ -100,6 +100,10 @@ DONE:
   14 Jul 2023:
     Commit 1:
       - Resized all images to 512x512
+  15 Jul 2023:
+    Commit 1:
+      - Changed picturePath to picNum
+      - Added storing and compressing images
 
 TODO:
 <<<<<<< HEAD

@@ -1,11 +1,15 @@
 const Post = require('../models/posts');
 const Account = require('../models/accounts');
+const Count = require('../models/counts');
 
 const NotFound = require('../errors/notfound');
 const BadRequest = require('../errors/badrequest');
 const Unauthorized = require('../errors/unauthorized');
 
 const { StatusCodes } = require('http-status-codes');
+const easyimg = require('easyimage');
+
+const fs = require('fs');
 
 async function getHomePosts(req, res) {
 	const from = req.query.from || 0;
@@ -32,6 +36,7 @@ async function getPost(req, res) {
 async function createPost(req, res) {
 	const { content } = req.body;
 	const { username } = req.params;
+	const postPicture =  req.file;
 
 	if(!content) {
 		throw new BadRequest('Please provide the post content');
@@ -43,11 +48,25 @@ async function createPost(req, res) {
 		throw new Unauthorized('You are not authorized to make posts on behalf of ' + username);
 	}
 
-	const newPost = await Post.create({
+	const documentProperty = {
 		author: username,
 		authorDisplay: user.displayName,
 		content
-	});
+	};
+
+	if(postPicture) {
+		const count = (await Count.findOne({ username })).count;
+
+		const tmp_path = 'public/postPictures/' + username + (count-1) +  '.jpg';
+		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
+
+		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
+		fs.unlink(tmp_path, err => { if(err) throw err });
+
+		documentProperty.picNum = count - 1;
+	}
+
+	const newPost = await Post.create(documentProperty);
 
 	res.status(StatusCodes.CREATED).json({ success: true, message: 'Succesfully created post' });
 }
