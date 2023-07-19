@@ -106,6 +106,7 @@ async function likePost(req, res) {
 		await post.save();
 
 		res.status(StatusCodes.OK);
+		res.end();
 	}
 }
 
@@ -143,7 +144,8 @@ async function dislikePost(req, res) {
 
 		await post.save();
 
-		res.status(StatusCodes.OK).json({ success: true, message: 'Succesfully disliked post' });
+		res.status(StatusCodes.OK);
+		res.end();
 	}
 }
 

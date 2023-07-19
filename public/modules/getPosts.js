@@ -76,7 +76,7 @@ function editPost(postElem, postAuthor, postID) {
 	const mainContent = postElem.querySelector('#mainContent');
 
 	const beforeHTML = mainContent.innerHTML;
-	const beforeContent = postElem.querySelector('#postContent').textContent;
+	const beforeContent = postElem.querySelector('#postTextContent').textContent;
 
 	mainContent.innerHTML = createEditInput(beforeContent);
 
@@ -206,7 +206,8 @@ function createMediaObject(likeCount, dislikeCount, postID, profileURL) {
 
 								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
 								<br>
-								<span id="postContent" class="is-white-text"></span>
+								<span id="postImage" class="is-white-text"></span>
+								<span id="postTextContent"></span>
 							</p>
 						</div>
 						<nav class="level is-mobile">
@@ -478,8 +479,11 @@ async function getPosts(queryString) {
 			const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 			creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 			
-			const postContent = postElem.querySelector('#postContent');
-			postContent.textContent = posts[i].content;
+			const postImage = postElem.querySelector('#postImage');
+			if(true) {
+				postImage.innerHTML += '<figure class="image is-512x512"></figure>';
+			}
+			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 
 			if(posts[i].edited === true) {
 				const editedText = postElem.querySelector('#editedText');

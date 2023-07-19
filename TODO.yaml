@@ -104,6 +104,9 @@ DONE:
     Commit 1:
       - Changed picturePath to picNum
       - Added storing and compressing images
+  19 Jul 2023:
+    Commit 1:
+      - Started implementing displaying image on posts
 
 TODO:
 <<<<<<< HEAD
