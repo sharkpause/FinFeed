@@ -2,3 +2,4 @@
 /data
 .env
 /public/profilePictures
+/public/postPictures
