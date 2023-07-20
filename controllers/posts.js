@@ -158,6 +158,12 @@ async function deletePost(req, res) {
 		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
 	}
 
+	const post = await Post.findOne({ _id: postID });
+	console.log(post);
+	if(post.hasOwnProperty('picNum')) {
+		fs.unlink(`public/postPictures/${username}${post.picNum}.jpeg`);
+	}
+
 	const result = await Post.deleteOne({ _id: postID });
 
 	if(result.deletedCount <= 0) {

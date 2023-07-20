@@ -480,8 +480,9 @@ async function getPosts(queryString) {
 			creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 			
 			const postImage = postElem.querySelector('#postImage');
-			if(true) {
-				postImage.innerHTML += '<figure class="image is-512x512"></figure>';
+			if(posts[i].hasOwnProperty('picNum')) {
+				postImage.innerHTML += '<figure class="image is-512x512" id="imageContainer"></figure>';
+				postImage.querySelector('#imageContainer').innerHTML = `<img src="/postPictures/${postAuthor}${posts[i].picNum}.jpeg">`;
 			}
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 
