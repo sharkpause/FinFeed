@@ -4,7 +4,7 @@ const Comment = require('../models/comments');
 
 const bcrypt = require('bcrypt');
 const easyimg = require('easyimage');
-const fs = require('fs');
+const fs = require('fs').promises;
 const { StatusCodes } = require('http-status-codes');
 
 const Unauthorized = require('../errors/unauthorized');
@@ -71,7 +71,7 @@ async function deleteAccount(req, res) {
 	await Account.deleteOne({ _id: user._id });
 
 	if(fs.existsSync('public/profilePicures/' + username + '.jpeg'))
-		fs.unlink('public/profilePictures/' + username + '.jpeg', err => { if(err) throw err });
+		await fs.unlink('public/profilePictures/' + username + '.jpeg');
 
 	res.clearCookie('jwtToken');
 	res.clearCookie('username');

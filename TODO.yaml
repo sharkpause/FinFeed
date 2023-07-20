@@ -110,13 +110,9 @@ DONE:
   20 Jul 2023:
     Commit 1:
       - Displayed uploaded images on post
+    Commit 2:
+      - Added deleting the post image
 
 TODO:
-<<<<<<< HEAD
-	- Add images into posts
 	- Add confirming email before signing up and editing
 	- Add privacy policy and terms of conditions to sign up
-=======
-  - Add images into posts
-  - Add privacy policy and terms of conditions to sign up
->>>>>>> development

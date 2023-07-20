@@ -9,7 +9,7 @@ const Unauthorized = require('../errors/unauthorized');
 const { StatusCodes } = require('http-status-codes');
 const easyimg = require('easyimage');
 
-const fs = require('fs');
+const fs = require('fs').promises;
 
 async function getHomePosts(req, res) {
 	const from = req.query.from || 0;
@@ -61,14 +61,15 @@ async function createPost(req, res) {
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
-		fs.unlink(tmp_path, err => { if(err) throw err });
+		await fs.unlink(tmp_path);
 
 		documentProperty.picNum = count - 1;
 	}
 
 	const newPost = await Post.create(documentProperty);
 
-	res.status(StatusCodes.CREATED).json({ success: true, message: 'Succesfully created post' });
+	res.status(StatusCodes.CREATED);
+	res.redirect('/');
 }
 
 async function likePost(req, res) {
@@ -159,9 +160,8 @@ async function deletePost(req, res) {
 	}
 
 	const post = await Post.findOne({ _id: postID });
-	console.log(post);
-	if(post.hasOwnProperty('picNum')) {
-		fs.unlink(`public/postPictures/${username}${post.picNum}.jpeg`);
+	if(post.picNum >= 0) {
+		await fs.unlink(`public/postPictures/${username}${post.picNum}.jpeg`);
 	}
 
 	const result = await Post.deleteOne({ _id: postID });
@@ -170,7 +170,8 @@ async function deletePost(req, res) {
 		throw new NotFound('Post not does not exist');
 	}
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully deleted post' });
+	res.status(StatusCodes.OK);
+	res.end();
 }
 
 async function editPost(req, res) {

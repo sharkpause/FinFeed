@@ -325,8 +325,6 @@ async function editAccount() {
 			</form>
 		</div>`;
 
-		profileSection.querySelector('#editForm').addEventListener('submit', () => alert('a'));
-
 		profileSection.querySelector('#bioInput').addEventListener('input', function() { autoGrow(this) });
 
 		profileSection.querySelector('#fileInput').addEventListener('change', e => {
