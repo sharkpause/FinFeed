@@ -3,9 +3,14 @@ const multer = require('multer');
 
 const Count = require('../models/counts.js');
 
+const fs = require('fs');
+
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		cb(null, 'public/postPictures/');
+		const path = 'public/postPictures/' + req.params.username + '/';
+		fs.mkdirSync(path, { recursive: true });
+
+		cb(null, path);
 	},
 	filename: async (req, file, cb) => {
 		let count = await Count.findOne({ username: req.params.username });

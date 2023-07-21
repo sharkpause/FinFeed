@@ -107,7 +107,7 @@ async function editAccount(req, res) {
 		user.bio = req.body.bio;
 	}
 	if(file) {
-		const tmp_path = 'public/profilePictures/' + username + '.jpg';
+		const tmp_path = 'public/profilePictures/' + username + '/' + username + '.jpg';
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });

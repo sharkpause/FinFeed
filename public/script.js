@@ -54,19 +54,25 @@ fileUpload.addEventListener('change', e => {
 
 	reader.readAsDataURL(selectedImage);
 
-	const cancelButton = document.createElement('span');
+	const cancelButton = makePostForm.querySelector('#pictureUploadButton');
 	cancelButton.innerHTML = `
-		<button id="cancelButton" class="button is-blue-color is-transparent-button ml-3" style="margin-top: 6rem;">
+		<button id="cancelButton" class="button is-blue-color is-transparent-button">
 			<span class="icon">
 				<i class="fa-solid fa-xmark"></i>
 			</span>
 		</button>
 	`;
 
-	uploadContainer.appendChild(cancelButton);
 	cancelButton.addEventListener('click', e => {
 		picture.src = '';
 		pictureContainer.classList.remove('image', 'is-512x512');
-		cancelButton.remove();
+		cancelButton.innerHTML = `
+			<label for="file-upload" class="button is-blue-color is-transparent-button">
+				<i class="fas fa-image"></i>
+			</label>
+			<input type="file" id="file-upload" class="invisible" name="postPicture" accept="image/*">
+		`;
 	});
+
+	document.getElementById('uploadContainer').classList.add('mb-5');
 });

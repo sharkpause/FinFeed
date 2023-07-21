@@ -57,7 +57,7 @@ async function createPost(req, res) {
 	if(postPicture) {
 		const count = (await Count.findOne({ username })).count;
 
-		const tmp_path = 'public/postPictures/' + username + (count-1) +  '.jpg';
+		const tmp_path = 'public/postPictures/' + username + '/' + username + (count-1) +  '.jpg';
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
@@ -161,7 +161,7 @@ async function deletePost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 	if(post.picNum >= 0) {
-		await fs.unlink(`public/postPictures/${username}${post.picNum}.jpeg`);
+		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
 	}
 
 	const result = await Post.deleteOne({ _id: postID });
