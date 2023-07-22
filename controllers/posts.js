@@ -57,7 +57,7 @@ async function createPost(req, res) {
 	if(postPicture) {
 		const count = (await Count.findOne({ username })).count;
 
-		const tmp_path = 'public/postPictures/' + username + '/' + username + (count-1) +  '.jpg';
+		const tmp_path = `public/postPictures/${username}/${username}${count-1}.jpg`;
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });

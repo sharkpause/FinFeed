@@ -8,7 +8,9 @@ const fs = require('fs');
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		const path = 'public/postPictures/' + req.params.username + '/';
-		fs.mkdirSync(path, { recursive: true });
+		if(!fs.existsSync(path)) {
+			fs.mkdirSync(path, { recursive: true });
+		}
 
 		cb(null, path);
 	},

@@ -169,6 +169,13 @@ body {
 .confirm-email-margin {
   margin-top: 25rem !important; }
 
+.is-512x512-size {
+  height: 512px;
+  width: 512px; }
+
+.mt-11 {
+  margin-top: 5.4rem; }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg); }

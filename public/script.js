@@ -31,6 +31,8 @@ makePostForm.addEventListener('submit', async e => {
 	location.reload();
 });
 
+const uploadContainer = document.getElementById('uploadContainer');
+
 const fileUpload = document.getElementById('file-upload');
 fileUpload.addEventListener('change', e => {
 	if(!userLoggedIn) {
@@ -38,10 +40,8 @@ fileUpload.addEventListener('change', e => {
 		return alert('You must be logged in to use this feature');
 	}
 
-	const pictureContainer = document.getElementById('pictureContainer');
-	pictureContainer.classList.add('image', 'is-512x512');
-
 	const picture = document.getElementById('picture');
+	picture.classList.add('is-512x512-size');
 	
 	const selectedImage = e.target.files[0];
 	const reader = new FileReader();
@@ -54,25 +54,21 @@ fileUpload.addEventListener('change', e => {
 
 	reader.readAsDataURL(selectedImage);
 
-	const cancelButton = makePostForm.querySelector('#pictureUploadButton');
+	const cancelButton = document.createElement('button');
+	cancelButton.classList.add('button', 'is-blue-color', 'is-transparent-button', 'mt-11', 'ml-1');
 	cancelButton.innerHTML = `
-		<button id="cancelButton" class="button is-blue-color is-transparent-button">
-			<span class="icon">
-				<i class="fa-solid fa-xmark"></i>
-			</span>
-		</button>
+		<span class="icon">
+			<i class="fa-solid fa-xmark"></i>
+		</span>
 	`;
 
 	cancelButton.addEventListener('click', e => {
 		picture.src = '';
-		pictureContainer.classList.remove('image', 'is-512x512');
-		cancelButton.innerHTML = `
-			<label for="file-upload" class="button is-blue-color is-transparent-button">
-				<i class="fas fa-image"></i>
-			</label>
-			<input type="file" id="file-upload" class="invisible" name="postPicture" accept="image/*">
-		`;
+		picture.classList.remove('is-512x512-size');
+		cancelButton.remove();
 	});
 
-	document.getElementById('uploadContainer').classList.add('mb-5');
+	uploadContainer.appendChild(cancelButton);
+	uploadContainer.classList.add('mb-5');
 });
+

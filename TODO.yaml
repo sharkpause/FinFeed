@@ -112,6 +112,15 @@ DONE:
       - Displayed uploaded images on post
     Commit 2:
       - Added deleting the post image
+  21 Jul 2023:
+    Commit 1:
+      - Changed saving pictures in dedicated user directories
+      - Changed cancel button design
+  22 Jul 2023:
+    Commit 1:
+      - Changed cancel button design
+      - Fixed image uploading
 
 TODO:
 	- Add privacy policy and terms of conditions to sign up
+    - When deleting accounts, also delete post pictures and profile pictures
