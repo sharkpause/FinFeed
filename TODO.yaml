@@ -120,7 +120,10 @@ DONE:
     Commit 1:
       - Changed cancel button design
       - Fixed image uploading
+  26 Jul 2023:
+    Commit 1:
+      - Implemented deleting post and profile pictures when deleting accounts
 
 TODO:
+    - Added editing pictures on editing posts
 	- Add privacy policy and terms of conditions to sign up
-    - When deleting accounts, also delete post pictures and profile pictures

@@ -1,10 +1,11 @@
 const Account = require('../models/accounts');
 const Post = require('../models/posts');
 const Comment = require('../models/comments');
+const Count = require('../models/counts');
 
 const bcrypt = require('bcrypt');
 const easyimg = require('easyimage');
-const fs = require('fs').promises;
+const fs = require('fs');
 const { StatusCodes } = require('http-status-codes');
 
 const Unauthorized = require('../errors/unauthorized');
@@ -69,9 +70,13 @@ async function deleteAccount(req, res) {
 	}
 
 	await Account.deleteOne({ _id: user._id });
+	await Count.deleteOne({ username });
 
-	if(fs.existsSync('public/profilePicures/' + username + '.jpeg'))
-		await fs.unlink('public/profilePictures/' + username + '.jpeg');
+	if(fs.existsSync('public/profilePictures/' + username + '.jpeg')) {
+		fs.unlink('public/profilePictures/' + username + '.jpeg', err => { console.log(err) });
+	} if(fs.existsSync('public/postPictures/' + username)) {
+		fs.rmdirSync('public/postPictures/' + username, { recursive: true }, err => { console.log(err) });
+	}
 
 	res.clearCookie('jwtToken');
 	res.clearCookie('username');
@@ -107,7 +112,7 @@ async function editAccount(req, res) {
 		user.bio = req.body.bio;
 	}
 	if(file) {
-		const tmp_path = 'public/profilePictures/' + username + '/' + username + '.jpg';
+		const tmp_path = 'public/profilePictures/' + username + '.jpg';
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
