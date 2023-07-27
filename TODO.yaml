@@ -123,6 +123,10 @@ DONE:
   26 Jul 2023:
     Commit 1:
       - Implemented deleting post and profile pictures when deleting accounts
+  27 Jul 2023:
+    Commit 1:
+      - Changed putting back elements after cancelling edit post into refreshing the page
+      - Started implementing editing pictures
 
 TODO:
     - Added editing pictures on editing posts

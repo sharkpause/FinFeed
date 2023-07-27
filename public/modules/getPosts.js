@@ -73,44 +73,27 @@ async function deleteComment(username, postID, commentID) {
 }
 
 function editPost(postElem, postAuthor, postID) {
+	const pictureElem = postElem.querySelector('#postImage');
 	const mainContent = postElem.querySelector('#mainContent');
 
-	const beforeHTML = mainContent.innerHTML;
-	const beforeContent = postElem.querySelector('#postTextContent').textContent;
-
-	mainContent.innerHTML = createEditInput(beforeContent);
+	mainContent.innerHTML = createEditInput(postElem.querySelector('#postTextContent').textContent);
 
 	const editPostInput = mainContent.querySelector('#editPostInput');
-	autoGrow(editPostInput);
-	autoGrow(editPostInput);
+	editPostInput.addEventListener('input', e => {
+		autoGrow(editPostInput);
+	});
+
+	const editGroup = mainContent.querySelector('#editGroup');
+	if(pictureElem) {
+		const editPictureElem = pictureElem.cloneNode(true);
+		editGroup.prepend(editPictureElem);
+	}
 
 	const cancelButton = mainContent.querySelector('#cancelButton');
 	cancelButton.addEventListener('click', e => {
 		e.preventDefault();
-		mainContent.innerHTML = beforeHTML;
 
-		const dropdownTrigger = mainContent.querySelector('.dropdown-trigger');
-		dropdownTrigger.innerHTML = '';
-		dropdownTrigger.outerHTML = '';
-
-		const dropdownMenu = mainContent.querySelector('.dropdown-menu');
-		dropdownMenu.innerHTML = '';
-		dropdownMenu.outerHTML = '';
-
-		mainContent.querySelector('#likeButton').addEventListener('click', e => {
-			e.preventDefault();
-
-			likePost(postAuthor, postID);
-		});
-
-		mainContent.querySelector('#dislikeButton').addEventListener('click', e => {
-			e.preventDefault();
-
-			dislikePost(postAuthor, postID);
-		});
-
-		addPostInteractButtons(postElem, postAuthor, postID);
-		addCommentButton(postElem, postAuthor, postID);
+		location.reload();
 	});
 
 	const editForm = mainContent.querySelector('#editForm');
@@ -167,8 +150,8 @@ function createEditInput(beforeContent) {
 	return `
 			<form method="post" id="editForm">
 				<div class="field is-grouped">
-					<p class="control is-expanded">
-						<textarea class="input input-transparent auto-resize-textarea" id="editPostInput" wrap="soft" maxlength="1000" type="text">${beforeContent}</textarea>
+					<p class="control is-expanded" id="editGroup">
+						<textarea class="input input-transparent auto-resize-textarea mt-4" id="editPostInput" wrap="soft" maxlength="1000" type="text" required>${beforeContent}</textarea>
 					</p>
 					<p class="control">
 						<button type="submit" class="button is-blue-color is-transparent-button">
