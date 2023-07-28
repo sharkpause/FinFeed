@@ -177,6 +177,7 @@ async function deletePost(req, res) {
 async function editPost(req, res) {
 	const { username, postID } = req.params;
 	const { content } = req.body;
+	const postPicture = req.file;
 
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
@@ -188,9 +189,23 @@ async function editPost(req, res) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	await Post.updateOne({ _id: postID }, { edited: true, content });
+	const post = await Post.findOne({ _id: postID });
+	post.edited = true;
+	post.content = content;
 
-	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited post' });
+	if(postPicture) {
+		const count = (await Count.findOne({ username })).count;
+
+		const tmp_path = postPicture.path;
+
+		await easyimg.convert({ src: tmp_path, dst: `public/postPictures/${username}/${username}${post.picNum}.jpeg`, quality: 80 });
+		await fs.unlink(tmp_path);
+	}
+
+	await post.save();
+
+	res.status(StatusCodes.OK);
+	res.redirect('/');
 }
 
 module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost, getHomePosts };

@@ -127,7 +127,9 @@ DONE:
     Commit 1:
       - Changed putting back elements after cancelling edit post into refreshing the page
       - Started implementing editing pictures
+  28 Jul 2023:
+    Commit 1:
+      - Added editing pictures on editing posts
 
 TODO:
-    - Added editing pictures on editing posts
 	- Add privacy policy and terms of conditions to sign up

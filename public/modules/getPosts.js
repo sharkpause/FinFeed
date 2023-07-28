@@ -76,7 +76,7 @@ function editPost(postElem, postAuthor, postID) {
 	const pictureElem = postElem.querySelector('#postImage');
 	const mainContent = postElem.querySelector('#mainContent');
 
-	mainContent.innerHTML = createEditInput(postElem.querySelector('#postTextContent').textContent);
+	mainContent.innerHTML = createPostEditInput(postElem.querySelector('#postTextContent').textContent, apiURL + 'user/' + loggedUser + '/posts/' + postID + '/edit');
 
 	const editPostInput = mainContent.querySelector('#editPostInput');
 	editPostInput.addEventListener('input', e => {
@@ -86,6 +86,35 @@ function editPost(postElem, postAuthor, postID) {
 	const editGroup = mainContent.querySelector('#editGroup');
 	if(pictureElem) {
 		const editPictureElem = pictureElem.cloneNode(true);
+
+		const editPictureButton = document.createElement('div');
+		editPictureButton.innerHTML = `
+			<div class="file has-name column is-fullwidth is-narrow">
+				<label class="file-label">
+				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
+				<span class="file-cta is-blue-background-color is-blue-border">
+					<span class="file-icon">
+						<i class="fas fa-upload"></i>
+					</span>
+					<span class="file-label is-white-text">
+						Choose an image file
+					</span>
+				</span>
+				</label>
+			</div>`;
+		editPictureButton.querySelector('#fileInput').addEventListener('change', e => {
+			const reader = new FileReader();
+			const selectedImage = e.target.files[0];
+
+			reader.onload = e => {
+				editPictureElem.querySelector('img').src = e.target.result;
+			}
+
+			reader.readAsDataURL(selectedImage);
+		});
+
+		editGroup.prepend(editPictureButton);
+
 		editGroup.prepend(editPictureElem);
 	}
 
@@ -97,18 +126,6 @@ function editPost(postElem, postAuthor, postID) {
 	});
 
 	const editForm = mainContent.querySelector('#editForm');
-	editForm.addEventListener('submit', async e => {
-		e.preventDefault();
-
-		try {
-			await axios.patch(apiURL + 'user/' + loggedUser + '/posts/' + postID, { content: editPostInput.value });
-
-			location.reload();
-		} catch(err) {
-			console.log(err);
-			alert(err);
-		}
-	});
 }
 
 function editComment(commentElem, postAuthor, postID, commentID) {
@@ -117,7 +134,7 @@ function editComment(commentElem, postAuthor, postID, commentID) {
 	const beforeHTML = mainContent.innerHTML;
 	const beforeContent = commentElem.querySelector('#commentContent').textContent;
 
-	mainContent.innerHTML = createEditInput(beforeContent);
+	mainContent.innerHTML = createCommentEditInput(beforeContent);
 
 	const cancelButton = mainContent.querySelector('#cancelButton');
 	cancelButton.addEventListener('click', e => {
@@ -146,7 +163,31 @@ function editComment(commentElem, postAuthor, postID, commentID) {
 	});
 }
 
-function createEditInput(beforeContent) {
+function createPostEditInput(beforeContent, actionURL) {
+	return `
+			<form method="post" id="editForm" action="${actionURL}" enctype="multipart/form-data">
+				<div class="field is-grouped">
+					<p class="control is-expanded" id="editGroup">
+						<textarea class="input input-transparent auto-resize-textarea mt-4" id="editPostInput" wrap="soft" maxlength="1000" type="text" name="content" required>${beforeContent}</textarea>
+					</p>
+					<p class="control">
+						<button type="submit" class="button is-blue-color is-transparent-button">
+							<span class="icon">
+								<i class="fa-solid fa-check"></i>
+							</span>
+						</button>
+						<button id="cancelButton" class="button is-blue-color is-transparent-button">
+							<span class="icon">
+								<i class="fa-solid fa-xmark"></i>
+							</span>
+						</button>
+					</p>
+				</div>
+			</form>
+			`;
+}
+
+function createCommentEditInput(beforeContent) {
 	return `
 			<form method="post" id="editForm">
 				<div class="field is-grouped">
@@ -464,8 +505,8 @@ async function getPosts(queryString) {
 			
 			const postImage = postElem.querySelector('#postImage');
 			if(posts[i].hasOwnProperty('picNum')) {
-				postImage.innerHTML += '<figure class="image is-512x512" id="imageContainer"></figure>';
-				postImage.querySelector('#imageContainer').innerHTML = `<img src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+				postImage.innerHTML += '<figure class="image is-512x512 ml-0" id="imageContainer"></figure>';
+				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-512x512-size" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
 			}
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 

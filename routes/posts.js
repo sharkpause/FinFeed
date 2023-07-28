@@ -45,7 +45,9 @@ router.route('/')
 router.route('/:postID')
 	.get(getPost)
 	.delete(auth, deletePost)
-	.patch(auth, editPost);
+
+router.route('/:postID/edit')
+	.post(auth, upload.single('postPicture'), editPost);
 
 router.route('/:postID/like')
 	.patch(auth, likePost);

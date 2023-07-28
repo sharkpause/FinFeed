@@ -21,6 +21,10 @@ body {
 	white-space: pre-wrap;
 }
 
+.ml-0 {
+	margin-left: 0rem !important;
+}
+
 .is-light-white-color {
 	color: white !important;
 	font-weight: normal !important;
@@ -225,8 +229,8 @@ body {
 }
 
 .is-512x512-size {
-	height: 512px;
-	width: 512px;
+	height: 512px !important;
+	width: 512px !important;
 }
 
 .mt-11 {
