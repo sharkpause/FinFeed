@@ -41,7 +41,7 @@ fileUpload.addEventListener('change', e => {
 	}
 
 	const picture = document.getElementById('picture');
-	picture.classList.add('is-512x512-size');
+	picture.classList.add('is-post-picture-size');
 	
 	const selectedImage = e.target.files[0];
 	const reader = new FileReader();
@@ -64,7 +64,7 @@ fileUpload.addEventListener('change', e => {
 
 	cancelButton.addEventListener('click', e => {
 		picture.src = '';
-		picture.classList.remove('is-512x512-size');
+		picture.classList.remove('is-post-picture-size');
 		cancelButton.remove();
 	});
 

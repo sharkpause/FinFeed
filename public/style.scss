@@ -228,11 +228,6 @@ body {
 	margin-top: 25rem !important;
 }
 
-.is-512x512-size {
-	height: 512px !important;
-	width: auto !important;
-}
-
 .mt-11 {
 	margin-top: 5.4rem;
 }
@@ -246,6 +241,16 @@ body {
 	.navbar-padding {
 		padding-left: 2.5rem;
 		padding-right: 2.5rem;
+	}
+
+	.image.is-post-picture-size {
+		height: 512px !important;
+		width: 512px !important;
+	}
+
+	.is-post-picture-size {
+		height: 512px !important;
+		width: auto !important;
 	}
 
 	$dropdown-menu-min-width: 8rem;
@@ -266,6 +271,16 @@ body {
 		height: 120px;
 		animation: spin 2s linear infinite;
 		margin: 0 auto;
+	}
+
+	.image.is-post-picture-size {
+		height: 256px !important;
+		width: 256px !important;
+	}
+
+	.is-post-picture-size {
+		height: 256px !important;
+		width: auto !important;
 	}
 }
 

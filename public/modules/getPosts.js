@@ -505,8 +505,8 @@ async function getPosts(queryString) {
 			
 			const postImage = postElem.querySelector('#postImage');
 			if(posts[i].hasOwnProperty('picNum')) {
-				postImage.innerHTML += '<figure class="image is-512x512 ml-0" id="imageContainer"></figure>';
-				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-512x512-size" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+				postImage.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
+				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
 			}
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 
