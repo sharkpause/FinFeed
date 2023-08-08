@@ -130,6 +130,10 @@ DONE:
   28 Jul 2023:
     Commit 1:
       - Added editing pictures on editing posts
+  8 Aug 2023:
+    Commit 1:
+      - Change images to resize only height and not width
 
 TODO:
-	- Add privacy policy and terms of conditions to sign up
+  - Fix UI for mobile
+  - Add privacy policy and terms of conditions to sign up
