@@ -135,6 +135,9 @@ DONE:
       - Changed images to resize only height and not width
     Commit 2:
       - Fixed UI for mobile
+  9 Aug 2023:
+    Commit 1:
+      - Fixed UI to pull images to the left
 
 TODO:
   - Add video uploading

@@ -231,7 +231,8 @@ function createMediaObject(likeCount, dislikeCount, postID, profileURL) {
 								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
 								<br>
 								<span id="postImage" class="is-white-text"></span>
-								<span id="postTextContent"></span>
+								<span id="postTextContent" class="is-pulled-left"></span>
+								<br>
 							</p>
 						</div>
 						<nav class="level is-mobile">
@@ -506,7 +507,7 @@ async function getPosts(queryString) {
 			const postImage = postElem.querySelector('#postImage');
 			if(posts[i].hasOwnProperty('picNum')) {
 				postImage.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
-				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
 			}
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 
