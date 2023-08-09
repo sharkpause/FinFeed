@@ -114,7 +114,6 @@ function editPost(postElem, postAuthor, postID) {
 		});
 
 		editGroup.prepend(editPictureButton);
-
 		editGroup.prepend(editPictureElem);
 	}
 
@@ -169,18 +168,19 @@ function createPostEditInput(beforeContent, actionURL) {
 				<div class="field is-grouped">
 					<p class="control is-expanded" id="editGroup">
 						<textarea class="input input-transparent auto-resize-textarea mt-4" id="editPostInput" wrap="soft" maxlength="1000" type="text" name="content" required>${beforeContent}</textarea>
-					</p>
-					<p class="control">
-						<button type="submit" class="button is-blue-color is-transparent-button">
-							<span class="icon">
-								<i class="fa-solid fa-check"></i>
-							</span>
-						</button>
-						<button id="cancelButton" class="button is-blue-color is-transparent-button">
-							<span class="icon">
-								<i class="fa-solid fa-xmark"></i>
-							</span>
-						</button>
+
+						<div class="mt-4">
+							<button type="submit" class="button is-blue-color is-transparent-button">
+								<span class="icon">
+									<i class="fa-solid fa-check"></i>
+								</span>
+							</button>
+							<button id="cancelButton" class="button is-blue-color is-transparent-button mt-1">
+								<span class="icon">
+									<i class="fa-solid fa-xmark"></i>
+								</span>
+							</button>
+						</div>
 					</p>
 				</div>
 			</form>

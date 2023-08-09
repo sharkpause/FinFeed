@@ -138,6 +138,8 @@ DONE:
   9 Aug 2023:
     Commit 1:
       - Fixed UI to pull images to the left
+    Commit 2:
+      - Changed 1162px to 1200px to fit entire post
 
 TODO:
   - Add video uploading
