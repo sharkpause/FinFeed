@@ -84,38 +84,44 @@ function editPost(postElem, postAuthor, postID) {
 	});
 
 	const editGroup = mainContent.querySelector('#editGroup');
-	if(pictureElem) {
-		const editPictureElem = pictureElem.cloneNode(true);
+	const editPictureElem = pictureElem.cloneNode(true);
 
-		const editPictureButton = document.createElement('div');
-		editPictureButton.innerHTML = `
-			<div class="file has-name column is-fullwidth is-narrow">
-				<label class="file-label">
-				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
-				<span class="file-cta is-blue-background-color is-blue-border">
-					<span class="file-icon">
-						<i class="fas fa-upload"></i>
-					</span>
-					<span class="file-label is-white-text">
-						Choose an image file
-					</span>
+	const imageContainer = editPictureElem.querySelector('#imageContainer');
+	imageContainer.classList.remove('is-zero-size');
+
+	const editPictureButton = document.createElement('div');
+	editPictureButton.innerHTML = `
+		<div class="file has-name column is-fullwidth is-narrow">
+			<label class="file-label">
+			<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
+			<span class="file-cta is-blue-background-color is-blue-border">
+				<span class="file-icon">
+					<i class="fas fa-upload"></i>
 				</span>
-				</label>
-			</div>`;
-		editPictureButton.querySelector('#fileInput').addEventListener('change', e => {
-			const reader = new FileReader();
-			const selectedImage = e.target.files[0];
+				<span class="file-label is-white-text">
+					Choose an image file
+				</span>
+			</span>
+			</label>
+		</div>`;
+	editPictureButton.querySelector('#fileInput').addEventListener('change', e => {
+		const reader = new FileReader();
+		const selectedImage = e.target.files[0];
 
-			reader.onload = e => {
-				editPictureElem.querySelector('img').src = e.target.result;
-			}
+		reader.onload = e => {
+			const imgElement = editPictureElem.querySelector('img');
+			imgElement.src = e.target.result;
+			imgElement.classList.remove('is-zero-size');
+			imgElement.classList.add('is-post-picture-size');
 
-			reader.readAsDataURL(selectedImage);
-		});
+			imageContainer.classList.add('is-post-picture-size');
+		}
 
-		editGroup.prepend(editPictureButton);
-		editGroup.prepend(editPictureElem);
-	}
+		reader.readAsDataURL(selectedImage);
+	});
+
+	editGroup.prepend(editPictureButton);
+	editGroup.prepend(editPictureElem);
 
 	const cancelButton = mainContent.querySelector('#cancelButton');
 	cancelButton.addEventListener('click', e => {
@@ -170,7 +176,7 @@ function createPostEditInput(beforeContent, actionURL) {
 						<textarea class="input input-transparent auto-resize-textarea mt-4" id="editPostInput" wrap="soft" maxlength="1000" type="text" name="content" required>${beforeContent}</textarea>
 
 						<div class="mt-4">
-							<button type="submit" class="button is-blue-color is-transparent-button">
+							<button type="submit" class="button is-blue-color is-transparent-button mt-1">
 								<span class="icon">
 									<i class="fa-solid fa-check"></i>
 								</span>
@@ -505,10 +511,15 @@ async function getPosts(queryString) {
 			creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 			
 			const postImage = postElem.querySelector('#postImage');
+
 			if(posts[i].hasOwnProperty('picNum')) {
 				postImage.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
 				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+			} else {
+				postImage.innerHTML += '<figure class="image is-zero-size ml-0" id="imageContainer"></figure>';
+				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;
 			}
+
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
 
 			if(posts[i].edited === true) {

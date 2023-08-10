@@ -140,7 +140,12 @@ DONE:
       - Fixed UI to pull images to the left
     Commit 2:
       - Changed 1162px to 1200px to fit entire post
+  10 AUg 2023:
+    Commit 1:
+      - Fixed UI when uploading picture into post with no picture
+      - Added uploading picture to non picture post
 
 TODO:
   - Add video uploading
+  - Add uploading a picture into a pictureless post
   - Add privacy policy and terms of conditions to sign up

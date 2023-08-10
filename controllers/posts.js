@@ -179,6 +179,8 @@ async function editPost(req, res) {
 	const { content } = req.body;
 	const postPicture = req.file;
 
+	console.log(req.file);
+
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
 	}
@@ -197,9 +199,14 @@ async function editPost(req, res) {
 		const count = (await Count.findOne({ username })).count;
 
 		const tmp_path = postPicture.path;
-
-		await easyimg.convert({ src: tmp_path, dst: `public/postPictures/${username}/${username}${post.picNum}.jpeg`, quality: 80 });
+		
+		const picNum = post.picNum || count;
+		await easyimg.convert({ src: tmp_path, dst: `public/postPictures/${username}/${username}${picNum}.jpeg`, quality: 80 });
 		await fs.unlink(tmp_path);
+
+		if(!post.picNum) {
+			post.picNum = count;
+		}
 	}
 
 	await post.save();
