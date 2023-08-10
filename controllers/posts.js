@@ -174,12 +174,31 @@ async function deletePost(req, res) {
 	res.end();
 }
 
+async function deletePostPicture(req, res) {
+	const { username, postID } = req.params;
+
+	const userID = (await Account.findOne({ username }))._id;
+
+	if(req.token.username !== username || req.token.id !== String(userID)) {
+		throw new Unauthorized('You are not authorized to delete post pictures behalf of ' + username);
+	}
+
+	const post = await Post.findOne({ _id: postID });
+	if(post.picNum >= 0) {
+		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
+	}
+
+	post.set('picNum', undefined);
+	await post.save();
+
+	res.status(StatusCodes.OK);
+	res.end();
+}
+
 async function editPost(req, res) {
 	const { username, postID } = req.params;
 	const { content } = req.body;
 	const postPicture = req.file;
-
-	console.log(req.file);
 
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
@@ -215,4 +234,4 @@ async function editPost(req, res) {
 	res.redirect('/');
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost, getHomePosts };
+module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost, getHomePosts };

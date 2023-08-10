@@ -104,13 +104,14 @@ function editPost(postElem, postAuthor, postID) {
 						Choose an image file
 					</span>
 				</span>
-
-				<button id="pictureCancelButton" class="button is-blue-color is-transparent-button ml-1 column is-narrow is-fullwidth button-size">
-					<span class="icon">
-						<i class="fa-solid fa-xmark"></i>
-					</span>
-				</button>
 			</label>
+
+			<button id="pictureDeleteButton" class="button is-blue-color is-transparent-button">
+				<span class="icon mr-2">
+					<i class="fa-solid fa-xmark"></i>
+				</span>
+				Delete picture
+			</button>
 		</div>`;
 	editPictureButton.querySelector('#fileInput').addEventListener('change', e => {
 		const reader = new FileReader();
@@ -127,17 +128,13 @@ function editPost(postElem, postAuthor, postID) {
 		reader.readAsDataURL(selectedImage);
 	});
 
-	const pictureCancelButton = editPictureButton.querySelector('#pictureCancelButton');
-	pictureCancelButton.addEventListener('click', e => {
+	const pictureDeleteButton = editPictureButton.querySelector('#pictureDeleteButton');
+	pictureDeleteButton.addEventListener('click', async e => {
 		e.preventDefault();
 
-		imgElement.src = '';
-		imgElement.classList.remove('is-post-picture-size');
-		
-		imageContainer.classList.remove('is-post-picture-size');
-		imageContainer.classList.add('is-zero-size');
+		await axios.delete(apiURL + 'user/' + loggedUser + '/posts/' + postID + '/delete-picture');
 
-		pictureCancelButton.remove();
+		location.reload();
 	});
 
 	editGroup.prepend(editPictureButton);

@@ -32,7 +32,7 @@ const upload = multer({ storage });
 const auth = require('../middleware/auth');
 const validateParams = require('../middleware/params');
 
-const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, editPost } = require('../controllers/posts');
+const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost } = require('../controllers/posts');
 
 router.use('/', validateParams);
 
@@ -45,6 +45,9 @@ router.route('/')
 router.route('/:postID')
 	.get(getPost)
 	.delete(auth, deletePost)
+
+router.route('/:postID/delete-picture')
+	.delete(auth, deletePostPicture);
 
 router.route('/:postID/edit')
 	.post(auth, upload.single('postPicture'), editPost);

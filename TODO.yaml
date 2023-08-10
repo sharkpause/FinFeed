@@ -146,6 +146,9 @@ DONE:
       - Added uploading picture to non picture post
     Commit 2:
       - Added cancel button UI
+    Commit 3:
+      - Updated delete picture button design
+      - Added deleting picture on posts
 
 TODO:
   - Add video uploading
