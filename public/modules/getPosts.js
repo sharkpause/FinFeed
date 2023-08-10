@@ -89,19 +89,27 @@ function editPost(postElem, postAuthor, postID) {
 	const imageContainer = editPictureElem.querySelector('#imageContainer');
 	imageContainer.classList.remove('is-zero-size');
 
+	const imgElement = editPictureElem.querySelector('img');
+
 	const editPictureButton = document.createElement('div');
 	editPictureButton.innerHTML = `
 		<div class="file has-name column is-fullwidth is-narrow">
 			<label class="file-label">
-			<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
-			<span class="file-cta is-blue-background-color is-blue-border">
-				<span class="file-icon">
-					<i class="fas fa-upload"></i>
+				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
+				<span class="file-cta is-blue-background-color is-blue-border">
+					<span class="file-icon">
+						<i class="fas fa-upload"></i>
+					</span>
+					<span class="file-label is-white-text">
+						Choose an image file
+					</span>
 				</span>
-				<span class="file-label is-white-text">
-					Choose an image file
-				</span>
-			</span>
+
+				<button id="pictureCancelButton" class="button is-blue-color is-transparent-button ml-1 column is-narrow is-fullwidth button-size">
+					<span class="icon">
+						<i class="fa-solid fa-xmark"></i>
+					</span>
+				</button>
 			</label>
 		</div>`;
 	editPictureButton.querySelector('#fileInput').addEventListener('change', e => {
@@ -109,7 +117,6 @@ function editPost(postElem, postAuthor, postID) {
 		const selectedImage = e.target.files[0];
 
 		reader.onload = e => {
-			const imgElement = editPictureElem.querySelector('img');
 			imgElement.src = e.target.result;
 			imgElement.classList.remove('is-zero-size');
 			imgElement.classList.add('is-post-picture-size');
@@ -118,6 +125,19 @@ function editPost(postElem, postAuthor, postID) {
 		}
 
 		reader.readAsDataURL(selectedImage);
+	});
+
+	const pictureCancelButton = editPictureButton.querySelector('#pictureCancelButton');
+	pictureCancelButton.addEventListener('click', e => {
+		e.preventDefault();
+
+		imgElement.src = '';
+		imgElement.classList.remove('is-post-picture-size');
+		
+		imageContainer.classList.remove('is-post-picture-size');
+		imageContainer.classList.add('is-zero-size');
+
+		pictureCancelButton.remove();
 	});
 
 	editGroup.prepend(editPictureButton);

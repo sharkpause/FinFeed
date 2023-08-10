@@ -144,8 +144,9 @@ DONE:
     Commit 1:
       - Fixed UI when uploading picture into post with no picture
       - Added uploading picture to non picture post
+    Commit 2:
+      - Added cancel button UI
 
 TODO:
   - Add video uploading
-  - Add uploading a picture into a pictureless post
   - Add privacy policy and terms of conditions to sign up
