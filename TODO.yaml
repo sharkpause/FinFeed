@@ -149,6 +149,9 @@ DONE:
     Commit 3:
       - Updated delete picture button design
       - Added deleting picture on posts
+  15 Aug 2023:
+    Commit 1:
+      - Changed postImage to postMedia for video uploads soon
 
 TODO:
   - Add video uploading
