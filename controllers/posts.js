@@ -36,7 +36,9 @@ async function getPost(req, res) {
 async function createPost(req, res) {
 	const { content } = req.body;
 	const { username } = req.params;
-	const postPicture =  req.file;
+	const postMedia =  req.file;
+
+	console.log(postMedia);
 
 	if(!content) {
 		throw new BadRequest('Please provide the post content');
@@ -54,10 +56,10 @@ async function createPost(req, res) {
 		content
 	};
 
-	if(postPicture) {
+	if(postMedia) {
 		const count = (await Count.findOne({ username })).count;
 
-		const tmp_path = `public/postPictures/${username}/${username}${count-1}.jpg`;
+		const tmp_path = `public/postMedias/${username}/${username}${count-1}.jpg`;
 		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
@@ -161,7 +163,7 @@ async function deletePost(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 	if(post.picNum >= 0) {
-		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
+		await fs.unlink(`public/postMedias/${username}/${username}${post.picNum}.jpeg`);
 	}
 
 	const result = await Post.deleteOne({ _id: postID });
@@ -185,7 +187,7 @@ async function deletePostPicture(req, res) {
 
 	const post = await Post.findOne({ _id: postID });
 	if(post.picNum >= 0) {
-		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
+		await fs.unlink(`public/postMedias/${username}/${username}${post.picNum}.jpeg`);
 	}
 
 	post.set('picNum', undefined);
@@ -198,7 +200,7 @@ async function deletePostPicture(req, res) {
 async function editPost(req, res) {
 	const { username, postID } = req.params;
 	const { content } = req.body;
-	const postPicture = req.file;
+	const postMedia = req.file;
 
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
@@ -214,13 +216,13 @@ async function editPost(req, res) {
 	post.edited = true;
 	post.content = content;
 
-	if(postPicture) {
+	if(postMedia) {
 		const count = (await Count.findOne({ username })).count;
 
-		const tmp_path = postPicture.path;
+		const tmp_path = postMedia.path;
 		
 		const picNum = post.picNum || count;
-		await easyimg.convert({ src: tmp_path, dst: `public/postPictures/${username}/${username}${picNum}.jpeg`, quality: 80 });
+		await easyimg.convert({ src: tmp_path, dst: `public/postMedias/${username}/${username}${picNum}.jpeg`, quality: 80 });
 		await fs.unlink(tmp_path);
 
 		if(!post.picNum) {

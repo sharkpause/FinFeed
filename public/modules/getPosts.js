@@ -531,7 +531,7 @@ async function getPosts(queryString) {
 
 			if(posts[i].hasOwnProperty('picNum')) {
 				postMedia.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
-				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
 			} else {
 				postMedia.innerHTML += '<figure class="image is-zero-size ml-0" id="imageContainer"></figure>';
 				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;

@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const path = 'public/postPictures/' + req.params.username + '/';
+		const path = 'public/postMedias/' + req.params.username + '/';
 		if(!fs.existsSync(path)) {
 			fs.mkdirSync(path, { recursive: true });
 		}
@@ -37,7 +37,7 @@ const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, del
 router.use('/', validateParams);
 
 router.route('/')
-	.post(auth, upload.single('postPicture'), createPost);
+	.post(auth, upload.single('postMedia'), createPost);
 
 router.route('/')
 	.get(getAllPosts);
@@ -50,7 +50,7 @@ router.route('/:postID/delete-picture')
 	.delete(auth, deletePostPicture);
 
 router.route('/:postID/edit')
-	.post(auth, upload.single('postPicture'), editPost);
+	.post(auth, upload.single('postMedia'), editPost);
 
 router.route('/:postID/like')
 	.patch(auth, likePost);

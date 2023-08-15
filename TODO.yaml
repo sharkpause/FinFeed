@@ -152,6 +152,8 @@ DONE:
   15 Aug 2023:
     Commit 1:
       - Changed postImage to postMedia for video uploads soon
+    Commit 2:
+      - Changed postImage to postMedia on other stuff I forgot
 
 TODO:
   - Add video uploading
