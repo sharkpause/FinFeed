@@ -8,8 +8,12 @@ const Unauthorized = require('../errors/unauthorized');
 
 const { StatusCodes } = require('http-status-codes');
 const easyimg = require('easyimage');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath);
 
 const fs = require('fs').promises;
+const path = require('path');
 
 async function getHomePosts(req, res) {
 	const from = req.query.from || 0;
@@ -58,14 +62,28 @@ async function createPost(req, res) {
 
 	if(postMedia) {
 		const count = (await Count.findOne({ username })).count;
-
 		const tmp_path = `public/postMedias/${username}/${username}${count-1}.jpg`;
-		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
+		if(postMedia.mimetype.includes('image')) {
+			const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
-		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
-		await fs.unlink(tmp_path);
+			await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
+			await fs.unlink(tmp_path);
 
-		documentProperty.picNum = count - 1;
+			documentProperty.picNum = count - 1;
+		} else {
+			const tmp_extless = tmp_path.replace('.jpg', '.mp4');
+
+			ffmpeg(path.basename(tmp_path))
+				.outputOptions(['-crf 20'])
+				.output(tmp_extless)
+				.on('end', async () => {
+					//await fs.unlink(tmp_path);
+				})
+				.on('error', err => {
+					throw err;
+				})
+				.run();
+		}
 	}
 
 	const newPost = await Post.create(documentProperty);
