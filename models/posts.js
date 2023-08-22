@@ -46,7 +46,7 @@ const PostSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false
 	},
-	picNum: Number
+	medNum: Number
 });
 
 PostSchema.pre('save', async function(next) {

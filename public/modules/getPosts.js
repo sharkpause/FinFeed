@@ -95,7 +95,7 @@ function editPost(postElem, postAuthor, postID) {
 	editPictureButton.innerHTML = `
 		<div class="file has-name column is-fullwidth is-narrow">
 			<label class="file-label">
-				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
+				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*,video/*">
 				<span class="file-cta is-blue-background-color is-blue-border">
 					<span class="file-icon">
 						<i class="fas fa-upload"></i>
@@ -529,9 +529,9 @@ async function getPosts(queryString) {
 			
 			const postMedia = postElem.querySelector('#postMedia');
 
-			if(posts[i].hasOwnProperty('picNum')) {
+			if(posts[i].hasOwnProperty('medNum')) {
 				postMedia.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
-				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.jpeg">`;
 			} else {
 				postMedia.innerHTML += '<figure class="image is-zero-size ml-0" id="imageContainer"></figure>';
 				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;

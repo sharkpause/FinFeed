@@ -67,7 +67,7 @@ async function createPost(req, res) {
 			await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
 			await fs.unlink(tmp_path);
 
-			documentProperty.picNum = count - 1;
+			documentProperty.medNum = count - 1;
 		} else {
 			const tmp_path = `public/postMedias/${username}/${username}${count-1}.vid`;
 			const tmp_extless = tmp_path.replace('.vid', '.mp4');
@@ -84,7 +84,7 @@ async function createPost(req, res) {
 				})
 				.run();
 			
-			documentProperty.picNum = count - 1;
+			documentProperty.medNum = count - 1;
 		}
 	}
 
@@ -182,12 +182,12 @@ async function deletePost(req, res) {
 	}
 
 	const post = await Post.findOne({ _id: postID });
-	if(post.picNum >= 0) {
+	if(post.medNum >= 0) {
 		try {
-			await fs.unlink(`public/postMedias/${username}/${username}${post.picNum}.jpeg`);
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
 		} catch(err) {
 			try {
-				await fs.unlink(`public/postMedias/${username}/${username}${post.picNum}.mp4`);
+				await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.mp4`);
 			} catch(err) {
 				throw err;
 			}
@@ -214,11 +214,11 @@ async function deletePostPicture(req, res) {
 	}
 
 	const post = await Post.findOne({ _id: postID });
-	if(post.picNum >= 0) {
-		await fs.unlink(`public/postMedias/${username}/${username}${post.picNum}.jpeg`);
+	if(post.medNum >= 0) {
+		await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
 	}
 
-	post.set('picNum', undefined);
+	post.set('medNum', undefined);
 	await post.save();
 
 	res.status(StatusCodes.OK);
@@ -250,20 +250,20 @@ async function editPost(req, res) {
 
 			const tmp_path = postMedia.path;
 			
-			const picNum = post.picNum || count;
-			await easyimg.convert({ src: tmp_path, dst: `public/postMedias/${username}/${username}${picNum}.jpeg`, quality: 80 });
+			const medNum = post.medNum || count;
+			await easyimg.convert({ src: tmp_path, dst: `public/postMedias/${username}/${username}${medNum}.jpeg`, quality: 80 });
 			await fs.unlink(tmp_path);
 
-			if(!post.picNum) {
-				post.picNum = count;
+			if(!post.medNum) {
+				post.medNum = count;
 			}
 		} else {
-		//	const count = (await Count.findOne({ username })).count;
+			const count = (await Count.findOne({ username })).count;
 
-		//	const tmp_path = postMedia.path;
+			const tmp_path = postMedia.path;
 
-		//	const picNum = post.picNum || count;
-		//	await 
+			const vidNum = post.medNum || count;
+			
 		}
 	}
 

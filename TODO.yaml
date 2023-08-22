@@ -162,6 +162,8 @@ DONE:
       - Implemented video compressing and storing
     Commit 2:
       - Implement deleting videos on post deletion
+    Commit 3:
+      - Changed picNum to medNum
 
 TODO:
   Add video uploading:
