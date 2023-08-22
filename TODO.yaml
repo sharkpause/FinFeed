@@ -168,6 +168,9 @@ DONE:
       - Fixed adding an image to a post that originally didn't have an image
     Commit 5:  
       - Implement editing media on post
+    Commit 6:
+      - Changed imageContainer to postMediaContainer
+      - Started working on displaying the video
 
 TODO:
   - Add video uploading

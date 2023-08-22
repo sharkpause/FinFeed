@@ -86,8 +86,8 @@ function editPost(postElem, postAuthor, postID) {
 	const editGroup = mainContent.querySelector('#editGroup');
 	const editPictureElem = pictureElem.cloneNode(true);
 
-	const imageContainer = editPictureElem.querySelector('#imageContainer');
-	imageContainer.classList.remove('is-zero-size');
+	const mediaContainer = editPictureElem.querySelector('#mediaContainer');
+	mediaContainer.classList.remove('is-zero-size');
 
 	const imgElement = editPictureElem.querySelector('img');
 
@@ -122,7 +122,7 @@ function editPost(postElem, postAuthor, postID) {
 			imgElement.classList.remove('is-zero-size');
 			imgElement.classList.add('is-post-picture-size');
 
-			imageContainer.classList.add('is-post-picture-size');
+			mediaContainer.classList.add('is-post-picture-size');
 		}
 
 		reader.readAsDataURL(selectedImage);
@@ -530,11 +530,16 @@ async function getPosts(queryString) {
 			const postMedia = postElem.querySelector('#postMedia');
 
 			if(posts[i].hasOwnProperty('medNum')) {
-				postMedia.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
-				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.jpeg">`;
+				postMedia.innerHTML += '<figure class="image is-post-picture-size ml-0" id="mediaContentContainer"></figure>';
+				const mediaContentContainer = postMedia.querySelector('#mediaContentContainer')
+				mediaContentContainer.innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.jpeg">`;
+
+				mediaContentContainer.querySelector('img').onerror = () => {
+					mediaContentContainer.innerHTML = `<video height="500" width="500" controls><source src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.mp4" type="video/mp4"></video>`;
+				}
 			} else {
-				postMedia.innerHTML += '<figure class="image is-zero-size ml-0" id="imageContainer"></figure>';
-				postMedia.querySelector('#imageContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;
+				postMedia.innerHTML += '<figure class="image is-zero-size ml-0" id="mediaContentContainer"></figure>';
+				postMedia.querySelector('#mediaContentContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;
 			}
 
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
