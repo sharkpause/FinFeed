@@ -10,7 +10,7 @@ const { StatusCodes } = require('http-status-codes');
 const easyimg = require('easyimage');
 const ffmpeg = require('fluent-ffmpeg');
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg');
-ffmpeg.setFfmpegPath(ffmpegPath);
+ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 const fs = require('fs').promises;
 const path = require('path');
@@ -42,8 +42,6 @@ async function createPost(req, res) {
 	const { username } = req.params;
 	const postMedia =  req.file;
 
-	console.log(postMedia);
-
 	if(!content) {
 		throw new BadRequest('Please provide the post content');
 	}
@@ -62,8 +60,8 @@ async function createPost(req, res) {
 
 	if(postMedia) {
 		const count = (await Count.findOne({ username })).count;
-		const tmp_path = `public/postMedias/${username}/${username}${count-1}.jpg`;
 		if(postMedia.mimetype.includes('image')) {
+			const tmp_path = `public/postMedias/${username}/${username}${count-1}.jpg`;
 			const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
 			await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
@@ -71,13 +69,15 @@ async function createPost(req, res) {
 
 			documentProperty.picNum = count - 1;
 		} else {
-			const tmp_extless = tmp_path.replace('.jpg', '.mp4');
+			const tmp_path = `public/postMedias/${username}/${username}${count-1}.vid`;
+			const tmp_extless = tmp_path.replace('.vid', '.mp4');
 
-			ffmpeg(path.basename(tmp_path))
-				.outputOptions(['-crf 20'])
+			ffmpeg(tmp_path)
+				.fps(30)
+				.addOptions(['-crf 28'])
 				.output(tmp_extless)
 				.on('end', async () => {
-					//await fs.unlink(tmp_path);
+					await fs.unlink(tmp_path);
 				})
 				.on('error', err => {
 					throw err;

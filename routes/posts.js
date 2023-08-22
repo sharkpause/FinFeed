@@ -21,7 +21,10 @@ const storage = multer.diskStorage({
 			count = await Count.create({ username: req.params.username });
 		}
 
-		cb(null, req.params.username + count.count + '.jpg');
+		if(file.mimetype.includes('image'))
+			cb(null, req.params.username + count.count + '.jpg');
+		else
+			cb(null, req.params.username + count.count + '.vid');
 		++count.count;
 		await count.save();
 	}
