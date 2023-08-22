@@ -253,6 +253,11 @@ async function editPost(req, res) {
 			const medNum = post.medNum || count;
 			await easyimg.convert({ src: tmp_path, dst: `public/postMedias/${username}/${username}${medNum}.jpeg`, quality: 80 });
 			await fs.unlink(tmp_path);
+			try {
+				await fs.unlink(`public/postMedias/${username}/${username}${medNum}.mp4`);
+			} catch(err) {
+				;
+			}
 
 			if(!post.medNum) {
 				post.medNum = count;
@@ -274,6 +279,12 @@ async function editPost(req, res) {
 					throw err;
 				})
 				.run();
+			
+			try {
+				await fs.unlink(`public/postMedias/${username}/${username}${medNum}.jpeg`);
+			} catch(err) {
+				;
+			}
 
 			if(!post.medNum) {
 				post.medNum = count;

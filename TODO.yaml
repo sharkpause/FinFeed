@@ -166,8 +166,9 @@ DONE:
       - Changed picNum to medNum
     Commit 4:
       - Fixed adding an image to a post that originally didn't have an image
+    Commit 5:  
+      - Implement editing media on post
 
 TODO:
-  Add video uploading:
-    - Implement editing videos on post
+  - Add video uploading
   - Add privacy policy and terms of conditions to sign up
