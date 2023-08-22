@@ -95,7 +95,7 @@ function editPost(postElem, postAuthor, postID) {
 	editPictureButton.innerHTML = `
 		<div class="file has-name column is-fullwidth is-narrow">
 			<label class="file-label">
-				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*,video/*">
+				<input class="file-input" type="file" name="postMedia" id="fileInput" accept="image/*,video/*">
 				<span class="file-cta is-blue-background-color is-blue-border">
 					<span class="file-icon">
 						<i class="fas fa-upload"></i>

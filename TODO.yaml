@@ -164,6 +164,8 @@ DONE:
       - Implement deleting videos on post deletion
     Commit 3:
       - Changed picNum to medNum
+    Commit 4:
+      - Fixed adding an image to a post that originally didn't have an image
 
 TODO:
   Add video uploading:

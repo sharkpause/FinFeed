@@ -262,8 +262,22 @@ async function editPost(req, res) {
 
 			const tmp_path = postMedia.path;
 
-			const vidNum = post.medNum || count;
-			
+			const medNum = post.medNum || count;
+			ffmpeg(tmp_path)
+				.fps(30)
+				.addOptions(['-crf 28'])
+				.output(`public/postMedias/${username}/${username}${medNum}.mp4`)
+				.on('end', async () => {
+					await fs.unlink(tmp_path);
+				})
+				.on('error', err => {
+					throw err;
+				})
+				.run();
+
+			if(!post.medNum) {
+				post.medNum = count;
+			}
 		}
 	}
 
