@@ -160,9 +160,10 @@ DONE:
   22 Aug 2023:
     Commit 1:
       - Implemented video compressing and storing
+    Commit 2:
+      - Implement deleting videos on post deletion
 
 TODO:
   Add video uploading:
-    - Implement deleting videos on post deletion
     - Implement editing videos on post
   - Add privacy policy and terms of conditions to sign up
