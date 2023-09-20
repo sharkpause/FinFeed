@@ -17,17 +17,18 @@ require('dotenv').config();
 async function getAccount(req, res) {
 	const { username } = req.params;
 
-	const user = await Account.findOne({ username }).select({ username: 1, email: 1, bio: 1, createdAt: 1, displayName: 1, follows: 1 });
+	const posts = await Post.find({ author: username });
 
-	const posts = await Post.find({ author: username});
-
-	res.status(StatusCodes.OK).json({ user, posts, numPosts: posts.length });
+	res.status(StatusCodes.OK).json({
+		user: (({ username, email, bio, createdAt, displayName, follows }) => ({ username, email, bio, createdAt, displayName, follows}))(req.queryData.user),
+		posts,
+		numPosts: posts.length });
 }
 
 async function deleteAccount(req, res) {
 	const { username } = req.params;
 
-	const user = await Account.findOne({ username });
+	const user = req.queryData.user;
 
 	if(req.token.username !== user.username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to delete this account');
@@ -88,7 +89,7 @@ async function editAccount(req, res) {
 	const { username } = req.params;
 	const file = req.file;
 
-	const user = await Account.findOne({ username });
+	const user = req.queryData.user;
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to edit this account');
@@ -133,7 +134,7 @@ async function followAccount(req, res) {
 		throw new BadRequest('Please provide follower username');
 	}
 
-	const user = await Account.findOne({ username });
+	const user = req.queryData.user;
 
 	if(req.token.username !== follower) {
 		throw new Unauthorized('You are not authorized to follow users on behalf of ' + follower);

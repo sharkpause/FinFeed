@@ -30,11 +30,7 @@ async function getAllPosts(req, res) {
 }
 
 async function getPost(req, res) {
-	const { postID } = req.params;
-
-	const post = await Post.findOne({ _id: postID });
-
-	res.status(StatusCodes.OK).json({ post });
+	res.status(StatusCodes.OK).json({ post: req.queryData.post });
 }
 
 async function createPost(req, res) {
@@ -46,7 +42,7 @@ async function createPost(req, res) {
 		throw new BadRequest('Please provide the post content');
 	}
 
-	const user = await Account.findOne({ username });
+	const user = req.queryData.user;
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to make posts on behalf of ' + username);
@@ -95,14 +91,13 @@ async function createPost(req, res) {
 }
 
 async function likePost(req, res) {
-	const { postID } = req.params;
 	const { liker } = req.body;
 
 	if(!liker) {
 		throw new BadRequest('Please provide liker username');
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 
 	const likerID = (await Account.findOne({ username: liker }))._id;
 
@@ -134,14 +129,13 @@ async function likePost(req, res) {
 }
 
 async function dislikePost(req, res) {
-	const { postID } = req.params;
 	const { disliker } = req.body;
 
 	if(!disliker) {
 		throw new BadRequest('Please provide disliker username');
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 
 	const dislikerID = (await Account.findOne({ username: disliker }))._id;
 
@@ -175,13 +169,13 @@ async function dislikePost(req, res) {
 async function deletePost(req, res) {
 	const { username, postID } = req.params;
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 	if(post.medNum >= 0) {
 		try {
 			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
@@ -205,15 +199,15 @@ async function deletePost(req, res) {
 }
 
 async function deletePostPicture(req, res) {
-	const { username, postID } = req.params;
+	const { username } = req.params;
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to delete post pictures behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 	if(post.medNum >= 0) {
 		await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
 	}
@@ -226,7 +220,7 @@ async function deletePostPicture(req, res) {
 }
 
 async function editPost(req, res) {
-	const { username, postID } = req.params;
+	const { username } = req.params;
 	const { content } = req.body;
 	const postMedia = req.file;
 
@@ -234,13 +228,13 @@ async function editPost(req, res) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 	post.edited = true;
 	post.content = content;
 

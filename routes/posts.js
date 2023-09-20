@@ -38,26 +38,30 @@ const validateParams = require('../middleware/params');
 const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost } = require('../controllers/posts');
 
 router.use('/', validateParams);
-
 router.route('/')
 	.post(auth, upload.single('postMedia'), createPost);
 
 router.route('/')
 	.get(getAllPosts);
 
+router.use('/:postID', validateParams);
 router.route('/:postID')
 	.get(getPost)
 	.delete(auth, deletePost)
 
+router.use('/:postID/delete-picture', validateParams);
 router.route('/:postID/delete-picture')
 	.delete(auth, deletePostPicture);
 
+router.use('/:postID/edit', validateParams);
 router.route('/:postID/edit')
 	.post(auth, upload.single('postMedia'), editPost);
 
+router.use('/:postID/like', validateParams);
 router.route('/:postID/like')
 	.patch(auth, likePost);
 
+router.use('/:postID/dislike', validateParams);
 router.route('/:postID/dislike')
 	.patch(auth, dislikePost);
 

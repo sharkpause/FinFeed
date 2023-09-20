@@ -171,7 +171,10 @@ DONE:
     Commit 6:
       - Changed imageContainer to postMediaContainer
       - Started working on displaying the video
+  20 Sep 2023:
+    Commit 1:
+      - Refactored validate params middleware and all controllers
 
 TODO:
-  - Add video uploading
-  - Add privacy policy and terms of conditions to sign up
+  - Add api docs on swagger.yaml
+  - Refactor code
