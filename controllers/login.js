@@ -102,7 +102,10 @@ async function clicked(req, res) {
 
 async function success(req, res) {
 	const tokenDocument = await ResetToken.findOne({ token: req.token.token });
-	if(!tokenDocument) throw new Unauthorized('Unauthorized to reset password');
+	if(!tokenDocument) {
+		res.status(401).json({ errorCode: 4 });
+		throw new Unauthorized('Unauthorized to reset password');
+	}
 
 	const { password } = req.body;
 
