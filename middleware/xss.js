@@ -5,8 +5,6 @@ function sanitizeInput(req, res, next) {
 		req.body[key] = xss(req.body[key]);
 	}
 
-	console.log(req.body);
-
 	next();
 }
 

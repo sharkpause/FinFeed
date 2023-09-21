@@ -174,7 +174,9 @@ DONE:
   20 Sep 2023:
     Commit 1:
       - Refactored validate params middleware and all controllers
+  21 Sep 2023:
+    Commit 1:
+      - Finished refactoring the codebase
 
 TODO:
   - Add api docs on swagger.yaml
-  - Refactor code

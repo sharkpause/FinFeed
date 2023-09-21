@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-
 const Unauthorized = require('../errors/unauthorized');
 
 async function authMiddleware(req, res, next) {
@@ -8,11 +7,9 @@ async function authMiddleware(req, res, next) {
 	try {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-		const { id, username } = decoded;
-
 		req.token = {
-			id,
-			username
+			id: decoded.id,
+			username: decoded.username
 		}
 
 		next();
