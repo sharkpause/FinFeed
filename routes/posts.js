@@ -35,13 +35,11 @@ const upload = multer({ storage });
 const auth = require('../middleware/auth');
 const validateParams = require('../middleware/params');
 
-const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost } = require('../controllers/posts');
+const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostMedia, editPost } = require('../controllers/posts');
 
 router.use('/', validateParams);
 router.route('/')
-	.post(auth, upload.single('postMedia'), createPost);
-
-router.route('/')
+	.post(auth, upload.single('postMedia'), createPost)
 	.get(getAllPosts);
 
 router.use('/:postID', validateParams);
@@ -49,9 +47,9 @@ router.route('/:postID')
 	.get(getPost)
 	.delete(auth, deletePost)
 
-router.use('/:postID/delete-picture', validateParams);
-router.route('/:postID/delete-picture')
-	.delete(auth, deletePostPicture);
+router.use('/:postID/delete-media', validateParams);
+router.route('/:postID/delete-media')
+	.delete(auth, deletePostMedia);
 
 router.use('/:postID/edit', validateParams);
 router.route('/:postID/edit')

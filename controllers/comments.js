@@ -26,10 +26,12 @@ async function createComment(req, res) {
 	const { commentator, content } = req.body;
 
 	if(!commentator) {
+		res.json({ errorCode: 1 });
 		throw new BadRequest('Please provide commentator username');
 	}
 
 	if(!content) {
+		res.json({ errorCode: 2 });
 		throw new BadRequest('Please provide comment content');
 	}
 

@@ -179,6 +179,8 @@ DONE:
       - Finished refactoring the codebase
     Commit 2:
       - Started adding documentations about the API
+  22 Sep 2023:
+    Commit 1:
+      - Finished the API docs
 
 TODO:
-  - Add api docs on swagger.yaml

@@ -198,7 +198,7 @@ async function deletePost(req, res) {
 	res.end();
 }
 
-async function deletePostPicture(req, res) {
+async function deletePostMedia(req, res) {
 	const { username } = req.params;
 
 	const userID = req.queryData.user._id;
@@ -209,7 +209,11 @@ async function deletePostPicture(req, res) {
 
 	const post = req.queryData.post;
 	if(post.medNum >= 0) {
-		await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
+		try {
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
+		} catch(err) {
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.mp4`);
+		}
 	}
 
 	post.set('medNum', undefined);
@@ -292,4 +296,4 @@ async function editPost(req, res) {
 	res.redirect('/');
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost, getHomePosts };
+module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostMedia, editPost, getHomePosts };
