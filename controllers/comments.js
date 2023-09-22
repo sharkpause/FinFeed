@@ -17,11 +17,7 @@ async function getAllComments(req, res) {
 }
 
 async function getComment(req, res) {
-	const { commentID } = req.params;
-
-	const comment = await Comment.findOne({ _id: commentID });
-
-	res.status(StatusCodes.OK).json({ comment });
+	res.status(StatusCodes.OK).json({ comment: req.queryData.comment });
 
 }
 
@@ -30,14 +26,16 @@ async function createComment(req, res) {
 	const { commentator, content } = req.body;
 
 	if(!commentator) {
+		res.json({ errorCode: 1 });
 		throw new BadRequest('Please provide commentator username');
 	}
 
 	if(!content) {
+		res.json({ errorCode: 2 });
 		throw new BadRequest('Please provide comment content');
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 
 	const user = await Account.findOne({ username: commentator });
 
@@ -46,7 +44,7 @@ async function createComment(req, res) {
 	}
 
 	const newComment = await Comment.create({
-		postID: postID,
+		postID,
 		author: commentator,
 		authorDisplay: user.displayName,
 		content
@@ -56,14 +54,13 @@ async function createComment(req, res) {
 }
 
 async function likeComment(req, res) {
-	const { commentID } = req.params;
 	const { liker } = req.body;
 
 	if(!liker) {
 		throw new BadRequest('Please provide liker username');
 	}
 
-	const comment = await Comment.findOne({ _id: commentID });
+	const comment = req.queryData.comment;
 
 	const likerID = (await Account.findOne({ username: liker }))._id;
 
@@ -94,14 +91,13 @@ async function likeComment(req, res) {
 }
 
 async function dislikeComment(req, res) {
-	const { commentID } = req.params;
 	const { disliker } = req.body;
 
 	if(!disliker) {
 		throw new BadRequest('Please provide disliker username');
 	}
 
-	const comment = await Comment.findOne({ _id: commentID });
+	const comment = req.queryData.comment;
 
 	const dislikerID = (await Account.findOne({ username: disliker }))._id;	
 
@@ -133,7 +129,7 @@ async function dislikeComment(req, res) {
 async function deleteComment(req, res) {
 	const { username, commentID } = req.params;
 
-	const comment = await Comment.findOne({ _id: commentID });
+	const comment = req.queryData.comment;
 	const user = await Account.findOne({ username: comment.author });
 
 	if(req.token.username !== user.username || req.token.id !== String(user._id)) {
@@ -156,21 +152,24 @@ async function deleteComment(req, res) {
 }
 
 async function editComment(req, res) {
-	const { username, commentID } = req.params;
+	const { username } = req.params;
 	const { content } = req.body;
 
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const comment = await Comment.findOne({ _id: commentID });
+	const comment = req.queryData.comment;
 	const user = await Account.findOne({ username: comment.author });
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	await Comment.updateOne({ _id: commentID }, { edited: true, content });
+	comment.edited = true;
+	comment.content = content;
+
+	await comment.save();
 
 	res.status(StatusCodes.OK).json({ success: true, message: 'Successfully edited comment' });
 }

@@ -7,7 +7,7 @@ const fs = require('fs');
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
-		const path = 'public/postPictures/' + req.params.username + '/';
+		const path = 'public/postMedias/' + req.params.username + '/';
 		if(!fs.existsSync(path)) {
 			fs.mkdirSync(path, { recursive: true });
 		}
@@ -21,7 +21,10 @@ const storage = multer.diskStorage({
 			count = await Count.create({ username: req.params.username });
 		}
 
-		cb(null, req.params.username + count.count + '.jpg');
+		if(file.mimetype.includes('image'))
+			cb(null, req.params.username + count.count + '.jpg');
+		else
+			cb(null, req.params.username + count.count + '.vid');
 		++count.count;
 		await count.save();
 	}
@@ -32,29 +35,31 @@ const upload = multer({ storage });
 const auth = require('../middleware/auth');
 const validateParams = require('../middleware/params');
 
-const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost } = require('../controllers/posts');
+const { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostMedia, editPost } = require('../controllers/posts');
 
 router.use('/', validateParams);
-
 router.route('/')
-	.post(auth, upload.single('postPicture'), createPost);
-
-router.route('/')
+	.post(auth, upload.single('postMedia'), createPost)
 	.get(getAllPosts);
 
+router.use('/:postID', validateParams);
 router.route('/:postID')
 	.get(getPost)
 	.delete(auth, deletePost)
 
-router.route('/:postID/delete-picture')
-	.delete(auth, deletePostPicture);
+router.use('/:postID/delete-media', validateParams);
+router.route('/:postID/delete-media')
+	.delete(auth, deletePostMedia);
 
+router.use('/:postID/edit', validateParams);
 router.route('/:postID/edit')
-	.post(auth, upload.single('postPicture'), editPost);
+	.post(auth, upload.single('postMedia'), editPost);
 
+router.use('/:postID/like', validateParams);
 router.route('/:postID/like')
 	.patch(auth, likePost);
 
+router.use('/:postID/dislike', validateParams);
 router.route('/:postID/dislike')
 	.patch(auth, dislikePost);
 

@@ -8,8 +8,12 @@ const Unauthorized = require('../errors/unauthorized');
 
 const { StatusCodes } = require('http-status-codes');
 const easyimg = require('easyimage');
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg');
+ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 const fs = require('fs').promises;
+const path = require('path');
 
 async function getHomePosts(req, res) {
 	const from = req.query.from || 0;
@@ -26,23 +30,19 @@ async function getAllPosts(req, res) {
 }
 
 async function getPost(req, res) {
-	const { postID } = req.params;
-
-	const post = await Post.findOne({ _id: postID });
-
-	res.status(StatusCodes.OK).json({ post });
+	res.status(StatusCodes.OK).json({ post: req.queryData.post });
 }
 
 async function createPost(req, res) {
 	const { content } = req.body;
 	const { username } = req.params;
-	const postPicture =  req.file;
+	const postMedia =  req.file;
 
 	if(!content) {
 		throw new BadRequest('Please provide the post content');
 	}
 
-	const user = await Account.findOne({ username });
+	const user = req.queryData.user;
 
 	if(req.token.username !== username || req.token.id !== String(user._id)) {
 		throw new Unauthorized('You are not authorized to make posts on behalf of ' + username);
@@ -54,16 +54,34 @@ async function createPost(req, res) {
 		content
 	};
 
-	if(postPicture) {
+	if(postMedia) {
 		const count = (await Count.findOne({ username })).count;
+		if(postMedia.mimetype.includes('image')) {
+			const tmp_path = `public/postMedias/${username}/${username}${count-1}.jpg`;
+			const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
 
-		const tmp_path = `public/postPictures/${username}/${username}${count-1}.jpg`;
-		const tmp_extless = tmp_path.replace('.jpg', '.jpeg');
+			await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
+			await fs.unlink(tmp_path);
 
-		await easyimg.convert({ src: tmp_path, dst: tmp_extless, quality: 80 });
-		await fs.unlink(tmp_path);
+			documentProperty.medNum = count - 1;
+		} else {
+			const tmp_path = `public/postMedias/${username}/${username}${count-1}.vid`;
+			const tmp_extless = tmp_path.replace('.vid', '.mp4');
 
-		documentProperty.picNum = count - 1;
+			ffmpeg(tmp_path)
+				.fps(30)
+				.addOptions(['-crf 28'])
+				.output(tmp_extless)
+				.on('end', async () => {
+					await fs.unlink(tmp_path);
+				})
+				.on('error', err => {
+					throw err;
+				})
+				.run();
+			
+			documentProperty.medNum = count - 1;
+		}
 	}
 
 	const newPost = await Post.create(documentProperty);
@@ -73,14 +91,13 @@ async function createPost(req, res) {
 }
 
 async function likePost(req, res) {
-	const { postID } = req.params;
 	const { liker } = req.body;
 
 	if(!liker) {
 		throw new BadRequest('Please provide liker username');
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 
 	const likerID = (await Account.findOne({ username: liker }))._id;
 
@@ -112,14 +129,13 @@ async function likePost(req, res) {
 }
 
 async function dislikePost(req, res) {
-	const { postID } = req.params;
 	const { disliker } = req.body;
 
 	if(!disliker) {
 		throw new BadRequest('Please provide disliker username');
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 
 	const dislikerID = (await Account.findOne({ username: disliker }))._id;
 
@@ -153,15 +169,23 @@ async function dislikePost(req, res) {
 async function deletePost(req, res) {
 	const { username, postID } = req.params;
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to delete posts on behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
-	if(post.picNum >= 0) {
-		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
+	const post = req.queryData.post;
+	if(post.medNum >= 0) {
+		try {
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
+		} catch(err) {
+			try {
+				await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.mp4`);
+			} catch(err) {
+				throw err;
+			}
+		}
 	}
 
 	const result = await Post.deleteOne({ _id: postID });
@@ -174,21 +198,25 @@ async function deletePost(req, res) {
 	res.end();
 }
 
-async function deletePostPicture(req, res) {
-	const { username, postID } = req.params;
+async function deletePostMedia(req, res) {
+	const { username } = req.params;
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to delete post pictures behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
-	if(post.picNum >= 0) {
-		await fs.unlink(`public/postPictures/${username}/${username}${post.picNum}.jpeg`);
+	const post = req.queryData.post;
+	if(post.medNum >= 0) {
+		try {
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.jpeg`);
+		} catch(err) {
+			await fs.unlink(`public/postMedias/${username}/${username}${post.medNum}.mp4`);
+		}
 	}
 
-	post.set('picNum', undefined);
+	post.set('medNum', undefined);
 	await post.save();
 
 	res.status(StatusCodes.OK);
@@ -196,35 +224,69 @@ async function deletePostPicture(req, res) {
 }
 
 async function editPost(req, res) {
-	const { username, postID } = req.params;
+	const { username } = req.params;
 	const { content } = req.body;
-	const postPicture = req.file;
+	const postMedia = req.file;
 
 	if(!content) {
 		throw new BadRequest('Please provide the new edited content');
 	}
 
-	const userID = (await Account.findOne({ username }))._id;
+	const userID = req.queryData.user._id;
 
 	if(req.token.username !== username || req.token.id !== String(userID)) {
 		throw new Unauthorized('You are not authorized to edit posts on behalf of ' + username);
 	}
 
-	const post = await Post.findOne({ _id: postID });
+	const post = req.queryData.post;
 	post.edited = true;
 	post.content = content;
 
-	if(postPicture) {
-		const count = (await Count.findOne({ username })).count;
+	if(postMedia) {
+		if(postMedia.mimetype.includes('image')) {
+			const count = (await Count.findOne({ username })).count;
 
-		const tmp_path = postPicture.path;
-		
-		const picNum = post.picNum || count;
-		await easyimg.convert({ src: tmp_path, dst: `public/postPictures/${username}/${username}${picNum}.jpeg`, quality: 80 });
-		await fs.unlink(tmp_path);
+			const tmp_path = postMedia.path;
+			
+			const medNum = post.medNum || count;
+			await easyimg.convert({ src: tmp_path, dst: `public/postMedias/${username}/${username}${medNum}.jpeg`, quality: 80 });
+			await fs.unlink(tmp_path);
+			try {
+				await fs.unlink(`public/postMedias/${username}/${username}${medNum}.mp4`);
+			} catch(err) {
+				;
+			}
 
-		if(!post.picNum) {
-			post.picNum = count;
+			if(!post.medNum) {
+				post.medNum = count;
+			}
+		} else {
+			const count = (await Count.findOne({ username })).count;
+
+			const tmp_path = postMedia.path;
+
+			const medNum = post.medNum || count;
+			ffmpeg(tmp_path)
+				.fps(30)
+				.addOptions(['-crf 28'])
+				.output(`public/postMedias/${username}/${username}${medNum}.mp4`)
+				.on('end', async () => {
+					await fs.unlink(tmp_path);
+				})
+				.on('error', err => {
+					throw err;
+				})
+				.run();
+			
+			try {
+				await fs.unlink(`public/postMedias/${username}/${username}${medNum}.jpeg`);
+			} catch(err) {
+				;
+			}
+
+			if(!post.medNum) {
+				post.medNum = count;
+			}
 		}
 	}
 
@@ -234,4 +296,4 @@ async function editPost(req, res) {
 	res.redirect('/');
 }
 
-module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostPicture, editPost, getHomePosts };
+module.exports = { getAllPosts, getPost, createPost, likePost, dislikePost, deletePost, deletePostMedia, editPost, getHomePosts };

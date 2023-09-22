@@ -17,18 +17,20 @@ const auth = require('../middleware/auth');
 
 const { getAccount, deleteAccount, editAccount, followAccount, logOut } = require('../controllers/accounts');
 
-router.use(validateParams);
-
+router.use('/', validateParams);
 router.route('/')
 	.get(getAccount)
 	.delete(auth, deleteAccount)
 
+router.use('/edit', validateParams);
 router.route('/edit')
 	.post(auth, upload.single('profilePicture'), editAccount);
 
+router.use('/follow', validateParams);
 router.route('/follow')
 	.patch(auth, followAccount);
 
+router.use('/logout', validateParams);
 router.route('/logout')
 	.delete(logOut);
 

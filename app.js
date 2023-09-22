@@ -43,7 +43,12 @@ app.use('/api/signup', rateLimiter({
 	max: 10
 }));
 
-app.use([express.json(), express.urlencoded({ extended: true }), express.static('public'), cookieParser()]);
+app.use([
+	express.json(),
+	express.urlencoded({ extended: true }),
+	express.static('public'),
+	cookieParser()
+]);
 
 app.use('/api/', rateLimiter({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -58,16 +63,15 @@ app.use('/api/posts', getHomePosts);
 app.use('/api/user/:username', accounts);
 app.use('/api/user/:username/posts', posts);
 app.use('/api/user/:username/posts/:postID/comments', comments);
-
 app.use('/user/:username', accountProfile);
 
 const PORT = process.env.PORT || 3000;
 
 async function start() {
 	try {
-		
 		//console.log(await connect(process.env.MONGO_URI)); // Connect to online database
 		console.log(await connect('mongodb://127.0.0.1/finfeed')); // Connect to local database
+
 		app.listen(PORT, () => {
 			console.log('Server listening on port ' + PORT);
 		});

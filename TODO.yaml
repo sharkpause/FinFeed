@@ -149,7 +149,38 @@ DONE:
     Commit 3:
       - Updated delete picture button design
       - Added deleting picture on posts
+  15 Aug 2023:
+    Commit 1:
+      - Changed postImage to postMedia for video uploads soon
+    Commit 2:
+      - Changed postImage to postMedia on other stuff I forgot
+  21 Aug 2023:
+    Commit 1:
+      - Started working on video compressing
+  22 Aug 2023:
+    Commit 1:
+      - Implemented video compressing and storing
+    Commit 2:
+      - Implement deleting videos on post deletion
+    Commit 3:
+      - Changed picNum to medNum
+    Commit 4:
+      - Fixed adding an image to a post that originally didn't have an image
+    Commit 5:  
+      - Implement editing media on post
+    Commit 6:
+      - Changed imageContainer to postMediaContainer
+      - Started working on displaying the video
+  20 Sep 2023:
+    Commit 1:
+      - Refactored validate params middleware and all controllers
+  21 Sep 2023:
+    Commit 1:
+      - Finished refactoring the codebase
+    Commit 2:
+      - Started adding documentations about the API
+  22 Sep 2023:
+    Commit 1:
+      - Finished the API docs
 
 TODO:
-  - Add video uploading
-  - Add privacy policy and terms of conditions to sign up

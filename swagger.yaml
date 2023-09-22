@@ -12,9 +12,482 @@ servers:
 paths:
   /signup:
     post:
+      tags:
+        - signup
       summary: Creates an account
       responses:
-        - '200':
+        '200':
           description: Account successfully created
-        - '409':
+        '409 (error code 1)':
           description: The username is already taken
+        '409 (error code 2)':
+          description: The email is already in use
+  /signup/verify/:token:
+    post:
+      tags:
+        - signup
+      summary: Verifies an email when creating an account
+      responses:
+        '200':
+          description: Email successfully verified
+      parameters:
+        - name: token
+          description: Verification token
+          required: true
+          schema:
+            type: string
+          in: path
+  /login:
+    post:
+      tags:
+        - login
+      summary: Logs into an account
+      responses:
+        '200':
+          description: Successfully logged in and token and username set in cookies
+        '401':
+          description: Either username or password was wrong
+  /login/reset/:
+    post:
+      tags:
+        - login
+      summary: Sends a password reset link to the account's email inbox
+      responses:
+        '200':
+          description: Email successfully sent
+  /login/reset/:token:
+    post:
+      tags:
+        - login
+      summary: Redirects the user to a password reset form
+      responses:
+        '401':
+          description: Reset token was not found or invalid
+      parameters:
+        - name: token
+          description: Reset token
+          required: true
+          schema:
+            type: string
+          in: path
+  /login/reset/success:
+    post:
+      tags:
+        - login
+      summary: Resets the password of the account
+      responses:
+        '200':
+          description: Successfully resets the account's password
+        '401':
+          description: Unauthorized to reset password
+  /posts:
+    get:
+      tags:
+        - posts
+      summary: Get posts for the home page
+      responses:
+        '200':
+          description: Home posts successfully received
+  /user/:username:
+    get:
+      tags:
+        - user/:username
+      summary: Get info about an account
+      responses:
+        '200':
+          description: Info about the account successfully received
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+    delete:
+      tags:
+        - user/:username
+      summary: Deletes an account
+      responses:
+        '200':
+          description: Account successfully deleted
+        '401':
+          description: Not authorized to delete this account
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+  /user/:username/edit:
+    post:
+      tags:
+        - user/:username
+      summary: Edits an account
+      responses:
+        '200':
+          description: Successfully edits account
+        '401':
+          description: Not authorized to edit this account
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+  /user/:username/follow:
+    post:
+      tags:
+        - user/:username
+      summary: Follows an account
+      responses:
+        '200':
+          description: Successfully followed/unfollowed user
+        '401':
+          description: Not authorized to follow user on behalf of this account
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+  /user/:username/logout:
+    delete:
+      tags:
+        - user/:username
+      summary: Logs out of an account
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+  /user/:username/posts:
+    get:
+      tags:
+        - user/:username/posts
+      summary: Gets all post made by a user
+      responses:
+        '200':
+          description: Successfully received posts
+    post:
+      tags:
+        - user/:username/posts
+      summary: Creates a post
+      responses:
+        '401':
+          description: Not authorized to create post on this user
+        '200':
+          description: Post successfully created
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID:
+    get:
+      tags:
+        - user/:username/posts
+      summary: Gets a specific post from a user
+      responses:
+        '200':
+          description: Post successfully received
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+    delete:
+      tags:
+        - user/:username/posts
+      summary: Deletes a post
+      responses:
+        '401':
+          description: Not authorized to delete posts
+        '200':
+          description: Successfully deleted post
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/delete-media:
+    delete:
+      tags:
+        - user/:username/posts
+      summary: Deletes a media on a post
+      responses:
+        '401':
+          description: Not authorzied to delete the media on this post
+        '200':
+          description: Successfully deleted the media off the post
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/edit:
+    post:
+      tags:
+        - user/:username/posts
+      summary: Edits a post
+      responses:
+        '401':
+          description: Not authorized to delete this post
+        '400':
+          description: New edited content missing
+        '200':
+          description: Successfully edited the post
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/like:
+    patch:
+      tags:
+        - user/:username/posts
+      summary: Likes a post
+      responses:
+        '400':
+          description: Liker's username missing
+        '401':
+          description: Not authorized to like this post
+        '200':
+          description: Successfully liked post
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/dislike:
+    patch:
+      tags:
+        - user/:username/posts
+      summary: Dislikes a post
+      responses:
+        '400':
+          description: Disliker's username missing
+        '401':
+          description: Not authorized to dislike this post
+        '200':
+          description: Successfully disliked post
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/comments:
+    get:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Gets all comments from a post
+      responses:
+        '200':
+          description: Successfully received comments
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+    post:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Posts a comment on a post
+      responses:
+        '200':
+          description: Successfully received comments
+        '400 (error code 1)':
+          description: Commentator username missing
+        '400 (error code 2)':
+          description: Comment content missing
+        '401':
+          description: Not authorized to create comments
+        '200':
+          description: Successfully created comment
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/comments/:commentID:
+    get:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Gets a comment from a post
+      responses:
+        '200':
+          description: Successfully received comments
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          description: ID of the comment
+          required: true
+          schema:
+            type: string
+    delete:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Deletes a comment from a post
+      responses:
+        '401':
+          description: Not authorized to delete this comment
+        '404':
+          description: Comment not found
+        '200':
+          description: Successfully deleted comment
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          description: ID of the comment
+          required: true
+          schema:
+            type: string
+    patch:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Edits a comment from a post
+      responses:
+        '400':
+          description: New edited content missing
+        '401':
+          description: Not authorized to edit this comment
+        '200':
+          description: Successfully edited comment
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          description: ID of the comment
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/comments/:commentID/like:
+    patch:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Likes a comment
+      responses:
+        '400':
+          description: Liker username missing
+        '401':
+          description: Not authorzied to like comment
+        '200':
+          description: Successfully liked comments
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          description: ID of the comment
+          required: true
+          schema:
+            type: string
+  /user/:username/posts/:postID/comments/:commentID/dislike:
+    patch:
+      tags:
+        - user/:username/posts/:postID/comments
+      summary: Dislikes a comment
+      responses:
+        '400':
+          description: Disliker username missing
+        '401':
+          description: Not authorzied to dislike comment
+        '200':
+          description: Successfully disliked comments
+      parameters:
+        - name: username
+          description: Username of user
+          required: true
+          schema:
+            type: string
+        - name: postID
+          description: ID of the post
+          required: true
+          schema:
+            type: string
+        - name: commentID
+          description: ID of the comment
+          required: true
+          schema:
+            type: string

@@ -73,7 +73,7 @@ async function deleteComment(username, postID, commentID) {
 }
 
 function editPost(postElem, postAuthor, postID) {
-	const pictureElem = postElem.querySelector('#postImage');
+	const pictureElem = postElem.querySelector('#postMedia');
 	const mainContent = postElem.querySelector('#mainContent');
 
 	mainContent.innerHTML = createPostEditInput(postElem.querySelector('#postTextContent').textContent, apiURL + 'user/' + loggedUser + '/posts/' + postID + '/edit');
@@ -86,8 +86,8 @@ function editPost(postElem, postAuthor, postID) {
 	const editGroup = mainContent.querySelector('#editGroup');
 	const editPictureElem = pictureElem.cloneNode(true);
 
-	const imageContainer = editPictureElem.querySelector('#imageContainer');
-	imageContainer.classList.remove('is-zero-size');
+	const mediaContainer = editPictureElem.querySelector('#mediaContainer');
+	mediaContainer.classList.remove('is-zero-size');
 
 	const imgElement = editPictureElem.querySelector('img');
 
@@ -95,7 +95,7 @@ function editPost(postElem, postAuthor, postID) {
 	editPictureButton.innerHTML = `
 		<div class="file has-name column is-fullwidth is-narrow">
 			<label class="file-label">
-				<input class="file-input" type="file" name="postPicture" id="fileInput" accept="image/*">
+				<input class="file-input" type="file" name="postMedia" id="fileInput" accept="image/*,video/*">
 				<span class="file-cta is-blue-background-color is-blue-border">
 					<span class="file-icon">
 						<i class="fas fa-upload"></i>
@@ -122,7 +122,7 @@ function editPost(postElem, postAuthor, postID) {
 			imgElement.classList.remove('is-zero-size');
 			imgElement.classList.add('is-post-picture-size');
 
-			imageContainer.classList.add('is-post-picture-size');
+			mediaContainer.classList.add('is-post-picture-size');
 		}
 
 		reader.readAsDataURL(selectedImage);
@@ -253,7 +253,7 @@ function createMediaObject(likeCount, dislikeCount, postID, profileURL) {
 
 								<span class="is-pulled-right is-gray-color mr-3" id="editedText"></span>
 								<br>
-								<span id="postImage" class="is-white-text"></span>
+								<span id="postMedia" class="is-white-text"></span>
 								<span id="postTextContent" class="is-pulled-left"></span>
 								<br>
 							</p>
@@ -527,14 +527,19 @@ async function getPosts(queryString) {
 			const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 			creationDate.textContent = `${dateObject.getDate()} ${monthNames[dateObject.getMonth()]} ${dateObject.getFullYear()}`;
 			
-			const postImage = postElem.querySelector('#postImage');
+			const postMedia = postElem.querySelector('#postMedia');
 
-			if(posts[i].hasOwnProperty('picNum')) {
-				postImage.innerHTML += '<figure class="image is-post-picture-size ml-0" id="imageContainer"></figure>';
-				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postPictures/${postAuthor}/${postAuthor}${posts[i].picNum}.jpeg">`;
+			if(posts[i].hasOwnProperty('medNum')) {
+				postMedia.innerHTML += '<figure class="image is-post-picture-size ml-0" id="mediaContentContainer"></figure>';
+				const mediaContentContainer = postMedia.querySelector('#mediaContentContainer')
+				mediaContentContainer.innerHTML = `<img class="is-post-picture-size is-pulled-left" src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.jpeg">`;
+
+				mediaContentContainer.querySelector('img').onerror = () => {
+					mediaContentContainer.innerHTML = `<video height="500" width="500" controls><source src="/postMedias/${postAuthor}/${postAuthor}${posts[i].medNum}.mp4" type="video/mp4"></video>`;
+				}
 			} else {
-				postImage.innerHTML += '<figure class="image is-zero-size ml-0" id="imageContainer"></figure>';
-				postImage.querySelector('#imageContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;
+				postMedia.innerHTML += '<figure class="image is-zero-size ml-0" id="mediaContentContainer"></figure>';
+				postMedia.querySelector('#mediaContentContainer').innerHTML = `<img class="is-pulled-left is-zero-size">`;
 			}
 
 			mediaContent.querySelector('#postTextContent').textContent = posts[i].content;
